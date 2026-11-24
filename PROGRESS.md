@@ -155,3 +155,66 @@ accounted for.
 - Backtest choices still open: execute at the next open or the next close (position[t] must earn the return from t to t+1 at the earliest); hold the hedge ratio fixed at entry or rebalance daily as beta changes; transaction costs.
 - Trading period length: 6 months (GGR) used for the plots; not yet fixed for the walk-forward.
 - The example plots show 2017-H1 prices: the first look at out-of-sample data. No P&L was computed and no parameter was changed afterwards.
+
+## Session 6 (2026-11-24): pre-registered backtest decisions
+
+Written and committed **before** the backtest (Step 4) exists and before any P&L has been
+computed. Like session 4, these rules cannot have been tuned to results. Changing any of
+them later is a new trial and must be logged.
+
+**Locked decisions**
+1. **Execution:** a signal at day t's close fills at day t+1's close: a one-day delay, as in
+   Gatev et al. (2006), who wait a day to avoid bid-ask bounce. We only store closes. This
+   applies to entries, exits and stops. So `position[t]` from `signals.py` first earns the
+   return from close t+1 to close t+2.
+2. **Hedge:** the hedge ratio is fixed at entry for the life of each trade, with no daily
+   rebalancing. At the fill the trade buys $1 of y and sells $beta of x, using the beta the
+   signal was computed with on day t (`hedge_ratio[t]`: the stored OLS beta, the Kalman
+   `beta_prior`, or 1 for distance pairs). Share counts then stay fixed until exit, so the
+   dollar weights drift with prices (as in GGR).
+3. **Costs, base case:** 5 bps per side per leg (commission + slippage), charged on the traded
+   notional of each leg. A round trip (enter + exit, two legs each) costs 4 x 5 bps. On top of
+   that, short borrow of 0.5% per year on the short leg's market value, accrued daily (/252).
+   **Sensitivity:** 0, 10 and 20 bps per side per leg are reported next to the base case and
+   are **never used to choose anything** (not pairs, not parameters, not methods). So they
+   are not trials.
+4. **Windows:** 24-month formation (the same as every logged selection trial), 6-month
+   trading period, rolling forward 6 months. Trading periods do not overlap and run back to
+   back; formation windows overlap by 18 months. With data from 2015-01 to 2025-12 that gives
+   18 windows, trading from 2017-01 to 2025-12. Selection reruns in each window with the
+   same configurations (trials 4 and 5), so walking forward adds no trials.
+5. **Kalman delta stays at 1e-6.**
+6. **Signal rules are unchanged** from session 5 (entry 2, exit 0.5, stop 4, lookback 3
+   half-lives clipped to [30, 252]; GGR 2 sigma / exit on cross for distance pairs).
+
+**Implementation consequences (flagged for Step 4, to confirm, not yet decided)**
+- **End of period:** `signals.py` forces positions flat on the last trading day. With a
+  one-day delay that fill would land in the next window. Proposal: the calendar-driven close
+  fills at the last day's own close. That is not look-ahead, because it depends only on the
+  date, which is known in advance (a market-on-close order). Data-driven signals keep the
+  one-day delay.
+- **Last-day entries:** a trade signalled on the second-to-last day would fill at the last
+  close and be closed at the same price, paying costs for nothing. Proposal: no new entries
+  on the last two trading days of a window.
+- **Mismatch with the Kalman hedge:** exits use the daily Kalman z (moving beta), but the
+  position holds the entry beta. At delta = 1e-6 beta moves about 0.03 in 6 months, so this is
+  small. The backtest should still report the held portfolio's own spread.
+- **Missing prices in a trading period** (a ticker stops trading, or a gap longer than the
+  2-day forward-fill): the rule needs deciding, e.g. close at the last available price.
+
+**Test fix: the "static OLS beta = -0.13" result**
+- In `test_kalman_tracks_a_hedge_ratio_that_changes`, the synthetic beta jumped from 1.0 to
+  1.5 while alpha stayed fixed. So log y jumped by 0.5 * log x, about 1.6 (price x5),
+  overnight. Full-sample OLS then fitted one line through two clouds. In the second cloud y
+  was much higher, and x happened to average lower (3.42 vs 3.64), so the line sloped down:
+  Simpson's paradox. OLS on each half alone gives 1.00 and 1.50. It was not a code bug, but
+  the test was unrealistic and its benchmark was unfair. Full-sample OLS has seen the
+  post-break data, i.e. look-ahead.
+- Fixed: the break now keeps the price continuous (alpha moves too), and the benchmark is
+  OLS on the pre-break half only, as in the strategy. Across 20 seeds formation OLS stays
+  about 1.00, Kalman (delta 1e-4) ends between 1.12 and 1.36, and the Kalman spread is less
+  volatile than the stale-OLS spread in every seed (1.3x to 6.7x). The level-jump case is
+  kept as a separate test documenting the sign flip.
+- Correction to the session-5 explanation: Kalman does not "track" a beta break quickly.
+  When log x moves little, alpha and beta are nearly collinear, so beta adapts slowly. On a
+  realistic break it gets partway in 400 days even at delta 1e-4 (100x the locked value).
