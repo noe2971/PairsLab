@@ -177,17 +177,42 @@ def test_kalman_innovations_are_standard_normal_when_model_is_true() -> None:
     assert z.iloc[100:].mean() == pytest.approx(0.0, abs=0.08)
 
 
-def test_kalman_tracks_a_hedge_ratio_that_changes() -> None:
-    rng = np.random.default_rng(1)
-    n = 800
+def beta_break(seed: int, continuous: bool, n: int = 800) -> tuple[np.ndarray, np.ndarray]:
+    """Log prices where beta jumps from 1.0 to 1.5 halfway through.
+
+    ``continuous=True`` also moves alpha so the fitted level does not jump at the break (the
+    slope of the relation changes, the price does not). ``False`` keeps alpha fixed, so log y
+    jumps by ``0.5 * x`` (about 1.6, i.e. the price x5) overnight.
+    """
+    rng = np.random.default_rng(seed)
     x = 4.0 + np.cumsum(rng.normal(0.0, 0.02, n))
-    beta_true = np.where(np.arange(n) < 400, 1.0, 1.5)
-    y = 0.3 + beta_true * x + rng.normal(0.0, 0.01, n)
+    after = np.arange(n) >= n // 2
+    beta = np.where(after, 1.5, 1.0)
+    alpha = np.where(after, 0.3 - 0.5 * x[n // 2], 0.3) if continuous else 0.3
+    return alpha + beta * x + rng.normal(0.0, 0.01, n), x
+
+
+def test_kalman_tracks_a_hedge_ratio_that_changes() -> None:
+    # Fair benchmark: OLS fitted on the pre-break "formation" half only, as in the strategy.
+    # (Full-sample OLS would have seen the post-break data, i.e. look-ahead.)
+    y, x = beta_break(seed=1, continuous=True)
+    b_ols, a_ols = hedge_ratio(y[:400], x[:400])
     kf = sig.kalman_hedge(y, x, obs_var=1e-4, delta=1e-4)
-    b_ols, a_ols = hedge_ratio(y, x)
     static_resid = y - a_ols - b_ols * x
-    assert abs(kf["beta"].iloc[-1] - 1.5) < abs(b_ols - 1.5)
-    assert kf["innovation"].iloc[-100:].std() < static_resid[-100:].std() / 3
+    assert b_ols == pytest.approx(1.0, abs=0.02)  # stale after the break
+    assert 1.15 < kf["beta"].iloc[-1] < 1.6  # moved towards the new beta of 1.5
+    assert kf["innovation"].iloc[-200:].std() < static_resid[-200:].std() / 1.3
+
+
+def test_full_sample_ols_across_a_level_jump_can_get_the_sign_wrong() -> None:
+    # Simpson's paradox, not a bug: each regime alone gives the right beta, but the second
+    # regime sits ~1.6 higher in log y while x happened to average lower there, so one line
+    # through both clouds slopes down.
+    y, x = beta_break(seed=1, continuous=False)
+    assert hedge_ratio(y[:400], x[:400])[0] == pytest.approx(1.0, abs=0.02)
+    assert hedge_ratio(y[400:], x[400:])[0] == pytest.approx(1.5, abs=0.02)
+    assert x[400:].mean() < x[:400].mean()
+    assert hedge_ratio(y, x)[0] < 0
 
 
 def test_kalman_prior_is_yesterdays_filtered_state() -> None:
