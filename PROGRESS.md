@@ -94,3 +94,27 @@ new trial and must be logged as one.
 us which pairs are real. Ranking just picks the most promising candidates; the evidence will
 come from out-of-sample trading on data the selection never saw, with the number of trials
 accounted for.
+
+**Done (after the pre-registration commit e321319)**
+- `selection.py` refactored: `SelectionConfig` (method, grouping, n_top, ...), same-group pairs, cointegration ranking (`rank_cointegration`), distance method (`distance_scores`, `rank_distance`), DuckDB table `pair_scores` (all scored pairs, both methods, keyed by config id + window), trials log (`log_trial`, `count_trials`) in `research/selection_trials.jsonl`.
+- Old `pair_selection` table dropped from the local database (derived output with the obsolete schema).
+- 35 selection tests (53 in total), including: real pair ranks first among random walks; top-N still returned when nothing is significant; distance method picks the closest normalized paths; SSD matches a manual calculation; a constant dividend back-adjustment does not change normalized prices; no look-ahead for both methods; trials counted by distinct configuration.
+- Trial log: trial 1 (session 3 rule) backfilled; trials 2 and 3 are the pre-registered cointegration and distance rules.
+
+**Results, formation 2015-01-01 to 2016-12-31**
+- 431 tickers (26 are alone in their sub-industry, 3 listed mid-window), 1,201 pairs.
+- Cointegration: 53 raw passes (60 expected by chance), 0 BH passes (min q = 0.73), 778 pairs pass the half-life and beta filters, top 20 stored. Top 3: BAX/ISRG, LII/MAS, GPN/V.
+- Distance: top 20 stored, dominated by utilities (13 of 20) and retail REITs. Top 3: ED/XEL, AEE/PNW, AEP/SO.
+- Only one pair is in both lists: FRT/KIM.
+
+**Decisions and why**
+- A trial = a distinct configuration (hash of the parameters that affect output), not a window, so the walk-forward does not inflate the count. The distance config id ignores alpha and half-life bounds because the method does not use them.
+- The log is JSON lines in git, not a DuckDB table: the database is git-ignored and rebuilt by downloads, and git history makes the log tamper-evident.
+- Both methods use the same candidate pairs (same sub-industry), so the comparison isolates the ranking rule. (GGR's main results match across all stocks.)
+- Distance candidates also store `spread_std`, the formation-period standard deviation of the normalized gap, for GGR's 2-sigma entry rule.
+
+**Open questions (flagged, NOT changed, because the rules are pre-registered)**
+- GOOG/GOOGL (distance rank 4) are two share classes of one company, not a pair. Excluding dual share classes (GOOG/GOOGL, FOX/FOXA, NWS/NWSA) is a universe fix, but changing it now would be trial 4. Needs a decision.
+- Concentration: BAX, BSX and ISRG each appear in 3 cointegration candidates; ED, XEL, PCG, NEE, AEP, KIM in 3 distance candidates. A per-stock cap could be considered (also a new trial).
+- SSD favours low-volatility stocks (utilities), whose small spreads may not cover costs. This is a known weakness of the distance method; the backtest will show it.
+- Sub-industry labels are today's GICS, an even finer version of the look-ahead in sector labels.

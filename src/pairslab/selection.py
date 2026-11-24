@@ -1,20 +1,22 @@
-"""Pair selection: find same-sector stock pairs whose spread mean-reverts.
+"""Pair selection: rank same-sub-industry stock pairs for out-of-sample testing.
 
-Pipeline (see :func:`select_pairs`):
+Two methods, both estimated on the **formation window** only (see :func:`select_pairs`):
 
-1. Slice prices to the **formation window** only and take logs.
-2. Build every pair of tickers **within the same GICS sector** (:func:`same_sector_pairs`).
-3. For each pair (:func:`analyze_pair`):
+* ``"cointegration"``: for each pair, an OLS hedge ratio on log prices
+  (``log P_y = alpha + beta * log P_x + spread``), the Engle-Granger test in both directions
+  (the pair's p-value is the larger of the two), an ADF test on the spread and an AR(1) /
+  Ornstein-Uhlenbeck half-life. Candidates are the top N pairs by p-value among pairs with a
+  half-life in [1, 60] days and a positive hedge ratio. Benjamini-Hochberg q-values are
+  reported as a diagnostic only.
+* ``"distance"`` (Gatev, Goetzmann and Rouwenhorst, 2006): normalize each price to 1 on the
+  first formation day and rank pairs by the sum of squared deviations (SSD) between the two
+  normalized series. Candidates are the top N pairs with the smallest SSD.
 
-   * hedge ratio by OLS: ``log P_y = alpha + beta * log P_x + spread``;
-   * Engle-Granger cointegration test in both directions; the pair's p-value is the
-     **larger** of the two (conservative, and still a valid p-value);
-   * ADF test on the spread (reported as a diagnostic, see the function docstring);
-   * half-life of mean reversion from an AR(1) / Ornstein-Uhlenbeck fit of the spread.
+Candidates are *candidates*, not statistically significant pairs: on 2015-2016 no pair
+survives the FDR correction, so the evidence has to come from out-of-sample trading.
 
-4. Benjamini-Hochberg FDR correction over **all** pairs tested (:func:`benjamini_hochberg`).
-5. Keep pairs with q-value < alpha, half-life in [1, 60] trading days and a positive hedge
-   ratio, ranked by p-value (:func:`apply_selection`).
+Every configuration that is run from the command line is appended to a trials log
+(:func:`log_trial`), because the deflated Sharpe ratio needs the number of trials.
 
 Look-ahead rule: everything is estimated from the formation window alone. The selection is
 a decision taken on the last day of the window and would be traded only *after* it.
@@ -23,12 +25,15 @@ a decision taken on the last day of the window and would be traded only *after* 
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import logging
 import math
 import warnings
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from itertools import combinations
 from pathlib import Path
 
@@ -43,17 +48,25 @@ logger = logging.getLogger(__name__)
 
 DEFAULT_FORMATION_START = "2015-01-01"
 DEFAULT_FORMATION_END = "2016-12-31"
-DEFAULT_ALPHA = 0.05  # significance level / target false discovery rate
+DEFAULT_TRIALS_PATH = Path("research/selection_trials.jsonl")
+DEFAULT_N_TOP = 20
+DEFAULT_ALPHA = 0.05  # significance level for the raw test / target FDR for the diagnostic
 MIN_HALF_LIFE = 1.0  # trading days; faster than this is noise we cannot trade
 MAX_HALF_LIFE = 60.0  # trading days; slower than this ties up capital for too long
 MIN_OBS = 250  # about one trading year; fewer observations make the tests unreliable
 
+METHODS = ("cointegration", "distance")
+GROUPINGS = ("sub_industry", "sector")
+
 RESULT_COLUMNS = [
     "rank",
+    "candidate",
     "ticker_y",
     "ticker_x",
     "sector",
+    "sub_industry",
     "n_obs",
+    "score",
     "hedge_ratio",
     "intercept",
     "eg_pvalue",
@@ -65,40 +78,103 @@ RESULT_COLUMNS = [
     "half_life",
     "pass_raw",
     "pass_bh",
-    "half_life_ok",
-    "selected",
+    "filters_ok",
+    "ssd",
+    "spread_std",
 ]
 
-SELECTION_TABLE_SQL = """
-CREATE TABLE IF NOT EXISTS pair_selection (
+SCORES_TABLE_SQL = """
+CREATE TABLE IF NOT EXISTS pair_scores (
+    config_id        VARCHAR NOT NULL,   -- hash of the selection configuration (trials log)
+    method           VARCHAR NOT NULL,   -- 'cointegration' or 'distance'
+    grouping         VARCHAR NOT NULL,   -- 'sub_industry' or 'sector'
     formation_start  DATE    NOT NULL,
     formation_end    DATE    NOT NULL,
-    rank             INTEGER,            -- 1 = best; NULL if the pair was not selected
-    ticker_y         VARCHAR NOT NULL,   -- dependent leg:  log P_y = a + b log P_x + e
-    ticker_x         VARCHAR NOT NULL,   -- independent leg
+    rank             INTEGER,            -- 1 = best candidate; NULL if not a candidate
+    candidate        BOOLEAN NOT NULL,   -- in the top N for this method
+    ticker_y         VARCHAR NOT NULL,
+    ticker_x         VARCHAR NOT NULL,
     sector           VARCHAR NOT NULL,
+    sub_industry     VARCHAR NOT NULL,
     n_obs            INTEGER NOT NULL,
-    hedge_ratio      DOUBLE  NOT NULL,   -- b
-    intercept        DOUBLE  NOT NULL,   -- a
-    eg_pvalue        DOUBLE  NOT NULL,   -- max of the two Engle-Granger directions
-    eg_pvalue_yx     DOUBLE  NOT NULL,   -- regress y on x
-    eg_pvalue_xy     DOUBLE  NOT NULL,   -- regress x on y
-    q_value          DOUBLE  NOT NULL,   -- Benjamini-Hochberg adjusted eg_pvalue
-    adf_stat         DOUBLE  NOT NULL,
-    adf_pvalue       DOUBLE  NOT NULL,
+    score            DOUBLE  NOT NULL,   -- ranking statistic: eg_pvalue or ssd (lower = better)
+    hedge_ratio      DOUBLE,             -- cointegration: OLS beta on log prices
+    intercept        DOUBLE,
+    eg_pvalue        DOUBLE,             -- max of the two Engle-Granger directions
+    eg_pvalue_yx     DOUBLE,
+    eg_pvalue_xy     DOUBLE,
+    q_value          DOUBLE,             -- Benjamini-Hochberg diagnostic
+    adf_stat         DOUBLE,
+    adf_pvalue       DOUBLE,
     half_life        DOUBLE,             -- trading days; NULL = no mean reversion
-    pass_raw         BOOLEAN NOT NULL,
-    pass_bh          BOOLEAN NOT NULL,
-    half_life_ok     BOOLEAN NOT NULL,
-    selected         BOOLEAN NOT NULL,
-    PRIMARY KEY (formation_start, formation_end, ticker_y, ticker_x)
+    pass_raw         BOOLEAN,
+    pass_bh          BOOLEAN,
+    filters_ok       BOOLEAN NOT NULL,   -- eligible to be a candidate
+    ssd              DOUBLE,             -- distance: sum of squared normalized-price gaps
+    spread_std       DOUBLE,             -- distance: std of the normalized-price gap
+    PRIMARY KEY (config_id, formation_start, formation_end, ticker_y, ticker_x)
 );
 """
 
 
 @dataclass(frozen=True)
+class SelectionConfig:
+    """Everything that defines a selection rule (one *trial*), except the window.
+
+    Attributes:
+        method: ``"cointegration"`` or ``"distance"``.
+        grouping: Pairs must share this GICS level: ``"sub_industry"`` or ``"sector"``.
+        n_top: Number of candidates to keep.
+        alpha: Raw significance level and BH target (cointegration diagnostics only).
+        min_half_life: Shortest acceptable half-life (cointegration only).
+        max_half_life: Longest acceptable half-life (cointegration only).
+        min_obs: Minimum trading days in the formation window.
+
+    """
+
+    method: str = "cointegration"
+    grouping: str = "sub_industry"
+    n_top: int = DEFAULT_N_TOP
+    alpha: float = DEFAULT_ALPHA
+    min_half_life: float = MIN_HALF_LIFE
+    max_half_life: float = MAX_HALF_LIFE
+    min_obs: int = MIN_OBS
+
+    def __post_init__(self) -> None:
+        """Reject unknown methods, groupings and non-positive N."""
+        if self.method not in METHODS:
+            raise ValueError(f"method must be one of {METHODS}, got {self.method!r}")
+        if self.grouping not in GROUPINGS:
+            raise ValueError(f"grouping must be one of {GROUPINGS}, got {self.grouping!r}")
+        if self.n_top < 1:
+            raise ValueError("n_top must be at least 1")
+
+    def as_dict(self) -> dict[str, object]:
+        """Return only the parameters that affect this method's output.
+
+        The distance method ignores alpha and half-life bounds, so they are left out:
+        changing them must not count as a new distance trial.
+        """
+        common: dict[str, object] = {
+            "method": self.method,
+            "grouping": self.grouping,
+            "n_top": self.n_top,
+            "min_obs": self.min_obs,
+        }
+        if self.method == "distance":
+            return {**common, "rule": "top_n_by_ssd"}
+        return {
+            **common,
+            "rule": "top_n_by_eg_pvalue",
+            "alpha": self.alpha,
+            "min_half_life": self.min_half_life,
+            "max_half_life": self.max_half_life,
+        }
+
+
+@dataclass(frozen=True)
 class PairStats:
-    """Statistics for one pair, estimated on the formation window.
+    """Cointegration statistics for one pair, estimated on the formation window.
 
     Attributes:
         hedge_ratio: OLS slope ``beta`` of log P_y on log P_x.
@@ -124,40 +200,27 @@ class PairStats:
     n_obs: int
 
 
-@dataclass(frozen=True)
-class SelectionSummary:
-    """How many pairs survive each filter, with and without the FDR correction."""
-
-    tested: int
-    pass_raw: int
-    pass_raw_and_half_life: int
-    pass_bh: int
-    selected: int
-    expected_false_positives_raw: float
-
-
 # --------------------------------------------------------------------------- pairs
 
 
-def same_sector_pairs(sectors: pd.Series) -> list[tuple[str, str, str]]:
-    """List every unordered pair of tickers that share a GICS sector.
+def same_group_pairs(groups: pd.Series) -> list[tuple[str, str]]:
+    """List every unordered pair of tickers that share a group label.
 
-    Restricting to one sector keeps pairs that share economic drivers (same customers,
-    input costs, regulation), so a cointegrating relation has a reason to persist. It also
-    cuts the number of tests from about 105,000 (all 460 tickers) to about 11,400, which
-    means fewer false discoveries for the same error rate.
+    Used with GICS sub-industries: firms in the same sub-industry (e.g. "Regional Banks")
+    share customers, costs and regulation, so a stable price relation has an economic
+    reason to persist. A finer grouping also means far fewer tests.
 
     Args:
-        sectors: Series mapping ticker -> sector.
+        groups: Series mapping ticker -> group label (sector or sub-industry).
 
     Returns:
-        ``(ticker_y, ticker_x, sector)`` tuples, ``ticker_y < ticker_x`` alphabetically.
+        ``(ticker_y, ticker_x)`` tuples with ``ticker_y < ticker_x`` alphabetically.
 
     """
-    pairs: list[tuple[str, str, str]] = []
-    for sector, members in sectors.groupby(sectors, sort=True):
+    pairs: list[tuple[str, str]] = []
+    for _, members in groups.groupby(groups, sort=True):
         tickers = sorted(members.index.astype(str))
-        pairs.extend((a, b, str(sector)) for a, b in combinations(tickers, 2))
+        pairs.extend(combinations(tickers, 2))
     return pairs
 
 
@@ -230,7 +293,7 @@ def engle_granger_pvalue(y: np.ndarray, x: np.ndarray) -> float:
 
 
 def analyze_pair(y: np.ndarray, x: np.ndarray) -> PairStats:
-    """Compute every statistic for one pair of log-price series.
+    """Compute every cointegration statistic for one pair of log-price series.
 
     The Engle-Granger test is not symmetric: regressing y on x and x on y give slightly
     different answers. We run both and keep the **larger** p-value. That is conservative and
@@ -295,72 +358,76 @@ def benjamini_hochberg(pvalues: Sequence[float] | np.ndarray) -> np.ndarray:
     return q
 
 
-# --------------------------------------------------------------------------- selection
+def sum_squared_deviations(a: np.ndarray, b: np.ndarray) -> float:
+    """Gatev et al. distance: ``SSD = sum_t (a_t - b_t)**2`` of two normalized price series.
+
+    Args:
+        a: Normalized prices of the first stock (1.0 on the first formation day).
+        b: Normalized prices of the second stock.
+
+    Returns:
+        The sum of squared deviations (0 means the two series are identical).
+
+    """
+    gap = a - b
+    return float(gap @ gap)
 
 
-def apply_selection(
-    results: pd.DataFrame,
-    alpha: float = DEFAULT_ALPHA,
-    min_half_life: float = MIN_HALF_LIFE,
-    max_half_life: float = MAX_HALF_LIFE,
+# --------------------------------------------------------------------------- window
+
+
+def formation_window(
+    prices: pd.DataFrame, formation_start: str, formation_end: str, min_obs: int = MIN_OBS
 ) -> pd.DataFrame:
-    """Add q-values and pass/fail flags, then rank the selected pairs.
+    """Slice to the formation window and drop tickers with any missing day.
 
-    The FDR correction is applied to **all** pairs tested, before the half-life filter.
-    Half-life is computed from the same AR coefficient as the test statistic, so filtering
-    on it first and correcting over fewer tests would quietly understate the multiple testing.
+    This is the look-ahead guard: nothing after ``formation_end`` survives this function.
+    A ticker is kept only if it has a price on **every** day of the window, so all pairs
+    are compared on exactly the same dates.
 
-    A pair is selected when its q-value is below ``alpha``, its half-life lies in
-    ``[min_half_life, max_half_life]`` and its hedge ratio is positive (long one leg, short
-    the other; a negative ratio would mean holding both long or both short).
-
-    Args:
-        results: One row per pair with at least ``eg_pvalue``, ``half_life``, ``hedge_ratio``.
-        alpha: Significance level for the raw test and target FDR for BH.
-        min_half_life: Shortest acceptable half-life in trading days.
-        max_half_life: Longest acceptable half-life in trading days.
-
-    Returns:
-        A copy sorted with selected pairs first (rank 1, 2, ...), then the rest by p-value.
-
-    """
-    out = results.copy()
-    out["q_value"] = benjamini_hochberg(out["eg_pvalue"].to_numpy())
-    out["pass_raw"] = out["eg_pvalue"] < alpha
-    out["pass_bh"] = out["q_value"] < alpha
-    out["half_life_ok"] = out["half_life"].between(min_half_life, max_half_life)
-    out["selected"] = out["pass_bh"] & out["half_life_ok"] & (out["hedge_ratio"] > 0)
-    out = out.sort_values(
-        ["selected", "eg_pvalue", "half_life"], ascending=[False, True, True], kind="stable"
-    ).reset_index(drop=True)
-    n_selected = int(out["selected"].sum())
-    out["rank"] = pd.array(
-        [*range(1, n_selected + 1), *[pd.NA] * (len(out) - n_selected)], dtype="Int64"
-    )
-    return out[[c for c in RESULT_COLUMNS if c in out.columns]]
-
-
-def summarize(selection: pd.DataFrame, alpha: float = DEFAULT_ALPHA) -> SelectionSummary:
-    """Count how many pairs pass each stage, with and without the FDR correction.
+    Adjusted closes are scaled by later dividends and splits, but only by a constant factor
+    per ticker inside the window. That factor cancels in normalized prices (``P_t / P_0``) and
+    only shifts the intercept of a log-price regression, so it leaks no future information.
 
     Args:
-        selection: Output of :func:`apply_selection`.
-        alpha: The significance level that was used.
+        prices: Wide adjusted closes (dates x tickers), any date range.
+        formation_start: First day of the window, inclusive.
+        formation_end: Last day of the window, inclusive.
+        min_obs: Minimum number of trading days required in the window.
 
     Returns:
-        A :class:`SelectionSummary`. ``expected_false_positives_raw`` is ``alpha * tested``:
-        how many pairs would pass the raw test even if *no* pair were truly cointegrated.
+        Wide frame of adjusted closes restricted to the window.
+
+    Raises:
+        ValueError: If the window has fewer than ``min_obs`` trading days.
 
     """
-    return SelectionSummary(
-        tested=len(selection),
-        pass_raw=int(selection["pass_raw"].sum()),
-        pass_raw_and_half_life=int((selection["pass_raw"] & selection["half_life_ok"]).sum()),
-        pass_bh=int(selection["pass_bh"].sum()),
-        selected=int(selection["selected"].sum()),
-        expected_false_positives_raw=alpha * len(selection),
-    )
+    window = prices.sort_index().loc[formation_start:formation_end]
+    if len(window) < min_obs:
+        raise ValueError(f"formation window has {len(window)} days, need at least {min_obs}")
+    complete = window.dropna(axis=1, how="any")
+    dropped = window.shape[1] - complete.shape[1]
+    if dropped:
+        logger.info("dropped %d tickers with missing prices in the window", dropped)
+    return complete
 
+
+def normalized_prices(window: pd.DataFrame) -> pd.DataFrame:
+    """Divide each column by its first value, so every stock starts at 1.0.
+
+    With dividend-adjusted prices this is the cumulative total-return index Gatev et al. use.
+
+    Args:
+        window: Adjusted closes for the formation window (no NaN).
+
+    Returns:
+        Normalized prices with the same shape.
+
+    """
+    return window / window.iloc[0]
+
+
+# --------------------------------------------------------------------------- cointegration
 
 # Worker state for the process pool: the log-price matrix is sent once per process.
 _WORKER_LOGP: np.ndarray | None = None
@@ -374,88 +441,35 @@ def _init_worker(logp: np.ndarray, columns: list[str]) -> None:
     _WORKER_COLS = {c: i for i, c in enumerate(columns)}
 
 
-def _analyze_chunk(chunk: list[tuple[str, str, str]]) -> list[dict[str, object]]:
+def _analyze_chunk(chunk: list[tuple[str, str]]) -> list[dict[str, object]]:
     """Analyze a list of pairs using the worker's log-price matrix."""
     assert _WORKER_LOGP is not None, "worker not initialised"
     rows: list[dict[str, object]] = []
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", FutureWarning)  # statsmodels API-change notices
-        for ty, tx, sector in chunk:
+        for ty, tx in chunk:
             y = _WORKER_LOGP[:, _WORKER_COLS[ty]]
             x = _WORKER_LOGP[:, _WORKER_COLS[tx]]
-            stats = analyze_pair(y, x)
-            rows.append({"ticker_y": ty, "ticker_x": tx, "sector": sector, **vars(stats)})
+            rows.append({"ticker_y": ty, "ticker_x": tx, **vars(analyze_pair(y, x))})
     return rows
 
 
-def formation_log_prices(
-    prices: pd.DataFrame, formation_start: str, formation_end: str, min_obs: int = MIN_OBS
+def cointegration_scores(
+    window: pd.DataFrame, pairs: list[tuple[str, str]], n_jobs: int = 1
 ) -> pd.DataFrame:
-    """Slice to the formation window, drop incomplete tickers and take logs.
-
-    This is the look-ahead guard: nothing after ``formation_end`` survives this function.
-    A ticker is kept only if it has a price on **every** day of the window, so all pairs
-    are tested on exactly the same dates.
+    """Run :func:`analyze_pair` on every pair, optionally in parallel.
 
     Args:
-        prices: Wide adjusted closes (dates x tickers), any date range.
-        formation_start: First day of the window, inclusive.
-        formation_end: Last day of the window, inclusive.
-        min_obs: Minimum number of trading days required in the window.
-
-    Returns:
-        Wide frame of natural-log prices restricted to the window.
-
-    Raises:
-        ValueError: If the window has fewer than ``min_obs`` trading days.
-
-    """
-    window = prices.sort_index().loc[formation_start:formation_end]
-    if len(window) < min_obs:
-        raise ValueError(f"formation window has {len(window)} days, need at least {min_obs}")
-    complete = window.dropna(axis=1, how="any")
-    dropped = window.shape[1] - complete.shape[1]
-    if dropped:
-        logger.info("dropped %d tickers with missing prices in the window", dropped)
-    return np.log(complete)
-
-
-def select_pairs(
-    prices: pd.DataFrame,
-    sectors: pd.Series,
-    formation_start: str = DEFAULT_FORMATION_START,
-    formation_end: str = DEFAULT_FORMATION_END,
-    alpha: float = DEFAULT_ALPHA,
-    min_half_life: float = MIN_HALF_LIFE,
-    max_half_life: float = MAX_HALF_LIFE,
-    min_obs: int = MIN_OBS,
-    n_jobs: int = 1,
-) -> pd.DataFrame:
-    """Test every same-sector pair on the formation window and rank the survivors.
-
-    Args:
-        prices: Wide adjusted closes (dates x tickers). May extend beyond the window; later
-            data is cut off before any estimate is made.
-        sectors: Series mapping ticker -> GICS sector.
-        formation_start: First day of the formation window, inclusive.
-        formation_end: Last day of the formation window, inclusive.
-        alpha: Significance level / target FDR.
-        min_half_life: Shortest acceptable half-life (trading days).
-        max_half_life: Longest acceptable half-life (trading days).
-        min_obs: Minimum trading days in the window.
+        window: Adjusted closes for the formation window (no NaN).
+        pairs: ``(ticker_y, ticker_x)`` tuples.
         n_jobs: Worker processes; 1 runs everything in this process.
 
     Returns:
-        One row per pair tested, columns :data:`RESULT_COLUMNS`, selected pairs first.
+        One row per pair with the :class:`PairStats` fields.
 
     """
-    logp = formation_log_prices(prices, formation_start, formation_end, min_obs)
-    usable = sectors[sectors.index.isin(logp.columns)]
-    pairs = same_sector_pairs(usable)
-    logger.info("testing %d same-sector pairs on %d days", len(pairs), len(logp))
-
-    matrix = logp.to_numpy()
-    columns = [str(c) for c in logp.columns]
+    matrix = np.log(window.to_numpy())
+    columns = [str(c) for c in window.columns]
     if n_jobs <= 1:
         _init_worker(matrix, columns)
         rows = _analyze_chunk(pairs)
@@ -466,19 +480,269 @@ def select_pairs(
             n_jobs, initializer=_init_worker, initargs=(matrix, columns)
         ) as pool:
             rows = [row for chunk_rows in pool.map(_analyze_chunk, chunks) for row in chunk_rows]
+    frame = pd.DataFrame(rows, columns=["ticker_y", "ticker_x", *PairStats.__dataclass_fields__])
+    return frame.sort_values(["ticker_y", "ticker_x"]).reset_index(drop=True)
 
-    empty = pd.DataFrame(
-        columns=["ticker_y", "ticker_x", "sector", "eg_pvalue", "half_life", "hedge_ratio"]
+
+def rank_cointegration(scores: pd.DataFrame, config: SelectionConfig) -> pd.DataFrame:
+    """Flag the top-N cointegration candidates and add the BH diagnostic.
+
+    Eligible pairs have a half-life in ``[min_half_life, max_half_life]`` and a positive
+    hedge ratio (long one leg, short the other). Among them, the N smallest Engle-Granger
+    p-values become candidates. The q-values are computed over **all** pairs tested, but
+    they are not used to choose: they only tell us whether any pair is significant.
+
+    Args:
+        scores: Output of :func:`cointegration_scores`.
+        config: The selection configuration.
+
+    Returns:
+        A copy with ``q_value``, ``pass_raw``, ``pass_bh``, ``filters_ok``, ``score``,
+        ``candidate`` and ``rank``, sorted best first.
+
+    """
+    out = scores.copy()
+    out["score"] = out["eg_pvalue"]
+    out["q_value"] = benjamini_hochberg(out["eg_pvalue"].to_numpy())
+    out["pass_raw"] = out["eg_pvalue"] < config.alpha
+    out["pass_bh"] = out["q_value"] < config.alpha
+    hl_ok = out["half_life"].between(config.min_half_life, config.max_half_life)
+    out["filters_ok"] = hl_ok & (out["hedge_ratio"] > 0)
+    return _flag_top_n(out, config.n_top, tiebreak="half_life")
+
+
+def _flag_top_n(out: pd.DataFrame, n_top: int, tiebreak: str) -> pd.DataFrame:
+    """Sort by ``score`` among eligible rows, mark the first ``n_top`` and give them ranks."""
+    out = out.sort_values(
+        ["filters_ok", "score", tiebreak, "ticker_y", "ticker_x"],
+        ascending=[False, True, True, True, True],
+        kind="stable",
+    ).reset_index(drop=True)
+    n_candidates = min(n_top, int(out["filters_ok"].sum()))
+    out["candidate"] = out.index < n_candidates
+    out["rank"] = pd.array(
+        [*range(1, n_candidates + 1), *[pd.NA] * (len(out) - n_candidates)], dtype="Int64"
     )
-    results = pd.DataFrame(rows) if rows else empty
-    return apply_selection(results, alpha, min_half_life, max_half_life)
+    return out
+
+
+# --------------------------------------------------------------------------- distance
+
+
+def distance_scores(window: pd.DataFrame, pairs: list[tuple[str, str]]) -> pd.DataFrame:
+    """Gatev et al. (2006) distance statistics for every pair.
+
+    Args:
+        window: Adjusted closes for the formation window (no NaN).
+        pairs: ``(ticker_y, ticker_x)`` tuples.
+
+    Returns:
+        One row per pair: ``ssd``; ``spread_std`` (the formation-period standard deviation
+        of the normalized-price gap, which the 2-sigma trading rule will use); ``half_life``
+        of the gap (diagnostic only); and ``n_obs``.
+
+    """
+    norm = normalized_prices(window)
+    rows: list[dict[str, object]] = []
+    for ty, tx in pairs:
+        a = norm[ty].to_numpy()
+        b = norm[tx].to_numpy()
+        gap = a - b
+        rows.append(
+            {
+                "ticker_y": ty,
+                "ticker_x": tx,
+                "ssd": sum_squared_deviations(a, b),
+                "spread_std": float(gap.std(ddof=1)),
+                "half_life": half_life(gap),
+                "n_obs": len(gap),
+            }
+        )
+    columns = ["ticker_y", "ticker_x", "ssd", "spread_std", "half_life", "n_obs"]
+    return pd.DataFrame(rows, columns=columns)
+
+
+def rank_distance(scores: pd.DataFrame, config: SelectionConfig) -> pd.DataFrame:
+    """Flag the N pairs with the smallest SSD as candidates (no other filter, as in GGR).
+
+    Args:
+        scores: Output of :func:`distance_scores`.
+        config: The selection configuration.
+
+    Returns:
+        A copy with ``score``, ``filters_ok``, ``candidate`` and ``rank``, best first.
+
+    """
+    out = scores.copy()
+    out["score"] = out["ssd"]
+    out["filters_ok"] = True
+    return _flag_top_n(out, config.n_top, tiebreak="spread_std")
+
+
+# --------------------------------------------------------------------------- selection
+
+
+def select_pairs(
+    prices: pd.DataFrame,
+    universe: pd.DataFrame,
+    config: SelectionConfig,
+    formation_start: str = DEFAULT_FORMATION_START,
+    formation_end: str = DEFAULT_FORMATION_END,
+    n_jobs: int = 1,
+) -> pd.DataFrame:
+    """Score every same-group pair on the formation window and flag the top-N candidates.
+
+    Args:
+        prices: Wide adjusted closes (dates x tickers). May extend beyond the window; later
+            data is cut off before any estimate is made.
+        universe: Frame indexed by ticker with columns ``sector`` and ``sub_industry``.
+        config: Which method, grouping and N to use.
+        formation_start: First day of the formation window, inclusive.
+        formation_end: Last day of the formation window, inclusive.
+        n_jobs: Worker processes for the cointegration tests.
+
+    Returns:
+        One row per pair scored, columns :data:`RESULT_COLUMNS` (method-specific columns are
+        NaN for the other method), candidates first.
+
+    """
+    window = formation_window(prices, formation_start, formation_end, config.min_obs)
+    usable = universe[universe.index.isin(window.columns)]
+    pairs = same_group_pairs(usable[config.grouping])
+    logger.info(
+        "%s: scoring %d same-%s pairs on %d days",
+        config.method,
+        len(pairs),
+        config.grouping,
+        len(window),
+    )
+    if config.method == "cointegration":
+        ranked = rank_cointegration(cointegration_scores(window, pairs, n_jobs), config)
+    else:
+        ranked = rank_distance(distance_scores(window, pairs), config)
+    ranked["sector"] = ranked["ticker_y"].map(usable["sector"])
+    ranked["sub_industry"] = ranked["ticker_y"].map(usable["sub_industry"])
+    return ranked.reindex(columns=RESULT_COLUMNS)
+
+
+def summarize(scores: pd.DataFrame) -> dict[str, int]:
+    """Headline counts for one selection run (these go into the trials log).
+
+    Args:
+        scores: Output of :func:`select_pairs`.
+
+    Returns:
+        ``tickers``, ``tested``, ``pass_raw``, ``pass_bh``, ``eligible`` and ``candidates``.
+        The two ``pass_*`` counts are 0 for the distance method, which runs no tests.
+
+    """
+    tickers = set(scores["ticker_y"]) | set(scores["ticker_x"])
+    return {
+        "tickers": len(tickers),
+        "tested": len(scores),
+        "pass_raw": int(scores["pass_raw"].eq(True).sum()),
+        "pass_bh": int(scores["pass_bh"].eq(True).sum()),
+        "eligible": int(scores["filters_ok"].sum()),
+        "candidates": int(scores["candidate"].sum()),
+    }
+
+
+# --------------------------------------------------------------------------- trials log
+
+
+def config_id(config: Mapping[str, object]) -> str:
+    """Short stable hash identifying a configuration (same parameters -> same id).
+
+    Args:
+        config: Parameters, e.g. from :meth:`SelectionConfig.as_dict`.
+
+    Returns:
+        The first 12 hex characters of the SHA-256 of the sorted JSON.
+
+    """
+    blob = json.dumps(dict(config), sort_keys=True, default=str)
+    return hashlib.sha256(blob.encode()).hexdigest()[:12]
+
+
+def log_trial(
+    path: Path | str,
+    config: Mapping[str, object],
+    formation_start: str,
+    formation_end: str,
+    summary: Mapping[str, object],
+    note: str = "",
+) -> str:
+    """Append one selection run to the JSON-lines trials log.
+
+    The log is append-only and git-tracked, so a trial cannot quietly disappear. Running the
+    same configuration again (or on another walk-forward window) adds a line but not a new
+    trial: :func:`count_trials` counts distinct configurations.
+
+    Args:
+        path: The ``.jsonl`` file (created with its parent directory if missing).
+        config: The configuration parameters.
+        formation_start: First day of the formation window.
+        formation_end: Last day of the formation window.
+        summary: Headline counts, e.g. from :func:`summarize`.
+        note: Free text, e.g. why this configuration was tried.
+
+    Returns:
+        The configuration id.
+
+    """
+    cid = config_id(config)
+    record = {
+        "logged_at": datetime.now(UTC).isoformat(timespec="seconds"),
+        "config_id": cid,
+        "config": dict(config),
+        "formation_start": formation_start,
+        "formation_end": formation_end,
+        "summary": dict(summary),
+        "note": note,
+    }
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with target.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(record, sort_keys=True) + "\n")
+    return cid
+
+
+def read_trials(path: Path | str) -> pd.DataFrame:
+    """Read the trials log into a DataFrame (empty if the file does not exist).
+
+    Args:
+        path: The ``.jsonl`` file.
+
+    Returns:
+        One row per logged run.
+
+    """
+    target = Path(path)
+    if not target.exists():
+        return pd.DataFrame(columns=["logged_at", "config_id", "config", "summary"])
+    lines = [json.loads(line) for line in target.read_text().splitlines() if line.strip()]
+    return pd.DataFrame(lines)
+
+
+def count_trials(path: Path | str) -> int:
+    """Count distinct selection configurations ever tried (input to the deflated Sharpe).
+
+    Args:
+        path: The ``.jsonl`` file.
+
+    Returns:
+        Count of distinct ``config_id`` values.
+
+    """
+    trials = read_trials(path)
+    return int(trials["config_id"].nunique()) if len(trials) else 0
 
 
 # --------------------------------------------------------------------------- storage
 
 
-def load_prices(db_path: Path | str, start: str, end: str) -> tuple[pd.DataFrame, pd.Series]:
-    """Read prices for ``[start, end]`` and the sector map from the DuckDB file.
+def load_prices(db_path: Path | str, start: str, end: str) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Read prices for ``[start, end]`` and the GICS labels from the DuckDB file.
 
     The date filter is in the SQL, so data after ``end`` never even reaches Python.
 
@@ -488,7 +752,8 @@ def load_prices(db_path: Path | str, start: str, end: str) -> tuple[pd.DataFrame
         end: Last date, inclusive.
 
     Returns:
-        ``(prices, sectors)``: wide adjusted closes and a ticker -> sector Series.
+        ``(prices, universe)``: wide adjusted closes, and a frame indexed by ticker with
+        columns ``sector`` and ``sub_industry``.
 
     """
     con = duckdb.connect(str(db_path), read_only=True)
@@ -497,49 +762,110 @@ def load_prices(db_path: Path | str, start: str, end: str) -> tuple[pd.DataFrame
             "SELECT ticker, date, adj_close FROM prices WHERE date BETWEEN ? AND ?",
             [start, end],
         ).df()
-        tickers = con.execute("SELECT ticker, sector FROM tickers").df()
+        universe = con.execute("SELECT ticker, sector, sub_industry FROM tickers").df()
     finally:
         con.close()
     prices = long.pivot(index="date", columns="ticker", values="adj_close").sort_index()
     prices.index = pd.to_datetime(prices.index)
-    sectors = tickers.set_index("ticker")["sector"]
-    return prices, sectors
+    return prices, universe.set_index("ticker")
 
 
-def save_selection(
-    db_path: Path | str, selection: pd.DataFrame, formation_start: str, formation_end: str
+def save_scores(
+    db_path: Path | str,
+    scores: pd.DataFrame,
+    config: SelectionConfig,
+    formation_start: str,
+    formation_end: str,
 ) -> None:
-    """Store the results in the ``pair_selection`` table.
+    """Store every scored pair in the ``pair_scores`` table.
 
-    Rows for the same formation window are replaced, so reruns never duplicate data, while
-    results for other windows (later walk-forward steps) are kept.
+    Rows for the same configuration and window are replaced, so reruns never duplicate
+    data; other configurations and windows are kept side by side for comparison.
 
     Args:
         db_path: DuckDB file.
-        selection: Output of :func:`select_pairs`.
+        scores: Output of :func:`select_pairs`.
+        config: The configuration that produced ``scores``.
         formation_start: First day of the formation window.
         formation_end: Last day of the formation window.
 
     """
-    frame = selection.copy()
+    cid = config_id(config.as_dict())
+    frame = scores.copy()
     frame["half_life"] = frame["half_life"].replace([np.inf], np.nan)  # NULL = no reversion
-    frame.insert(0, "formation_end", pd.Timestamp(formation_end).date())
-    frame.insert(0, "formation_start", pd.Timestamp(formation_start).date())
+    for col in ["pass_raw", "pass_bh"]:
+        frame[col] = frame[col].astype("boolean")
+    meta = {
+        "config_id": cid,
+        "method": config.method,
+        "grouping": config.grouping,
+        "formation_start": pd.Timestamp(formation_start).date(),
+        "formation_end": pd.Timestamp(formation_end).date(),
+    }
+    for i, (name, value) in enumerate(meta.items()):
+        frame.insert(i, name, value)
     con = duckdb.connect(str(db_path))
     try:
-        con.execute(SELECTION_TABLE_SQL)
+        con.execute(SCORES_TABLE_SQL)
         con.execute(
-            "DELETE FROM pair_selection WHERE formation_start = ? AND formation_end = ?",
-            [formation_start, formation_end],
+            "DELETE FROM pair_scores "
+            "WHERE config_id = ? AND formation_start = ? AND formation_end = ?",
+            [cid, formation_start, formation_end],
         )
-        con.register("selection_df", frame)
-        cols = ", ".join(["formation_start", "formation_end", *RESULT_COLUMNS])
-        con.execute(f"INSERT INTO pair_selection ({cols}) SELECT {cols} FROM selection_df")
+        con.register("scores_df", frame)
+        cols = ", ".join([*meta, *RESULT_COLUMNS])
+        con.execute(f"INSERT INTO pair_scores ({cols}) SELECT {cols} FROM scores_df")
     finally:
         con.close()
 
 
+def run_selection(
+    db_path: Path | str,
+    config: SelectionConfig,
+    formation_start: str,
+    formation_end: str,
+    trials_path: Path | str = DEFAULT_TRIALS_PATH,
+    n_jobs: int = 1,
+    note: str = "",
+) -> tuple[pd.DataFrame, dict[str, int]]:
+    """Load, select, save to DuckDB and append to the trials log.
+
+    Args:
+        db_path: DuckDB file with ``prices`` and ``tickers``.
+        config: The selection configuration.
+        formation_start: First day of the formation window, inclusive.
+        formation_end: Last day of the formation window, inclusive.
+        trials_path: The trials log.
+        n_jobs: Worker processes for the cointegration tests.
+        note: Free text stored with the trial.
+
+    Returns:
+        ``(scores, summary)``.
+
+    """
+    prices, universe = load_prices(db_path, formation_start, formation_end)
+    scores = select_pairs(prices, universe, config, formation_start, formation_end, n_jobs)
+    save_scores(db_path, scores, config, formation_start, formation_end)
+    summary = summarize(scores)
+    log_trial(trials_path, config.as_dict(), formation_start, formation_end, summary, note)
+    return scores, summary
+
+
 # --------------------------------------------------------------------------- CLI
+
+DISPLAY_COLUMNS = {
+    "cointegration": [
+        "rank",
+        "ticker_y",
+        "ticker_x",
+        "sub_industry",
+        "hedge_ratio",
+        "eg_pvalue",
+        "q_value",
+        "half_life",
+    ],
+    "distance": ["rank", "ticker_y", "ticker_x", "sub_industry", "ssd", "spread_std", "half_life"],
+}
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -555,46 +881,36 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m pairslab.selection", description=__doc__)
     parser.add_argument("--start", default=DEFAULT_FORMATION_START, help="formation start")
     parser.add_argument("--end", default=DEFAULT_FORMATION_END, help="formation end (inclusive)")
+    parser.add_argument("--method", choices=[*METHODS, "both"], default="both")
+    parser.add_argument("--grouping", choices=GROUPINGS, default="sub_industry")
+    parser.add_argument("--top", type=int, default=DEFAULT_N_TOP, help="N candidates")
     parser.add_argument("--db", default=str(DEFAULT_DB_PATH))
-    parser.add_argument("--alpha", type=float, default=DEFAULT_ALPHA)
+    parser.add_argument("--trials-log", default=str(DEFAULT_TRIALS_PATH))
     parser.add_argument("--jobs", type=int, default=4, help="worker processes")
-    parser.add_argument("--top", type=int, default=10)
+    parser.add_argument("--note", default="", help="why this configuration is being tried")
     args = parser.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
-    prices, sectors = load_prices(args.db, args.start, args.end)
-    selection = select_pairs(
-        prices, sectors, args.start, args.end, alpha=args.alpha, n_jobs=args.jobs
-    )
-    save_selection(args.db, selection, args.start, args.end)
-
-    s = summarize(selection, args.alpha)
-    print(f"pairs tested:                         {s.tested:,}")
-    print(f"expected false positives at p<{args.alpha}: {s.expected_false_positives_raw:,.0f}")
-    print(f"pass raw Engle-Granger p<{args.alpha}:     {s.pass_raw:,}")
-    print(f"  ... and half-life in [1, 60]:        {s.pass_raw_and_half_life:,}")
-    print(f"pass Benjamini-Hochberg q<{args.alpha}:    {s.pass_bh:,}")
-    print(f"  ... and half-life + beta>0 (final):  {s.selected:,}")
-    top = selection[selection["selected"]].head(args.top)
-    if top.empty:
-        print(
-            f"\nNo pair survives the FDR correction. Nearest {args.top} candidates by raw "
-            "p-value (NOT statistically significant after correction):"
+    methods = METHODS if args.method == "both" else (args.method,)
+    for method in methods:
+        config = SelectionConfig(method=method, grouping=args.grouping, n_top=args.top)
+        scores, s = run_selection(
+            args.db, config, args.start, args.end, args.trials_log, args.jobs, args.note
         )
-        top = selection.sort_values("eg_pvalue").head(args.top)
-    cols = [
-        "rank",
-        "ticker_y",
-        "ticker_x",
-        "sector",
-        "hedge_ratio",
-        "eg_pvalue",
-        "q_value",
-        "adf_pvalue",
-        "half_life",
-    ]
-    with pd.option_context("display.width", 160, "display.float_format", "{:.4g}".format):
-        print(top[cols].to_string(index=False))
+        print(f"\n=== {method} | same {args.grouping} | {args.start} to {args.end} ===")
+        print(f"tickers {s['tickers']} | pairs scored {s['tested']:,}")
+        if method == "cointegration":
+            print(
+                f"raw p<{config.alpha}: {s['pass_raw']} "
+                f"(chance alone: ~{config.alpha * s['tested']:.0f}) | "
+                f"BH q<{config.alpha}: {s['pass_bh']} | "
+                f"pass half-life + beta>0 filters: {s['eligible']}"
+            )
+        print(f"top {s['candidates']} CANDIDATES (ranked, not significance-tested):")
+        top = scores[scores["candidate"]][DISPLAY_COLUMNS[method]]
+        with pd.option_context("display.width", 160, "display.float_format", "{:.4g}".format):
+            print(top.to_string(index=False))
+    print(f"\ndistinct configurations tried so far: {count_trials(args.trials_log)}")
     return 0
 
 
