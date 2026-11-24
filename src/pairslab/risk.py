@@ -56,8 +56,11 @@ risk analysis of the realised returns, not a trading signal, so look-ahead in th
 using future data to trade does not arise; the automatic block length uses the whole sample,
 which is fine for describing it.
 
-Pure NumPy, written so the hot loop (:func:`bootstrap_risk`) can be ported to C++ next: the
-timing of every stage is recorded in the result.
+**Two backends.** The NumPy code here is the reference. ``backend="cpp"`` runs the same hot
+loop in C++ (``cpp/risk_core.hpp``, bound with pybind11, wrapped in :mod:`pairslab.risk_cpp`):
+it draws the same random numbers (an exact copy of NumPy's PCG64), so it simulates the same
+histories, and its statistics agree with NumPy's to rounding. The timing of every stage is
+recorded in the result; ``bench/bench_risk.py`` compares the two.
 """
 
 from __future__ import annotations
@@ -65,10 +68,11 @@ from __future__ import annotations
 import argparse
 import math
 import time
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from statistics import NormalDist
+from types import ModuleType
 
 import duckdb
 import numpy as np
@@ -90,6 +94,25 @@ N_WINDOWS = 18
 CI_LEVEL = 0.95
 ALT_BLOCK = 40.0  # shown next to the automatic block length for the tail statistics
 STAGES = ("indices", "gather", "tail_1d", "tail_10d", "drawdown", "sharpe")
+BACKENDS = ("numpy", "cpp")
+
+
+def _cpp_backend(backend: str) -> ModuleType | None:
+    """Return :mod:`pairslab.risk_cpp` for ``"cpp"``, ``None`` for ``"numpy"``.
+
+    Imported only when asked for, so the NumPy path works even without the compiled module.
+
+    Raises:
+        ValueError: For any other backend name.
+
+    """
+    if backend not in BACKENDS:
+        raise ValueError(f"backend must be one of {BACKENDS}, got {backend!r}")
+    if backend == "numpy":
+        return None
+    from pairslab import risk_cpp
+
+    return risk_cpp
 
 
 # --------------------------------------------------------------------------- loading
@@ -206,7 +229,11 @@ def politis_white_block_length(returns: Sequence[float] | np.ndarray) -> float:
 
 
 def stationary_bootstrap_indices(
-    n_obs: int, n_paths: int, mean_block: float, rng: np.random.Generator
+    n_obs: int,
+    n_paths: int,
+    mean_block: float,
+    rng: np.random.Generator,
+    backend: str = "numpy",
 ) -> np.ndarray:
     """Draw the day indices of ``n_paths`` stationary-bootstrap histories.
 
@@ -219,7 +246,9 @@ def stationary_bootstrap_indices(
         n_obs: Length of the original series and of each history.
         n_paths: Number of histories.
         mean_block: Mean block length ``b`` (>= 1; 1 means independent days).
-        rng: Random generator.
+        rng: Random generator (PCG64 for the C++ backend).
+        backend: ``"numpy"`` or ``"cpp"``; both give identical indices and leave ``rng`` in
+            the same state.
 
     Returns:
         Integer array ``(n_paths, n_obs)`` of positions in ``0..n_obs-1``.
@@ -230,6 +259,9 @@ def stationary_bootstrap_indices(
     """
     if mean_block < 1.0:
         raise ValueError("mean_block must be at least 1")
+    cpp = _cpp_backend(backend)
+    if cpp is not None:
+        return cpp.stationary_bootstrap_indices(n_obs, n_paths, mean_block, rng)
     restart = rng.random((n_paths, n_obs)) < 1.0 / mean_block
     restart[:, 0] = True
     fresh = rng.integers(0, n_obs, size=(n_paths, n_obs))
@@ -249,7 +281,7 @@ def tail_count(n_obs: int, alpha: float) -> int:
 
 
 def tail_risk(
-    samples: np.ndarray, alphas: Sequence[float] = ALPHAS
+    samples: np.ndarray, alphas: Sequence[float] = ALPHAS, backend: str = "numpy"
 ) -> dict[float, tuple[np.ndarray, np.ndarray]]:
     """Empirical VaR and CVaR (as positive losses) of every row of ``samples``.
 
@@ -261,6 +293,7 @@ def tail_risk(
     Args:
         samples: ``(n_rows, n)`` returns.
         alphas: Confidence levels, e.g. 0.95 and 0.99.
+        backend: ``"numpy"`` or ``"cpp"`` (one pass with a heap instead of partitioning).
 
     Returns:
         ``{alpha: (var, cvar)}``, each a vector with one value per row.
@@ -273,6 +306,10 @@ def tail_risk(
     counts = {a: tail_count(n, a) for a in alphas}
     if max(counts.values()) > n:
         raise ValueError("tail larger than the sample")
+    cpp = _cpp_backend(backend)
+    if cpp is not None:
+        pairs = cpp.tail_risk(samples, 1, [counts[a] for a in alphas])
+        return dict(zip(alphas, pairs, strict=True))
     out: dict[float, tuple[np.ndarray, np.ndarray]] = {}
     work = samples
     for alpha in sorted(alphas, key=lambda a: counts[a], reverse=True):  # widest tail first
@@ -315,14 +352,16 @@ def stat_name(kind: str, horizon: int, alpha: float) -> str:
 def path_statistics(
     paths: np.ndarray,
     timings: dict[str, float] | None = None,
+    backend: str = "numpy",
 ) -> dict[str, np.ndarray]:
     """Risk statistics of each row of ``paths`` (one row = one history of daily returns).
 
-    This is the numerical core that is meant to move to C++.
+    This is the numerical core; ``backend="cpp"`` runs each stage in C++.
 
     Args:
         paths: ``(n_paths, T)`` daily returns, all above -1.
         timings: If given, seconds spent in each stage are added to this dict.
+        backend: ``"numpy"`` or ``"cpp"``.
 
     Returns:
         ``var_1d_95``, ``cvar_1d_95``, ... for both horizons and levels, plus ``max_drawdown``
@@ -336,6 +375,10 @@ def path_statistics(
         now = time.perf_counter()
         clock[stage] = clock.get(stage, 0.0) + (now - start)
         return now
+
+    cpp = _cpp_backend(backend)
+    if cpp is not None:
+        return _path_statistics_cpp(cpp, paths, tick)
 
     out: dict[str, np.ndarray] = {}
     t0 = time.perf_counter()
@@ -359,6 +402,29 @@ def path_statistics(
     return out
 
 
+def _path_statistics_cpp(
+    cpp: ModuleType, paths: np.ndarray, tick: Callable[[str, float], float]
+) -> dict[str, np.ndarray]:
+    """C++ stages of :func:`path_statistics`, timed under the same stage names."""
+    paths = np.ascontiguousarray(paths, dtype=float)
+    out: dict[str, np.ndarray] = {}
+    t0 = time.perf_counter()
+    for horizon in HORIZONS:
+        if horizon > paths.shape[1]:
+            raise ValueError("window longer than the paths")
+        n = paths.shape[1] - horizon + 1
+        counts = [tail_count(n, a) for a in ALPHAS]
+        for alpha, (var, cvar) in zip(ALPHAS, cpp.tail_risk(paths, horizon, counts), strict=True):
+            out[stat_name("var", horizon, alpha)] = var
+            out[stat_name("cvar", horizon, alpha)] = cvar
+        t0 = tick(f"tail_{horizon}d", t0)
+    out["max_drawdown"], out["final_return"] = cpp.drawdown(paths)
+    t0 = tick("drawdown", t0)
+    out["sharpe"] = cpp.sharpe(paths, float(PERIODS_PER_YEAR))
+    tick("sharpe", t0)
+    return out
+
+
 @dataclass
 class BootstrapResult:
     """Output of :func:`bootstrap_risk`.
@@ -369,6 +435,7 @@ class BootstrapResult:
         n_paths: Number of histories.
         mean_block: Mean block length ``b`` used.
         seed: Random seed.
+        backend: ``"numpy"`` or ``"cpp"``.
         stats: Statistic name -> vector of ``n_paths`` simulated values.
         observed: Statistic name -> value on the real series (same estimator).
         timings: Stage name -> seconds (indices, gather, tail_1d, tail_10d, drawdown, sharpe,
@@ -381,6 +448,7 @@ class BootstrapResult:
     n_paths: int
     mean_block: float
     seed: int
+    backend: str
     stats: dict[str, np.ndarray] = field(repr=False)
     observed: dict[str, float] = field(repr=False)
     timings: dict[str, float] = field(repr=False)
@@ -393,12 +461,13 @@ def bootstrap_risk(
     mean_block: float | None = None,
     seed: int = DEFAULT_SEED,
     chunk_size: int = CHUNK_SIZE,
+    backend: str = "numpy",
 ) -> BootstrapResult:
     """Simulate ``n_paths`` histories by stationary bootstrap and measure their risk.
 
     Histories are generated and measured ``chunk_size`` at a time to keep memory small (one
     chunk of 1,000 histories of 2,262 days is 18 MB per array). For a fixed seed and chunk
-    size the result is exactly reproducible.
+    size the result is exactly reproducible, and both backends simulate the same histories.
 
     Args:
         returns: Real daily returns (all above -1; more than 20 of them).
@@ -407,17 +476,19 @@ def bootstrap_risk(
         mean_block: Mean block length in days, or ``None`` for the Politis-White choice.
         seed: Seed of the random generator.
         chunk_size: Histories per batch.
+        backend: ``"numpy"`` (reference) or ``"cpp"`` (same histories, faster).
 
     Returns:
         A :class:`BootstrapResult`.
 
     Raises:
-        ValueError: If a return is -100% or lower.
+        ValueError: If a return is -100% or lower (or NaN), or the backend is unknown.
 
     """
-    r = np.asarray(returns, dtype=float)
+    r = np.ascontiguousarray(returns, dtype=float)
     if not (r > -1.0).all():
         raise ValueError("returns must all be above -1")
+    cpp = _cpp_backend(backend)
     n = len(r)
     block = politis_white_block_length(r) if mean_block is None else float(mean_block)
     rng = np.random.default_rng(seed)
@@ -427,16 +498,16 @@ def bootstrap_risk(
     for first in range(0, n_paths, chunk_size):
         size = min(chunk_size, n_paths - first)
         t0 = time.perf_counter()
-        idx = stationary_bootstrap_indices(n, size, block, rng)
+        idx = stationary_bootstrap_indices(n, size, block, rng, backend)
         t1 = time.perf_counter()
-        paths = r[idx]
+        paths = r[idx] if cpp is None else cpp.gather(r, idx)
         timings["indices"] += t1 - t0
         timings["gather"] += time.perf_counter() - t1
-        chunks.append(path_statistics(paths, timings))
+        chunks.append(path_statistics(paths, timings, backend))
     timings["total"] = time.perf_counter() - start
     stats = {k: np.concatenate([c[k] for c in chunks]) for k in chunks[0]}
-    observed = {k: float(v[0]) for k, v in path_statistics(r[None, :]).items()}
-    return BootstrapResult(variant, n, n_paths, block, seed, stats, observed, timings)
+    observed = {k: float(v[0]) for k, v in path_statistics(r[None, :], backend=backend).items()}
+    return BootstrapResult(variant, n, n_paths, block, seed, backend, stats, observed, timings)
 
 
 # --------------------------------------------------------------------------- summaries
@@ -545,6 +616,7 @@ def block_sensitivity(
     blocks: Sequence[float] = SENSITIVITY_BLOCKS,
     n_paths: int = N_PATHS,
     seed: int = DEFAULT_SEED,
+    backend: str = "numpy",
 ) -> pd.DataFrame:
     """Rerun the bootstrap for several block lengths to see how much the answer depends on it.
 
@@ -556,6 +628,7 @@ def block_sensitivity(
         blocks: Mean block lengths to try (1 = independent days).
         n_paths: Histories per block length.
         seed: Random seed.
+        backend: ``"numpy"`` or ``"cpp"``.
 
     Returns:
         One row per block length: Sharpe interval, drawdown median and upper end, final-return
@@ -564,7 +637,7 @@ def block_sensitivity(
     """
     rows = []
     for b in blocks:
-        res = bootstrap_risk(returns, variant, n_paths, float(b), seed)
+        res = bootstrap_risk(returns, variant, n_paths, float(b), seed, backend=backend)
         s_lo, s_hi = percentile_interval(res.stats["sharpe"])
         f_lo, f_hi = percentile_interval(res.stats["final_return"])
         d_lo, d_hi = percentile_interval(res.stats["max_drawdown"])
@@ -705,6 +778,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--alt-block", type=float, default=ALT_BLOCK, help="second block length for the tail table"
     )
     parser.add_argument("--no-sensitivity", action="store_true", help="skip other block lengths")
+    parser.add_argument(
+        "--backend", choices=BACKENDS, default="numpy", help="numpy (reference) or cpp (faster)"
+    )
     args = parser.parse_args(argv)
     out_dir = Path(args.results_dir)
 
@@ -712,12 +788,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     first = series[VARIANTS[0]]
     print(f"{len(first)} out-of-sample days, {first.index[0].date()} to {first.index[-1].date()}")
 
-    results = [bootstrap_risk(series[v], v, args.paths, args.block, args.seed) for v in VARIANTS]
+    def run(v: str, block: float | None) -> BootstrapResult:
+        return bootstrap_risk(series[v], v, args.paths, block, args.seed, backend=args.backend)
+
+    results = [run(v, args.block) for v in VARIANTS]
     summary = pd.concat([summarize(res) for res in results], ignore_index=True)
     summary.to_csv(out_dir / "risk_summary.csv", index=False)
-    alt_results = [
-        bootstrap_risk(series[v], v, args.paths, args.alt_block, args.seed) for v in VARIANTS
-    ]
+    alt_results = [run(v, args.alt_block) for v in VARIANTS]
     tails = pd.concat(
         [tail_comparison(m, a) for m, a in zip(results, alt_results, strict=True)],
         ignore_index=True,
@@ -735,7 +812,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     sens = None
     if not args.no_sensitivity:
         sens = pd.concat(
-            [block_sensitivity(series[v], v, n_paths=args.paths, seed=args.seed) for v in VARIANTS],
+            [
+                block_sensitivity(series[v], v, n_paths=args.paths, seed=args.seed,
+                                  backend=args.backend)
+                for v in VARIANTS
+            ],
             ignore_index=True,
         )
         sens.to_csv(out_dir / "risk_block_sensitivity.csv", index=False)

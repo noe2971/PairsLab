@@ -4,10 +4,18 @@ on: [push, pull_request]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]  # GCC on Linux, Apple Clang on macOS
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
+      # uv sync builds the project with scikit-build-core, which runs CMake and compiles the
+      # C++ extension (cpp/) with pybind11.
       - run: uv sync
+      - name: Check the C++ extension was built and imports
+        run: uv run python -c "import pairslab._risk_cpp as m; print(m.__file__)"
       - run: uv run ruff check .
       - run: uv run pytest
