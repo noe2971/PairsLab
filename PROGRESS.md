@@ -224,3 +224,118 @@ before any backtest; to be implemented in Step 4)**
 - Correction to the session-5 explanation: Kalman does not "track" a beta break quickly.
   When log x moves little, alpha and beta are nearly collinear, so beta adapts slowly. On a
   realistic break it gets partway in 400 days even at delta 1e-4 (100x the locked value).
+
+## Session 7 (2026-11-24): event-driven backtester and the first out-of-sample window
+
+**Done**
+- `src/pairslab/backtest/`: `events.py` (MarketEvent, SignalEvent, OrderEvent, FillEvent),
+  `feed.py` (bar feed: releases one bar at a time, drops rows after the window), `strategy.py`
+  (PairsStrategy: one online signal per pair), `portfolio.py` (cash, positions, equity,
+  sizing, gross limit, borrow, trade log, rule 10), `execution.py` (CostModel, next-close
+  fills, commission, slippage), `engine.py` (FIFO event loop), `metrics.py`, `store.py`
+  (DuckDB tables `runs`, `trades`, `equity_curve`), `run.py` + `__main__.py` (CLI).
+- `signals.py`: rules 7 and 8 implemented in a step-wise `PositionMachine`; the Kalman filter
+  is now a `KalmanHedge` class fed one observation at a time (output bit-for-bit identical
+  to before, checked); new `OnlinePairSignal` computes the signal bar by bar.
+- 39 new tests (151 in total). Key ones: a 3-trade example worked out by hand (every
+  trade's P&L, costs and borrow, and the equity curve on all 10 days); costs strictly lower
+  returns vs a zero-cost run, with identical trade dates; look-ahead test (all prices after t
+  scrambled: equity and fills up to t bit-for-bit identical); a next-close order cannot fill
+  on its own bar; the online signal equals the vectorized one; rules 7, 8 and 10; gross
+  limit rejects and scales. Both look-ahead tests were checked to fail when a leak (the feed
+  publishing tomorrow's close as today's) is planted.
+- Cross-check on real data: per-trade gross returns rebuilt from `build_pair_signals` alone
+  match the engine to 1e-16, with identical entry/exit dates and reasons, for all three
+  variants.
+- 12 runs stored in DuckDB (commit ca5101b, clean tree): 3 variants x 4 cost levels.
+- Plot: `results/backtest_2017H1_equity.png`.
+
+**Results: formation 2015-2016, trading 2017-01-03 to 2017-06-30 (125 days), $1M, 2x gross limit**
+
+| variant | costs | return | CAGR | Sharpe | Sortino | max DD | turnover/yr | trades | hit | hold (days) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| trial 4, OLS hedge | zero | -0.75% | -1.5% | -0.34 | -0.49 | 5.3% | 25.8x | 63 | 56% | 17.8 |
+| trial 4, OLS hedge | base (5 bps) | -1.52% | -3.0% | -0.71 | -0.99 | 5.7% | 25.9x | 63 | 52% | 17.8 |
+| trial 4, OLS hedge | 10 bps | -2.15% | -4.3% | -1.02 | -1.40 | 6.1% | 25.9x | 63 | 49% | 17.8 |
+| trial 4, OLS hedge | 20 bps | -3.39% | -6.7% | -1.63 | -2.17 | 6.8% | 25.9x | 63 | 44% | 17.8 |
+| trial 4, Kalman hedge | zero | -0.46% | -0.9% | -0.23 | -0.32 | 4.6% | 29.4x | 72 | 57% | 15.2 |
+| trial 4, Kalman hedge | base (5 bps) | -1.30% | -2.6% | -0.69 | -0.93 | 5.1% | 29.5x | 72 | 53% | 15.2 |
+| trial 4, Kalman hedge | 10 bps | -2.02% | -4.0% | -1.08 | -1.44 | 5.5% | 29.5x | 72 | 49% | 15.2 |
+| trial 4, Kalman hedge | 20 bps | -3.44% | -6.8% | -1.87 | -2.39 | 6.3% | 29.5x | 72 | 42% | 15.2 |
+| trial 5, distance | zero | -2.62% | -5.2% | -2.97 | -3.42 | 2.9% | 4.4x | 11 | 18% | 65.9 |
+| trial 5, distance | base (5 bps) | -2.80% | -5.6% | -3.15 | -3.59 | 3.0% | 4.4x | 11 | 18% | 65.9 |
+| trial 5, distance | 10 bps | -2.91% | -5.8% | -3.23 | -3.67 | 3.1% | 4.4x | 11 | 18% | 65.9 |
+| trial 5, distance | 20 bps | -3.13% | -6.2% | -3.38 | -3.80 | 3.3% | 4.4x | 11 | 18% | 65.9 |
+
+Base-case P&L split (dollars): OLS gross -7,516, commission + slippage 6,342, borrow 1,324;
+Kalman gross -4,552, 7,235, 1,234; distance gross -26,229, 1,086, 722.
+
+**What the numbers say**
+- Every variant lost money in this window, even with zero costs. Costs roughly double the
+  cointegration losses (turnover is about 26-29x a year, so 5 bps per side costs about
+  0.65% per half year in trading costs plus about 0.13% in borrow).
+- The one-day delay (rule 1) costs the whole edge. For the OLS hedge, on the 58 trades that
+  ended with a normal exit, the log spread moved +49 bps in our favour between the entry and
+  exit *signal* closes (64% positive), but -5 bps between the *fill* closes one day later
+  (57% positive). Much of the measured reversion happens on the day right after the signal:
+  bid-ask bounce or very short-term reversal, which is exactly why Gatev et al. wait a day.
+  (Not computed for the Kalman hedge: its spread is the filter's forecast error, not the
+  spread of the portfolio held.)
+- Distance (GGR): only 11 of 20 pairs ever crossed 2 formation standard deviations, none
+  converged ("prices cross") within the 6 months, so all 11 were closed by rule 7 at a loss.
+- Rule 9 check: the Kalman beta moved between entry and exit by a median 0.009, 75th
+  percentile 0.029, max 0.156 (GPN/V: beta 2.08 at entry, 1.92 at exit; 1.72 by end of
+  June). The session-6 estimate (about 0.03 in 6 months, from BAX/ISRG) holds for most
+  trades but not all.
+- Rule 10 never triggered (no missing prices in these 40 tickers); no order was rejected or
+  scaled by the gross limit; no end-of-window entry (rule 8) and no safety-net liquidation.
+- One window of 125 days is far too short to conclude anything (the Sharpe ratio's standard
+  error over half a year is about 1.4). This is a first data point for the walk-forward.
+
+**Decisions and why** (all made before the first backtest result was seen)
+- Sizing: gross budget per pair = 2.0 x equity / 20 (the max-gross limit split evenly over
+  the 20 candidates), equity measured at the signal close; legs $1 of y : $beta of x
+  (rule 2). The spec asked for "dollar-neutral sizing per pair". That holds exactly for
+  distance pairs (beta = 1); for cointegration pairs the locked rule 2 was followed instead
+  (beta-weighted legs: equal *return* exposure, not equal dollars). Flagged below.
+- Opening orders are in dollars, converted to shares at the fill price (rule 2 says "$1 of y
+  at the fill"); closing orders are the exact shares held. Fractional shares allowed.
+- Costs: commission and slippage are both proportional to traded notional, so only their
+  sum matters; the base 5 bps is split 2.5 + 2.5. Slippage is applied to the fill price.
+  The "zero" run has no borrow either; the 10 and 20 bps runs keep 0.5% borrow.
+- Borrow is charged each morning for the night just ended, on the short leg's value at
+  the previous close: a trade filled at close a and closed at close b pays b - a nights.
+- Gross limit check at the signal close counts open positions plus orders still waiting to
+  fill; a trade that does not fit is shrunk, or rejected if there is no room.
+- Each pair's legs are booked separately (no netting of a ticker shared by two pairs), as
+  in GGR. Cash earns no interest; Sharpe uses a zero risk-free rate.
+- The strategy is incremental (`OnlinePairSignal`), not a re-run of the vectorized code on a
+  growing window: that is what a live system would do, it is much faster (re-running the
+  Kalman filter from scratch costs about 6 ms per pair per bar), and agreement with the
+  vectorized code is a test. The z-scores agree within the tested 1e-9 relative tolerance
+  (pandas and numpy add up in a different order), positions and events exactly.
+- Within a day, events are processed oldest first, so yesterday's fills are booked before
+  today's signals are sized (the day-7 entry in the hand example is sized on the equity
+  after the day-7 exit fill).
+- Rule 7 also beats an exit or stop signalled on the last day (that fill would land after
+  the window). Rule 8 only applies when the window is closed at the end.
+- Runs are append-only in DuckDB with the git commit and a dirty flag, so every stored
+  result can be traced to the exact code.
+- A third table `equity_curve` was added next to `runs` and `trades` (the spec asked for
+  two) so metrics can be recomputed in SQL.
+
+**Open questions**
+- **Trial count.** This session observed P&L for three strategies: trial 4 with OLS, trial 4
+  with Kalman, and trial 5. The hedge choice is a signal parameter, so OLS vs Kalman should
+  count as two trials for the deflated Sharpe ratio (5 selection configurations, of which
+  2 are in use, x hedges). The cost sensitivities are not trials (rule 3). Decide how to log
+  this (proposal from session 5: add the signal parameters to the trials log).
+- **Dollar-neutral vs beta-weighted legs** for cointegration pairs (see decisions). Switching
+  now, after seeing results, would be a new trial.
+- **The one-day delay** removes the edge in this window. Judging that needs the full
+  walk-forward (18 windows), not a change of rules after one window.
+- Rule 9's premise (beta barely moves) fails for a few pairs (GPN/V 0.16).
+- Distance pairs never converged in 6 months: GGR's exit-on-cross may need longer than one
+  trading period in this universe (as already noted, SSD favours low-volatility utilities).
+- Next step: the walk-forward over all 18 windows (selection rerun per window with trials 4
+  and 5), then the deflated Sharpe ratio.
