@@ -71,6 +71,13 @@ Every run goes to DuckDB: `runs` (settings + metrics), `trades` (trade log) and
 SELECT label, round(sharpe, 2) AS sharpe, n_trades FROM runs ORDER BY created_at;
 ```
 
+Seeing a strategy's P&L makes it a trial, so the base-cost run of every variant is also
+appended to [`research/strategy_trials.jsonl`](research/strategy_trials.jsonl). The trial
+count for the deflated Sharpe ratio (`pairslab.trials.count_strategy_trials`) takes each
+selection configuration once if it was never backtested, and once per distinct strategy
+(selection + signal and backtest rules, e.g. OLS vs Kalman hedge) if it was. Windows and
+cost levels are not trials. **Count so far: 6.**
+
 **2017-H1 (first out-of-sample window), base case:** every variant lost money. Trial 4 with
 the OLS hedge -1.5% (Sharpe -0.71, 63 trades), with the Kalman hedge -1.3% (Sharpe -0.69, 72
 trades); trial 5 (distance) -2.8% (Sharpe -3.15, 11 trades, none converged within the

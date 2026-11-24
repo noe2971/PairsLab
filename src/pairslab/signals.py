@@ -579,7 +579,7 @@ def build_pair_signals(
     frame = pd.DataFrame({"price_y": price_y, "price_x": price_x})
     lookback: int | None = None
 
-    hedge = _resolve_hedge(spec.method, hedge)
+    hedge = resolve_hedge(spec.method, hedge)
     if spec.method == "distance":
         gap = pd.Series(np.nan, index=window.index)
         gap[trading] = distance_gap(price_y[trading], price_x[trading])
@@ -587,7 +587,7 @@ def build_pair_signals(
         frame["intercept"] = 0.0
         frame["spread"] = gap
         frame["zscore"] = gap / spec.spread_std
-    else:  # cointegration (_resolve_hedge rejected anything else)
+    else:  # cointegration (resolve_hedge rejected anything else)
         log_y, log_x = np.log(price_y), np.log(price_x)
         if hedge == "ols":
             frame["hedge_ratio"] = spec.hedge_ratio
@@ -654,7 +654,7 @@ class SignalRow:
     event: str
 
 
-def _resolve_hedge(method: str, hedge: str | None) -> str:
+def resolve_hedge(method: str, hedge: str | None) -> str:
     """Check that the hedge fits the selection method and fill in the default."""
     if method == "distance":
         if hedge not in (None, "equal"):
@@ -708,7 +708,7 @@ class OnlinePairSignal:
         days = pd.DatetimeIndex(trading_days)
         if len(days) == 0 or days[0] <= self.spec.formation_end:
             raise ValueError("trading days must be non-empty and after the formation window")
-        self.hedge = _resolve_hedge(self.spec.method, hedge)
+        self.hedge = resolve_hedge(self.spec.method, hedge)
         self.rules = self.config.rules_for(self.spec.method)
         self.lookback: int | None = None
         if self.spec.method == "cointegration":

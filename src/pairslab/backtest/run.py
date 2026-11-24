@@ -5,6 +5,10 @@ rule 4): formation 2015-01-01 to 2016-12-31, trading 2017-01-01 to 2017-06-30, u
 top-20 candidates of selection trials 4 (cointegration, traded with the OLS and the Kalman
 hedge) and 5 (distance). Each is run with zero costs, the base case and the cost
 sensitivities (rule 3).
+
+Looking at a strategy's P&L makes it a trial, so the base-cost run of every variant is
+appended to ``research/strategy_trials.jsonl`` (even with ``--no-save``). The cost
+sensitivities are not logged as trials (rule 3).
 """
 
 from __future__ import annotations
@@ -31,6 +35,12 @@ from pairslab.backtest.store import save_run
 from pairslab.backtest.strategy import PairsStrategy
 from pairslab.data import DEFAULT_DB_PATH
 from pairslab.signals import PairSpec, SignalConfig
+from pairslab.trials import (
+    DEFAULT_STRATEGY_TRIALS_PATH,
+    count_strategy_trials,
+    log_strategy_trial,
+    strategy_config,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -143,6 +153,29 @@ SUMMARY_COLUMNS = {
 }
 
 
+def trial_summary(result: BacktestResult, run_id: str | None) -> dict[str, object]:
+    """Headline results stored with a strategy trial (base-cost run of one window).
+
+    Args:
+        result: The base-cost backtest.
+        run_id: Its id in the ``runs`` table (``None`` if it was not saved).
+
+    Returns:
+        Run id, pairs, trades, total return, Sharpe and daily-return count. The Sharpe
+        ratios of all trials are what the deflated Sharpe ratio needs later.
+
+    """
+    stats = result.metrics
+    return {
+        "run_id": run_id,
+        "n_pairs": result.params.get("n_pairs"),
+        "n_trades": int(stats["n_trades"]),
+        "n_days": int(stats["n_days"]),
+        "total_return": stats["total_return"],
+        "sharpe": stats["sharpe"],
+    }
+
+
 def summary_table(results: Mapping[tuple[str, str], BacktestResult]) -> pd.DataFrame:
     """One row per (variant, cost scenario) with the headline metrics."""
     rows = []
@@ -199,6 +232,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--db", default=str(DEFAULT_DB_PATH))
     parser.add_argument("--no-save", action="store_true", help="do not write to DuckDB")
     parser.add_argument("--plot", default=None, help="PNG path for the equity curves")
+    parser.add_argument("--trials", default=str(DEFAULT_STRATEGY_TRIALS_PATH))
+    parser.add_argument("--note", default="", help="stored with each strategy trial")
     args = parser.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -211,6 +246,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         if candidates.empty:
             raise SystemExit(f"no candidates stored for {variant.config_id}")
+        method = str(candidates["method"].iloc[0])
         for scenario, costs in scenarios.items():
             result = run_backtest(
                 prices, candidates.to_dict("records"), args.trading_start, args.trading_end,
@@ -218,10 +254,20 @@ def main(argv: Sequence[str] | None = None) -> int:
             )  # fmt: skip
             result.params["selection_config_id"] = variant.config_id
             results[(variant.name, scenario)] = result
+            run_id = None
             if not args.no_save:
                 label = f"{variant.name}-{scenario}"
                 run_id = save_run(args.db, result, label)
                 logger.info("saved %s as run %s", label, run_id)
+            if scenario == "base":  # the P&L has been seen: this strategy is a trial
+                log_strategy_trial(
+                    args.trials,
+                    strategy_config(variant.config_id, method, variant.hedge),
+                    args.trading_start,
+                    args.trading_end,
+                    trial_summary(result, run_id),
+                    args.note,
+                )
             if result.counters:
                 logger.info("%s %s counters: %s", variant.name, scenario, result.counters)
 
@@ -231,4 +277,6 @@ def main(argv: Sequence[str] | None = None) -> int:
     plot_equity_curves(results, plot, ["zero", "base"])
     print(f"saved {plot}")
     print(f"base case = {BASE_COST_BPS:g} bps per side per leg + {BASE_BORROW_RATE:.1%} borrow")
+    n_trials = count_strategy_trials(strategy_path=args.trials)
+    print(f"strategy trials so far (for the deflated Sharpe): {n_trials}")
     return 0

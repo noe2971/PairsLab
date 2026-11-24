@@ -325,11 +325,7 @@ Kalman gross -4,552, 7,235, 1,234; distance gross -26,229, 1,086, 722.
   two) so metrics can be recomputed in SQL.
 
 **Open questions**
-- **Trial count.** This session observed P&L for three strategies: trial 4 with OLS, trial 4
-  with Kalman, and trial 5. The hedge choice is a signal parameter, so OLS vs Kalman should
-  count as two trials for the deflated Sharpe ratio (5 selection configurations, of which
-  2 are in use, x hedges). The cost sensitivities are not trials (rule 3). Decide how to log
-  this (proposal from session 5: add the signal parameters to the trials log).
+- ~~Trial count~~: resolved, see the follow-up below.
 - **Dollar-neutral vs beta-weighted legs** for cointegration pairs (see decisions). Switching
   now, after seeing results, would be a new trial.
 - **The one-day delay** removes the edge in this window. Judging that needs the full
@@ -339,3 +335,31 @@ Kalman gross -4,552, 7,235, 1,234; distance gross -26,229, 1,086, 722.
   trading period in this universe (as already noted, SSD favours low-volatility utilities).
 - Next step: the walk-forward over all 18 windows (selection rerun per window with trials 4
   and 5), then the deflated Sharpe ratio.
+
+**Follow-up in the same session: strategy trials log (user decision: OLS and Kalman count as
+two trials)**
+- New `src/pairslab/trials.py` and git-tracked, append-only `research/strategy_trials.jsonl`.
+  A strategy configuration = selection config id + method + hedge + signal thresholds (+
+  lookback for cointegration, + delta for Kalman) + the locked backtest rules (next-close
+  execution, same-close "end", hedge fixed at entry, hedge-ratio leg sizing). Its id is the
+  same 12-character hash as for selection configurations.
+- Counting rule (`count_strategy_trials`): each selection configuration counts once if it
+  was never backtested, and once per distinct strategy if it was. Current count: **6**
+  (trials 1, 2, 3 never backtested; trial 4 x {OLS b25dde78da27, Kalman 1c4b93f07564};
+  trial 5 distance f08793b5c54b).
+- `python -m pairslab.backtest` now logs the base-cost run of each variant automatically,
+  with run id, trades and Sharpe (the deflated Sharpe ratio also needs the spread of Sharpe
+  ratios across trials). The 2017-H1 runs were backfilled from DuckDB (commit ca5101b).
+  Cost sensitivities, windows, capital and leverage are not part of the id.
+- 10 new tests (161 in total).
+
+**Decisions and why**
+- A second log file instead of new record types in `selection_trials.jsonl`: that file stays
+  append-only and unchanged, and the two kinds of record have different fields.
+- Untested selection configurations still count once: their output was seen and shaped
+  later choices (trials 2 and 3 led to 4 and 5), the conservative choice from session 4.
+- Only parameters a strategy uses enter its id, so an unused setting (Kalman delta for the
+  OLS hedge, lookback for distance pairs) can never create a phantom trial.
+- The locked backtest rules are inside the id, so a later switch to dollar-neutral legs or
+  same-close execution is automatically a new trial.
+- Logged even with `--no-save`: looking at the P&L is what makes it a trial, not storing it.
