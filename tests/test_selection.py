@@ -43,7 +43,8 @@ def cointegrated_prices(seed: int = 0, beta: float = 1.5, phi: float = 0.9) -> p
 def universe_for(tickers, sub_industry="Banks", sector="Financials") -> pd.DataFrame:
     """Universe frame with every ticker in the same sub-industry and sector."""
     idx = pd.Index(list(tickers), name="ticker")
-    return pd.DataFrame({"sector": sector, "sub_industry": sub_industry}, index=idx)
+    names = [f"{t} Corp" for t in idx]  # every ticker is a different company
+    return pd.DataFrame({"name": names, "sector": sector, "sub_industry": sub_industry}, index=idx)
 
 
 def null_plus_real_prices(n_walks: int = 20, seed: int = 5) -> pd.DataFrame:
@@ -73,6 +74,25 @@ def test_default_config_is_pre_registered_rule() -> None:
         1.0,
         60.0,
     )
+    assert cfg.exclude_share_classes
+
+
+def test_share_class_flag_changes_config_id_only_when_on() -> None:
+    # With the flag off the rule is the one run before the option existed (trials 2 and 3),
+    # so it must hash exactly as those did; with it on it is a new trial.
+    old_trial_2 = {
+        "method": "cointegration",
+        "grouping": "sub_industry",
+        "n_top": 20,
+        "min_obs": 250,
+        "rule": "top_n_by_eg_pvalue",
+        "alpha": 0.05,
+        "min_half_life": 1.0,
+        "max_half_life": 60.0,
+    }
+    off = sel.SelectionConfig(exclude_share_classes=False)
+    assert sel.config_id(off.as_dict()) == sel.config_id(old_trial_2)
+    assert sel.config_id(COINT.as_dict()) != sel.config_id(old_trial_2)
 
 
 def test_distance_config_ignores_cointegration_parameters() -> None:
@@ -110,6 +130,61 @@ def test_sub_industry_grouping_gives_fewer_pairs_than_sector() -> None:
         universe["sub_industry"]
     )
     assert same.all()
+
+
+@pytest.mark.parametrize(
+    ("name", "key"),
+    [
+        ("Alphabet Inc. (Class A)", "alphabet inc."),
+        ("Alphabet Inc. (Class C)", "alphabet inc."),
+        ("News Corp (class B)", "news corp"),
+        ("Berkshire Hathaway", "berkshire hathaway"),
+    ],
+)
+def test_company_key_strips_share_class(name: str, key: str) -> None:
+    assert sel.company_key(name) == key
+
+
+def test_drop_same_company_pairs() -> None:
+    names = pd.Series(
+        {
+            "GOOG": "Alphabet Inc. (Class C)",
+            "GOOGL": "Alphabet Inc. (Class A)",
+            "META": "Meta Platforms",
+        }
+    )
+    pairs = [("GOOG", "GOOGL"), ("GOOG", "META"), ("GOOGL", "META")]
+    assert sel.drop_same_company_pairs(pairs, names) == [("GOOG", "META"), ("GOOGL", "META")]
+
+
+def test_share_classes_are_never_paired_but_can_be_when_flag_is_off() -> None:
+    rng = np.random.default_rng(10)
+    base = np.exp(4 + random_walk(rng))
+    prices = pd.DataFrame(
+        {
+            "CLA": base,
+            "CLC": base * np.exp(rng.normal(0, 0.001, N)),  # second share class, near-identical
+            "OTH1": np.exp(4 + random_walk(rng)),
+            "OTH2": np.exp(4 + random_walk(rng)),
+        },
+        index=DATES,
+    )
+    universe = universe_for(prices.columns)
+    universe.loc["CLA", "name"] = "Twin Co (Class A)"
+    universe.loc["CLC", "name"] = "Twin Co (Class C)"
+    on = sel.select_pairs(prices, universe, DIST, START, END)
+    off_cfg = sel.SelectionConfig(method="distance", exclude_share_classes=False)
+    off = sel.select_pairs(prices, universe, off_cfg, START, END)
+    assert ("CLA", "CLC") not in set(zip(on["ticker_y"], on["ticker_x"], strict=True))
+    assert len(on) == len(off) - 1
+    assert (off.iloc[0]["ticker_y"], off.iloc[0]["ticker_x"]) == ("CLA", "CLC")
+
+
+def test_share_class_exclusion_needs_names() -> None:
+    prices = cointegrated_prices()
+    universe = universe_for(prices.columns).drop(columns="name")
+    with pytest.raises(ValueError, match="name"):
+        sel.select_pairs(prices, universe, DIST, START, END)
 
 
 # ---- statistics -------------------------------------------------------------------------
@@ -352,8 +427,12 @@ def make_db(path: str) -> None:
         .melt("date", var_name="ticker", value_name="adj_close")
     )
     con = duckdb.connect(path)
-    con.execute("CREATE TABLE tickers (ticker VARCHAR, sector VARCHAR, sub_industry VARCHAR)")
-    con.execute("INSERT INTO tickers VALUES ('AAA','Fin','Banks'), ('BBB','Fin','Banks')")
+    con.execute(
+        "CREATE TABLE tickers (ticker VARCHAR, name VARCHAR, sector VARCHAR, sub_industry VARCHAR)"
+    )
+    con.execute(
+        "INSERT INTO tickers VALUES ('AAA','A Inc','Fin','Banks'), ('BBB','B Inc','Fin','Banks')"
+    )
     con.register("long_df", long)
     con.execute(
         "CREATE TABLE prices AS SELECT ticker, CAST(date AS DATE) date, adj_close FROM long_df"
@@ -367,6 +446,7 @@ def test_load_prices_filters_dates_in_sql(tmp_path) -> None:
     prices, universe = sel.load_prices(db, "2015-01-01", "2015-12-31")
     assert prices.index.max() <= pd.Timestamp("2015-12-31")
     assert universe.loc["AAA", "sub_industry"] == "Banks"
+    assert universe.loc["AAA", "name"] == "A Inc"
 
 
 def test_run_selection_saves_both_methods_and_logs_trials(tmp_path) -> None:

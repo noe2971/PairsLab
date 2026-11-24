@@ -29,7 +29,8 @@ upper bound until a point-in-time constituent list is used.
 uv run python -m pairslab.selection --start 2015-01-01 --end 2016-12-31 --jobs 8 --note "why"
 ```
 
-Uses only the formation window and only pairs in the same GICS **sub-industry**. Two methods,
+Uses only the formation window and only pairs in the same GICS **sub-industry**; two share
+classes of one company (GOOG/GOOGL, NWS/NWSA) are never paired. Two methods,
 each returning the top N = 20 pairs as **candidates** (ranked, not significance-tested):
 
 * **cointegration**: OLS hedge ratio on log prices, Engle-Granger test in both directions
@@ -44,9 +45,9 @@ Every run is appended to [`research/selection_trials.jsonl`](research/selection_
 a git-tracked log of selection configurations; the number of distinct configurations is the
 trial count for the deflated Sharpe ratio.
 
-**2015-2016:** 1,201 same-sub-industry pairs, 53 pass the raw 5% Engle-Granger test (about 60
-would by chance), 0 pass BH (smallest q = 0.73). With the earlier same-sector run (11,444
-pairs, 0 BH passes) that makes 3 trials so far. No pair is statistically significant in the
+**2015-2016:** 1,199 same-sub-industry pairs, 53 pass the raw 5% Engle-Granger test (about 60
+would by chance), 0 pass BH (smallest q = 0.73). Counting the earlier same-sector run and the
+runs before share classes were excluded, 5 configurations have been tried so far. No pair is statistically significant in the
 formation window, so whether either method works can only be judged out of sample.
 
 ## Setup

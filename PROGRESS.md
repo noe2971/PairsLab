@@ -118,3 +118,11 @@ accounted for.
 - Concentration: BAX, BSX and ISRG each appear in 3 cointegration candidates; ED, XEL, PCG, NEE, AEP, KIM in 3 distance candidates. A per-stock cap could be considered (also a new trial).
 - SSD favours low-volatility stocks (utilities), whose small spreads may not cover costs. This is a known weakness of the distance method; the backtest will show it.
 - Sub-industry labels are today's GICS, an even finer version of the look-ahead in sector labels.
+
+**Follow-up in the same session: exclude dual share classes (trials 4 and 5)**
+- Decision (user, after seeing the selection output, before any backtest): never pair two share classes of the same company. Detected from the security name: a trailing "(Class X)" is stripped and tickers with the same remaining name are one company. In the current universe this removes GOOG/GOOGL and NWS/NWSA (FOX/FOXA were already dropped by the missing-data filter).
+- New option `SelectionConfig.exclude_share_classes`, default True. It enters the config hash only when True, so the old rules keep their ids (3d1138c009f7, 6d28f650c196) and are not double-counted.
+- It changes both methods' candidate sets, so it is **two** new configurations, not one: trial 4 = cointegration (8c0ddb178743), trial 5 = distance (ec2f675f8b2b). Counting both is the conservative choice for the deflated Sharpe. Distinct configurations so far: **5**.
+- Effect: 1,199 pairs (was 1,201), 429 tickers in at least one pair. Cointegration top 20 unchanged (GOOG/GOOGL was never near the top: the two prices are almost collinear, so the spread is mostly noise around a tiny drift). Distance: GOOG/GOOGL (rank 4) removed, everything below moves up one, RSG/WM enters at 20.
+- 8 new tests (61 in total).
+- The walk-forward should use trials 4 and 5. Trials 2 and 3 stay in the log and in `pair_scores` for the record.

@@ -29,6 +29,7 @@ import hashlib
 import json
 import logging
 import math
+import re
 import warnings
 from collections.abc import Mapping, Sequence
 from concurrent.futures import ProcessPoolExecutor
@@ -57,6 +58,7 @@ MIN_OBS = 250  # about one trading year; fewer observations make the tests unrel
 
 METHODS = ("cointegration", "distance")
 GROUPINGS = ("sub_industry", "sector")
+SHARE_CLASS_RE = re.compile(r"\s*\(class [a-z0-9]+\)\s*$", re.IGNORECASE)
 
 RESULT_COLUMNS = [
     "rank",
@@ -129,6 +131,8 @@ class SelectionConfig:
         min_half_life: Shortest acceptable half-life (cointegration only).
         max_half_life: Longest acceptable half-life (cointegration only).
         min_obs: Minimum trading days in the formation window.
+        exclude_share_classes: Never pair two share classes of the same company (e.g.
+            GOOG/GOOGL): they are one firm, so their "spread" is a listing artefact.
 
     """
 
@@ -139,6 +143,7 @@ class SelectionConfig:
     min_half_life: float = MIN_HALF_LIFE
     max_half_life: float = MAX_HALF_LIFE
     min_obs: int = MIN_OBS
+    exclude_share_classes: bool = True
 
     def __post_init__(self) -> None:
         """Reject unknown methods, groupings and non-positive N."""
@@ -154,6 +159,9 @@ class SelectionConfig:
 
         The distance method ignores alpha and half-life bounds, so they are left out:
         changing them must not count as a new distance trial.
+
+        ``exclude_share_classes`` is only written when True. With False the rule is exactly
+        the one run before the option existed (trials 2 and 3), so it keeps the same id.
         """
         common: dict[str, object] = {
             "method": self.method,
@@ -161,6 +169,8 @@ class SelectionConfig:
             "n_top": self.n_top,
             "min_obs": self.min_obs,
         }
+        if self.exclude_share_classes:
+            common["exclude_share_classes"] = True
         if self.method == "distance":
             return {**common, "rule": "top_n_by_ssd"}
         return {
@@ -222,6 +232,43 @@ def same_group_pairs(groups: pd.Series) -> list[tuple[str, str]]:
         tickers = sorted(members.index.astype(str))
         pairs.extend(combinations(tickers, 2))
     return pairs
+
+
+def company_key(name: str) -> str:
+    """Company name with any trailing share-class tag removed.
+
+    ``"Alphabet Inc. (Class A)"`` and ``"Alphabet Inc. (Class C)"`` both become
+    ``"Alphabet Inc."``, so the two tickers are recognised as one company.
+
+    Args:
+        name: Security name as stored in the ``tickers`` table.
+
+    Returns:
+        The name without a ``(Class X)`` suffix, stripped and lower-cased.
+
+    """
+    return SHARE_CLASS_RE.sub("", name).strip().lower()
+
+
+def drop_same_company_pairs(
+    pairs: list[tuple[str, str]], names: pd.Series
+) -> list[tuple[str, str]]:
+    """Remove pairs whose two tickers are share classes of the same company.
+
+    Two share classes have the same cash flows and differ only in voting rights and
+    liquidity, so they track each other almost perfectly. The tiny gap between them is not
+    a relative-value bet on two businesses, and with real costs it is rarely tradable.
+
+    Args:
+        pairs: ``(ticker_y, ticker_x)`` tuples.
+        names: Series mapping ticker -> security name.
+
+    Returns:
+        The pairs whose legs belong to different companies.
+
+    """
+    keys = names.astype(str).map(company_key)
+    return [(a, b) for a, b in pairs if keys[a] != keys[b]]
 
 
 # --------------------------------------------------------------------------- statistics
@@ -595,7 +642,8 @@ def select_pairs(
     Args:
         prices: Wide adjusted closes (dates x tickers). May extend beyond the window; later
             data is cut off before any estimate is made.
-        universe: Frame indexed by ticker with columns ``sector`` and ``sub_industry``.
+        universe: Frame indexed by ticker with columns ``sector``, ``sub_industry`` and
+            ``name`` (``name`` is needed only when excluding share classes).
         config: Which method, grouping and N to use.
         formation_start: First day of the formation window, inclusive.
         formation_end: Last day of the formation window, inclusive.
@@ -609,6 +657,12 @@ def select_pairs(
     window = formation_window(prices, formation_start, formation_end, config.min_obs)
     usable = universe[universe.index.isin(window.columns)]
     pairs = same_group_pairs(usable[config.grouping])
+    if config.exclude_share_classes:
+        if "name" not in usable.columns:
+            raise ValueError("universe needs a 'name' column to exclude share classes")
+        n_before = len(pairs)
+        pairs = drop_same_company_pairs(pairs, usable["name"])
+        logger.info("excluded %d same-company share-class pairs", n_before - len(pairs))
     logger.info(
         "%s: scoring %d same-%s pairs on %d days",
         config.method,
@@ -753,7 +807,7 @@ def load_prices(db_path: Path | str, start: str, end: str) -> tuple[pd.DataFrame
 
     Returns:
         ``(prices, universe)``: wide adjusted closes, and a frame indexed by ticker with
-        columns ``sector`` and ``sub_industry``.
+        columns ``name``, ``sector`` and ``sub_industry``.
 
     """
     con = duckdb.connect(str(db_path), read_only=True)
@@ -762,7 +816,7 @@ def load_prices(db_path: Path | str, start: str, end: str) -> tuple[pd.DataFrame
             "SELECT ticker, date, adj_close FROM prices WHERE date BETWEEN ? AND ?",
             [start, end],
         ).df()
-        universe = con.execute("SELECT ticker, sector, sub_industry FROM tickers").df()
+        universe = con.execute("SELECT ticker, name, sector, sub_industry FROM tickers").df()
     finally:
         con.close()
     prices = long.pivot(index="date", columns="ticker", values="adj_close").sort_index()
