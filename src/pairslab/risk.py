@@ -88,6 +88,7 @@ HORIZONS = (1, 10)
 SENSITIVITY_BLOCKS = (1, 5, 10, 20, 40)
 N_WINDOWS = 18
 CI_LEVEL = 0.95
+ALT_BLOCK = 40.0  # shown next to the automatic block length for the tail statistics
 STAGES = ("indices", "gather", "tail_1d", "tail_10d", "drawdown", "sharpe")
 
 
@@ -499,6 +500,45 @@ def summarize(result: BootstrapResult, level: float = CI_LEVEL) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def tail_comparison(main: BootstrapResult, alt: BootstrapResult) -> pd.DataFrame:
+    """Put the VaR and CVaR distributions of two block lengths side by side.
+
+    Args:
+        main: Result with the automatic block length (the headline).
+        alt: Result for the same series with another block length (e.g. 40 days).
+
+    Returns:
+        One row per VaR/CVaR statistic: the real value, the median and 95% interval under
+        each block length, and whether the real value falls inside each interval.
+
+    """
+    rows = []
+    for name in main.stats:
+        if not name.startswith(("var_", "cvar_")):
+            continue
+        m_lo, m_hi = percentile_interval(main.stats[name])
+        a_lo, a_hi = percentile_interval(alt.stats[name])
+        real = main.observed[name]
+        rows.append(
+            {
+                "variant": main.variant,
+                "statistic": name,
+                "observed": real,
+                "main_block": main.mean_block,
+                "main_median": float(np.median(main.stats[name])),
+                "main_lo": m_lo,
+                "main_hi": m_hi,
+                "main_covers": m_lo <= real <= m_hi,
+                "alt_block": alt.mean_block,
+                "alt_median": float(np.median(alt.stats[name])),
+                "alt_lo": a_lo,
+                "alt_hi": a_hi,
+                "alt_covers": a_lo <= real <= a_hi,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
 def block_sensitivity(
     returns: pd.Series,
     variant: str,
@@ -661,6 +701,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--block", type=float, default=None, help="mean block length (default auto)"
     )
+    parser.add_argument(
+        "--alt-block", type=float, default=ALT_BLOCK, help="second block length for the tail table"
+    )
     parser.add_argument("--no-sensitivity", action="store_true", help="skip other block lengths")
     args = parser.parse_args(argv)
     out_dir = Path(args.results_dir)
@@ -672,6 +715,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     results = [bootstrap_risk(series[v], v, args.paths, args.block, args.seed) for v in VARIANTS]
     summary = pd.concat([summarize(res) for res in results], ignore_index=True)
     summary.to_csv(out_dir / "risk_summary.csv", index=False)
+    alt_results = [
+        bootstrap_risk(series[v], v, args.paths, args.alt_block, args.seed) for v in VARIANTS
+    ]
+    tails = pd.concat(
+        [tail_comparison(m, a) for m, a in zip(results, alt_results, strict=True)],
+        ignore_index=True,
+    )
+    tails.to_csv(out_dir / "risk_tail_alt_block.csv", index=False)
     timing = pd.DataFrame(
         [
             {"variant": res.variant, "stage": stage, "seconds": secs}
@@ -722,6 +773,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     print("\nBlock length used:", {r.variant: round(r.mean_block, 1) for r in results})
     print("\nSummary (losses positive; lo/hi = 95% interval across histories)")
     print(_format(summary))
+    print(f"\nVaR and CVaR: automatic block length vs b = {args.alt_block:g}")
+    print(_format(tails[tails["statistic"].str.contains("10d")]))
     print("\nSharpe ratio, 95% intervals")
     print(_format(ci))
     if sens is not None:

@@ -543,11 +543,19 @@ DSR inputs: N = 6, T = 2,262, V[SR] empirical 2.7e-4, null 1/(T-1) = 4.4e-4, use
   2017-2025 was not unusually calm or rough for this strategy. A drawdown above 20% occurs
   in 5.6% of histories for OLS and distance and 11.1% for Kalman.
 
+**Decision (user): keep Politis-White as the headline, show b = 40 next to it.**
+`results/risk_tail_alt_block.csv` (and the CLI output) puts every VaR/CVaR distribution under
+both block lengths. 10-day, OLS: the real 99% VaR (2.47%) and CVaR (3.16%) fall outside the
+PW 95% interval (1.72-2.45%, 1.95-2.92%) and inside the b = 40 one (1.67-2.89%, 1.98-4.01%).
+Kalman: only the 10-day 99% CVaR is outside under PW, all inside under b = 40. Distance:
+everything inside under both (its PW block is already 18). The price of b = 40 is a wider
+interval (OLS 10-day 99% CVaR: 1.98-4.01% vs 1.95-2.92%). Read the 10-day 99% tail of the
+cointegration variants from the b = 40 column.
+
 **Open questions**
-- Which block length to headline for 10-day tail risk: PW on |r| gives 45 (OLS) and 66
-  (distance). Using it now, after seeing that the automatic rule misses the real tail, would
-  be a choice made with the results in view; it is not a strategy trial (nothing is traded),
-  but should be decided and recorded before reuse. Currently not changed.
+- PW on |r| gives block lengths 45 (OLS) and 66 (distance), close to the b = 40 shown. Not
+  adopted as the headline rule: the choice stays PW as pre-set, with b = 40 as the
+  reported alternative.
 - The bootstrap assumes the sample is representative. Survivorship bias (today's index
   members) probably understates tail risk. 2017-2025 contains March 2020 but no
   2008-style period.

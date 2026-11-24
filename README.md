@@ -124,7 +124,9 @@ Output: `results/risk_summary.csv`, `risk_sharpe_ci.csv`, `risk_block_sensitivit
 **Result (OLS hedge):** 1-day 99% CVaR 1.0% of equity, maximum drawdown 12.1% (95% interval
 across histories 5.8% to 22.7%), Sharpe 0.31 with a 95% interval of -0.36 to 0.95, which
 contains zero. Daily returns are not autocorrelated but their size is (volatility
-clustering), so the 10-day tail depends on the block length; see PROGRESS.md.
+clustering), so the 10-day 99% tail is understated under the automatic block length. The
+real 3.2% CVaR falls outside its interval (1.95-2.92%) but inside the one for 40-day blocks
+(1.98-4.01%); both are in `results/risk_tail_alt_block.csv`. Details in PROGRESS.md.
 
 ## Setup
 

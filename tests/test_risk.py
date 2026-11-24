@@ -22,6 +22,7 @@ from pairslab.risk import (
     rolling_compound,
     stationary_bootstrap_indices,
     summarize,
+    tail_comparison,
     tail_count,
     tail_risk,
 )
@@ -310,3 +311,16 @@ def test_charts_are_written(tmp_path) -> None:
     plot_var_cvar(pd.Series(r), tmp_path / "var.png")
     for name in ("dd.png", "ret.png", "var.png"):
         assert (tmp_path / name).stat().st_size > 5000
+
+
+def test_tail_comparison_lines_up_two_block_lengths() -> None:
+    r = ar1(1500, 0.0, seed=18) + 0.0003
+    main = bootstrap_risk(r, "x", n_paths=200, mean_block=1.0, seed=5)
+    alt = bootstrap_risk(r, "x", n_paths=200, mean_block=40.0, seed=5)
+    table = tail_comparison(main, alt)
+    assert len(table) == 8  # 2 horizons x 2 levels x (VaR, CVaR)
+    assert set(table["main_block"]) == {1.0} and set(table["alt_block"]) == {40.0}
+    row = table[table["statistic"] == "cvar_10d_99"].iloc[0]
+    assert row["main_lo"] <= row["main_median"] <= row["main_hi"]
+    assert row["main_covers"] == (row["main_lo"] <= row["observed"] <= row["main_hi"])
+    assert row["observed"] == pytest.approx(main.observed["cvar_10d_99"])
