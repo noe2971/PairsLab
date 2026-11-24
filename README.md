@@ -107,6 +107,25 @@ formation windows the pairs were picked on) the same strategies show Sharpe 3.5-
 None is close to the usual 0.95, so there is no evidence of a real edge after costs and
 after accounting for the strategies tried. With 10 bps costs the best variant breaks even.
 
+## Risk (bootstrap)
+
+```bash
+uv run python -m pairslab.risk   # reads the stored walk-forward runs, about 25 s
+```
+
+Stationary block bootstrap (Politis and Romano) of the stitched out-of-sample daily returns
+(base costs, read from DuckDB, nothing is re-backtested): 10,000 alternative histories of
+2,262 days per variant. Per history: 1-day and 10-day VaR and CVaR at 95% and 99%, maximum
+drawdown, total return and Sharpe ratio, so every number comes with its sampling spread.
+Output: `results/risk_summary.csv`, `risk_sharpe_ci.csv`, `risk_block_sensitivity.csv`,
+`risk_timing.csv` and three charts. Pure NumPy; the timing table shows where the time goes
+(10,000 histories in about 1.3 s) ahead of a C++ port.
+
+**Result (OLS hedge):** 1-day 99% CVaR 1.0% of equity, maximum drawdown 12.1% (95% interval
+across histories 5.8% to 22.7%), Sharpe 0.31 with a 95% interval of -0.36 to 0.95, which
+contains zero. Daily returns are not autocorrelated but their size is (volatility
+clustering), so the 10-day tail depends on the block length; see PROGRESS.md.
+
 ## Setup
 
 ```bash

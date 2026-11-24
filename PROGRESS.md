@@ -465,3 +465,93 @@ DSR inputs: N = 6, T = 2,262, V[SR] empirical 2.7e-4, null 1/(T-1) = 4.4e-4, use
 - Return distribution: kurtosis 12.7 (OLS), 60 (distance), positive skew. The DSR accounts
   for this; a normal-returns assumption would overstate confidence.
 - Survivorship bias and today's GICS labels are still unaddressed (sessions 2-3).
+
+## Session 9 (2026-11-24): bootstrap risk analysis
+
+**Done**
+- `src/pairslab/risk.py`: stationary block bootstrap (Politis-Romano) of the stitched
+  out-of-sample daily returns, read from the DuckDB `equity_curve` table (labels
+  `wf-pNN-<variant>-base`, nothing re-backtested). Automatic block length (Politis-White 2004
+  with the Patton-Politis-White 2009 correction), 10,000 histories of 2,262 days per variant,
+  1-day and 10-day VaR and CVaR at 95% and 99%, max drawdown, total return, Sharpe, 95%
+  Sharpe interval (percentile bootstrap, cross-checked against the Mertens normal-theory
+  interval), block-length sensitivity, per-stage timing, CLI (`python -m pairslab.risk`).
+- 24 new tests (210 in total): VaR/CVaR hand example and a full-sort comparison; drawdown by
+  hand and against `metrics.max_drawdown`; 10-day compounding and a plain-loop oracle for
+  the 10-day tail (the reference the C++ port must reproduce); block lengths have mean
+  `b`; wrap-around; blocks keep AR(1) autocorrelation and single days destroy it; bootstrap
+  Sharpe spread equals theory for independent days; blocks widen the Sharpe interval for
+  autocorrelated returns; loader stitching and its failure cases.
+- Code committed (d2f06b3) before the real run. The loaded series reproduces the walk-forward
+  table exactly (Sharpe 0.3135 / 0.1141 / -0.2071, total return 12.75% / 3.68% / -5.62%).
+- Outputs in `results/`: `risk_summary.csv`, `risk_sharpe_ci.csv`, `risk_block_sensitivity.csv`,
+  `risk_timing.csv`, `risk_drawdown_distribution.png`, `risk_return_distribution.png`,
+  `risk_var_cvar_ols.png`.
+
+**Results (base costs, losses positive, 95% interval across 10,000 histories)**
+
+| statistic | OLS real | OLS interval | Kalman real | distance real |
+|---|---|---|---|---|
+| 1-day VaR 95% | 0.43% | 0.39-0.45% | 0.39% | 0.24% |
+| 1-day CVaR 95% | 0.64% | 0.58-0.69% | 0.59% | 0.42% |
+| 1-day VaR 99% | 0.75% | 0.69-0.84% | 0.69% | 0.49% |
+| 1-day CVaR 99% | 0.99% | 0.85-1.13% | 0.94% | 0.76% |
+| 10-day VaR 95% | 1.33% | 1.19-1.59% | 1.24% | 0.87% |
+| 10-day CVaR 95% | 1.96% | 1.53-2.07% | 1.82% | 1.25% |
+| 10-day VaR 99% | 2.47% | 1.72-2.45% | 2.05% | 1.42% |
+| 10-day CVaR 99% | 3.16% | 1.95-2.92% | 2.96% | 1.88% |
+| max drawdown | 12.1% | 5.8-22.7% | 13.7% | 9.3% |
+| total return | 12.8% | -14.3 to 47.7% | 3.7% | -5.6% |
+| Sharpe | 0.31 | -0.36 to 0.95 | 0.11 | -0.21 |
+
+- Sharpe 95% intervals: OLS [-0.36, 0.95], Kalman [-0.55, 0.76], distance [-0.88, 0.39]. All
+  contain zero, consistent with the DSR result of session 8. The Mertens interval for OLS
+  is [-0.34, 0.96].
+- Share of the 10,000 histories that end with a loss over the nine years: OLS 19%, Kalman
+  39%, distance 76%. This is the spread of outcomes if the sample's own return process
+  repeated; it is not the probability that the strategy has no edge (the histories are
+  centred on the observed mean).
+- Timing, one thread on an Apple M5 Pro, 10,000 x 2,262 = 22.6M returns, about 1.25 s per
+  variant: index generation 0.37 s, 10-day tail 0.35 s, drawdown 0.31 s, 1-day tail 0.19 s,
+  Sharpe 0.02 s, gather 0.01 s. No single stage dominates; the three big ones are
+  random-number generation, partial sorting, and exp/cumsum/running max.
+
+**Decisions and why**
+- Block rule fixed before the run: Politis-White on the daily returns, not hand-picked.
+  Sensitivity over b = 1, 5, 10, 20, 40 is reported and never used to choose.
+- VaR/CVaR as positive losses with the nearest-rank estimator (CVaR >= VaR by construction);
+  10-day returns from overlapping windows within each simulated history (non-overlapping
+  would leave 2 points in the 99% tail).
+- Histories are as long as the real sample, so total return and drawdown are comparable to
+  the real values. All variants share the same block positions (same seed).
+- `np.partition` instead of a full sort for the tails (only the worst k values matter; the 99%
+  tail is inside the 95% tail).
+- Histories processed 1,000 at a time (18 MB per array) so memory stays small. Results are
+  reproducible for a fixed seed and chunk size.
+
+**Findings to read carefully**
+- Politis-White chose b = 1.0 (independent days) for OLS and Kalman, 18.3 for distance:
+  the daily returns have no meaningful autocorrelation (lag 1: 0.04, band 0.042).
+- But the **size** of returns is strongly autocorrelated (lag-1 autocorrelation of |r| is
+  0.24 for OLS, 0.26 for distance): volatility clustering. Checked after seeing the results.
+  A block length chosen to preserve the mean's variance does not preserve this clustering,
+  so the 10-day tail is understated under b = 1: the real 10-day 99% CVaR (3.16%) is above
+  the bootstrap's 95% interval (1.95-2.92%) and 10-day 99% VaR is at its upper edge. With
+  b = 40 the median 10-day 99% CVaR is 3.0%. Max drawdown and the Sharpe interval hardly
+  move with b (drawdown median 11.0-11.2%; Sharpe lower end -0.36 to -0.29).
+- Drawdown: the real max drawdown sits near the middle of its bootstrap distribution, so
+  2017-2025 was not unusually calm or rough for this strategy. A drawdown above 20% occurs
+  in 5.6% of histories for OLS and distance and 11.1% for Kalman.
+
+**Open questions**
+- Which block length to headline for 10-day tail risk: PW on |r| gives 45 (OLS) and 66
+  (distance). Using it now, after seeing that the automatic rule misses the real tail, would
+  be a choice made with the results in view; it is not a strategy trial (nothing is traded),
+  but should be decided and recorded before reuse. Currently not changed.
+- The bootstrap assumes the sample is representative. Survivorship bias (today's index
+  members) probably understates tail risk. 2017-2025 contains March 2020 but no
+  2008-style period.
+- Next: port `path_statistics` and `stationary_bootstrap_indices` to C++ (pybind11 or
+  nanobind); the tests (including the plain-loop oracle) are the acceptance criteria, and
+  the timing table above is the baseline. `log1p`/`cumsum` is computed twice (10-day tail
+  and drawdown) and could be shared.
