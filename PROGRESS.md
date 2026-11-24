@@ -187,20 +187,26 @@ them later is a new trial and must be logged.
 6. **Signal rules are unchanged** from session 5 (entry 2, exit 0.5, stop 4, lookback 3
    half-lives clipped to [30, 252]; GGR 2 sigma / exit on cross for distance pairs).
 
-**Implementation consequences (flagged for Step 4, to confirm, not yet decided)**
-- **End of period:** `signals.py` forces positions flat on the last trading day. With a
-  one-day delay that fill would land in the next window. Proposal: the calendar-driven close
-  fills at the last day's own close. That is not look-ahead, because it depends only on the
-  date, which is known in advance (a market-on-close order). Data-driven signals keep the
-  one-day delay.
-- **Last-day entries:** a trade signalled on the second-to-last day would fill at the last
-  close and be closed at the same price, paying costs for nothing. Proposal: no new entries
-  on the last two trading days of a window.
-- **Mismatch with the Kalman hedge:** exits use the daily Kalman z (moving beta), but the
-  position holds the entry beta. At delta = 1e-6 beta moves about 0.03 in 6 months, so this is
-  small. The backtest should still report the held portfolio's own spread.
-- **Missing prices in a trading period** (a ticker stops trading, or a gap longer than the
-  2-day forward-fill): the rule needs deciding, e.g. close at the last available price.
+**Implementation rules (proposed in this session, accepted by the user as written; decided
+before any backtest; to be implemented in Step 4)**
+7. **End of period:** `signals.py` forces positions flat on the last trading day. With a
+   one-day delay that fill would land in the next window, so the calendar-driven close fills
+   at the last trading day's own close. That is not look-ahead: it depends only on the
+   date, which is known in advance (a market-on-close order). Data-driven signals (entry,
+   exit, stop) keep the one-day delay. No position earns returns outside its window.
+8. **Last-day entries:** no new entries are signalled on the last two trading days of a
+   window. Otherwise an entry signalled on the second-to-last day would fill at the last
+   close and be closed at that same price, paying costs for nothing.
+9. **Kalman hedge mismatch:** exits use the daily Kalman z (moving beta) while the position
+   holds the entry beta (rule 2). This is accepted, because at delta = 1e-6 beta moves only
+   about 0.03 in 6 months. The backtest also reports the spread of the portfolio actually
+   held, so the gap can be measured.
+10. **Missing prices in a trading period** (a ticker stops trading, or a gap longer than the
+    2-day forward-fill): an open position is closed at the last available price of each
+    leg. While a leg has no price the z-score is NaN, so no new trade can open (this is
+    already how `generate_positions` behaves). Caveat: with no delisting return this is
+    slightly optimistic for real delistings. In today's-constituents data (survivorship
+    bias, session 2) it should rarely trigger. The backtest will count how often it does.
 
 **Test fix: the "static OLS beta = -0.13" result**
 - In `test_kalman_tracks_a_hedge_ratio_that_changes`, the synthetic beta jumped from 1.0 to
