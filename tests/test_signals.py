@@ -507,3 +507,99 @@ def test_robust_limits_ignore_a_single_spike() -> None:
     s = pd.Series([3.0] + [0.0, 0.1, -0.1] * 100)
     lo, hi = sig._robust_limits(s)
     assert hi < 1.0 and lo < -0.1
+
+
+# ---- end of the trading window (session 6, rules 7 and 8) ------------------------------
+
+
+def test_no_new_entries_on_the_last_two_trading_days() -> None:
+    # Rule 8: an entry signalled on day 3 (second-to-last) would fill at the last close and
+    # be closed at that same price. Days 3 and 4 are blocked; day 2 is still allowed.
+    late = sig.generate_positions(pd.Series([0, 0, 0, 2.5, 2.5], dtype=float), RULES)
+    assert late["position"].tolist() == [0, 0, 0, 0, 0]
+    assert late["event"].tolist() == [""] * 5
+    early = sig.generate_positions(pd.Series([0, 0, 2.5, 2.5, 2.5], dtype=float), RULES)
+    assert early["position"].tolist() == [0, 0, -1, -1, 0]
+    assert early["event"].tolist() == ["", "", "enter_short", "", "end"]
+
+
+def test_entry_block_only_applies_when_the_window_is_closed_at_the_end() -> None:
+    pos, ev = positions([0, 0, 0, 2.5])  # helper uses close_at_end=False
+    assert pos == [0, 0, 0, -1] and ev[3] == "enter_short"
+
+
+def test_end_of_window_close_beats_an_exit_signalled_the_same_day() -> None:
+    # Rule 7: the exit at z = 0.1 on the last day would fill the next day (outside the
+    # window), so the calendar close "end" (filled at today's close) takes its place.
+    out = sig.generate_positions(pd.Series([2.5, 2.5, 3.0, 0.1], dtype=float), RULES)
+    assert out["position"].tolist() == [-1, -1, -1, 0]
+    assert out["event"].tolist() == ["enter_short", "", "", "end"]
+    assert sig.SAME_CLOSE_EVENTS == {"end"}
+
+
+def test_position_machine_matches_generate_positions_day_by_day() -> None:
+    rng = np.random.default_rng(5)
+    z = pd.Series(np.cumsum(rng.normal(0, 0.8, 300)))
+    batch = sig.generate_positions(z, RULES)
+    machine = sig.PositionMachine(RULES)
+    steps = [machine.step(zt, len(z) - 1 - t) for t, zt in enumerate(z)]
+    assert [p for p, _ in steps] == batch["position"].tolist()
+    assert [e for _, e in steps] == batch["event"].tolist()
+
+
+# ---- one bar at a time (used by the event-driven backtest) ------------------------------
+
+
+def online_rows(prices: pd.DataFrame, row: dict, hedge: str | None, **kw) -> pd.DataFrame:
+    tracker = sig.OnlinePairSignal(row, DATES[FORM_N:], hedge, **kw)
+    out = [tracker.update(d, p["YYY"], p["XXX"]) for d, p in prices.iterrows()]
+    return pd.DataFrame([r.__dict__ for r in out]).set_index("date")
+
+
+@pytest.mark.parametrize(
+    ("row_fn", "hedge"), [(coint_row, "ols"), (coint_row, "kalman"), (distance_row, None)]
+)
+def test_online_signal_matches_vectorized_signal(row_fn, hedge) -> None:
+    # Two independent implementations (pandas over the whole series, and a running state
+    # fed one bar at a time) must agree on every trading day.
+    entries = 0
+    for seed in (0, 1, 2):
+        prices = pair_prices(seed=seed, phi=0.8)
+        row = row_fn(prices)
+        batch = sig.build_pair_signals(prices, row, TRADE_START, TRADE_END, hedge)
+        online = online_rows(prices, row, hedge)
+        b, o = batch.loc[TRADE_START:], online.loc[TRADE_START:]
+        assert o["position"].tolist() == b["position"].tolist()
+        assert o["event"].tolist() == b["event"].tolist()
+        for col in ["spread", "zscore", "hedge_ratio", "intercept"]:
+            np.testing.assert_allclose(o[col], b[col], rtol=1e-9, atol=1e-12)
+        entries += int(b["event"].isin(["enter_long", "enter_short"]).sum())
+    assert entries >= 2  # the comparison covered real trades, not just flat days
+
+
+def test_online_signal_handles_missing_prices_like_the_vectorized_one() -> None:
+    prices = pair_prices(seed=4, phi=0.8)
+    prices.iloc[FORM_N + 20 : FORM_N + 24, 0] = np.nan  # YYY has no price for 4 days
+    row = coint_row(prices.ffill())
+    for hedge in ("ols", "kalman"):
+        batch = sig.build_pair_signals(prices, row, TRADE_START, TRADE_END, hedge)
+        online = online_rows(prices, row, hedge)
+        assert (
+            online.loc[TRADE_START:, "position"].tolist()
+            == batch.loc[TRADE_START:, "position"].tolist()
+        )
+        np.testing.assert_allclose(
+            online.loc[TRADE_START:, "zscore"], batch.loc[TRADE_START:, "zscore"], rtol=1e-9
+        )
+
+
+def test_online_signal_rejects_bad_bars() -> None:
+    prices = pair_prices()
+    tracker = sig.OnlinePairSignal(coint_row(prices), DATES[FORM_N:], "ols")
+    tracker.update(DATES[0], 100.0, 50.0)
+    with pytest.raises(ValueError, match="date order"):
+        tracker.update(DATES[0], 100.0, 50.0)
+    with pytest.raises(ValueError, match="outside"):
+        tracker.update(DATES[-1] + pd.Timedelta(days=1), 100.0, 50.0)
+    with pytest.raises(ValueError, match="after the formation"):
+        sig.OnlinePairSignal(coint_row(prices), DATES[:10], "ols")

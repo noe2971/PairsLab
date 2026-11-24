@@ -27,6 +27,22 @@ $``beta`` short ``x`` is (approximately) hedged, whatever the price levels.
 **Timing (look-ahead rule).** Everything in row ``t`` uses data up to and including the
 close of day ``t``. ``position[t]`` is the position decided at that close, so a backtest must
 earn it on the return from ``t`` to ``t + 1`` (shift by one day), never on day ``t``'s return.
+The backtest (``pairslab.backtest``) goes further and fills a signal from day ``t`` at the
+close of day ``t + 1`` (session 6, rule 1).
+
+**End of a trading window (session 6, rules 7 and 8).**
+
+* Rule 7: an open position is closed on the last trading day with event ``"end"``. This
+  close is driven by the calendar, which is known in advance, so the backtest fills it at
+  that day's own close (a market-on-close order) instead of one day later, which would be
+  outside the window. It takes precedence over an exit or stop signalled on the same day.
+  :data:`SAME_CLOSE_EVENTS` lists the events filled this way.
+* Rule 8: no new trade is opened on the last :data:`NO_ENTRY_DAYS` (= 2) trading days. An
+  entry signalled on the second-to-last day would fill at the last close and be closed at
+  that same price: costs for nothing.
+
+:class:`OnlinePairSignal` computes the same signal one bar at a time for the event-driven
+backtest; a test checks that it agrees with :func:`build_pair_signals`.
 """
 
 from __future__ import annotations
@@ -34,6 +50,7 @@ from __future__ import annotations
 import argparse
 import logging
 import math
+from collections import deque
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -55,10 +72,13 @@ KALMAN_INIT_VAR = 1.0  # prior variance of alpha and beta: wide compared with th
 LOOKBACK_MULTIPLIER = 3.0  # z-score lookback = 3 half-lives
 MIN_LOOKBACK = 30  # trading days; a z-score from n points is capped at (n-1)/sqrt(n)
 MAX_LOOKBACK = 252  # one trading year
+NO_ENTRY_DAYS = 2  # rule 8: no new entries on the last two trading days of a window
 DEFAULT_RESULTS_DIR = Path("results")
 
 # Position codes: +1 = long the spread (long y, short x), -1 = short the spread, 0 = flat.
 LONG, FLAT, SHORT = 1, 0, -1
+ENTRY_EVENTS = frozenset({"enter_long", "enter_short"})
+SAME_CLOSE_EVENTS = frozenset({"end"})  # rule 7: filled at the close of the signal day
 
 
 @dataclass(frozen=True)
@@ -104,7 +124,9 @@ class SignalConfig:
         min_lookback: Shortest lookback in trading days.
         max_lookback: Longest lookback in trading days.
         kalman_delta: Kalman state noise relative to observation noise.
-        close_at_end: Force every position flat on the last trading day.
+        close_at_end: Force every position flat on the last trading day (rule 7).
+        no_entry_days: With ``close_at_end``, open no new trade on this many final trading
+            days (rule 8).
 
     """
 
@@ -114,6 +136,7 @@ class SignalConfig:
     max_lookback: int = MAX_LOOKBACK
     kalman_delta: float = KALMAN_DELTA
     close_at_end: bool = True
+    no_entry_days: int = NO_ENTRY_DAYS
 
     def rules_for(self, method: str) -> SignalRules:
         """Return the thresholds to use for a selection method."""
@@ -201,34 +224,72 @@ def kalman_hedge(
     xs = np.asarray(x, dtype=float)
     if ys.shape != xs.shape or ys.ndim != 1:
         raise ValueError("y and x must be 1-D and the same length")
-    if obs_var <= 0 or init_var <= 0 or delta < 0:
-        raise ValueError("need obs_var > 0, init_var > 0 and delta >= 0")
 
-    n = len(ys)
-    out = np.full((n, 6), np.nan)
-    m = np.array(init_state, dtype=float)
-    p = np.eye(2) * init_var
-    w = np.eye(2) * delta * obs_var
-    for t in range(n):
-        m_prior = m
-        p_prior = p + w
-        out[t, 0:2] = m_prior
-        if np.isnan(ys[t]) or np.isnan(xs[t]):
-            m, p = m_prior, p_prior
-            out[t, 2:4] = m
-            continue
-        h = np.array([1.0, xs[t]])
-        innovation = ys[t] - h @ m_prior
-        s = h @ p_prior @ h + obs_var
+    kf = KalmanHedge(obs_var, delta, init_state, init_var)
+    out = np.array([kf.update(ys[t], xs[t]) for t in range(len(ys))], dtype=float)
+    return pd.DataFrame(out.reshape(-1, 6), columns=list(KalmanHedge.COLUMNS), index=index)
+
+
+class KalmanHedge:
+    """The Kalman filter of :func:`kalman_hedge`, fed one observation at a time.
+
+    The event-driven backtest uses this directly: each new bar is one :meth:`update`, so the
+    filter can only ever have seen the bars already fed to it.
+
+    Args:
+        obs_var: Observation noise variance ``R``.
+        delta: State noise ratio, ``W = delta * R * I``.
+        init_state: Prior mean of ``(alpha, beta)`` before the first observation.
+        init_var: Prior variance of each state component.
+
+    Raises:
+        ValueError: If the variances are not positive or ``delta`` is negative.
+
+    """
+
+    COLUMNS = ("alpha_prior", "beta_prior", "alpha", "beta", "innovation", "innovation_var")
+
+    def __init__(
+        self,
+        obs_var: float,
+        delta: float = KALMAN_DELTA,
+        init_state: tuple[float, float] = (0.0, 0.0),
+        init_var: float = KALMAN_INIT_VAR,
+    ) -> None:
+        """Set the prior; see the class docstring for the arguments."""
+        if obs_var <= 0 or init_var <= 0 or delta < 0:
+            raise ValueError("need obs_var > 0, init_var > 0 and delta >= 0")
+        self.obs_var = float(obs_var)
+        self.m = np.array(init_state, dtype=float)
+        self.p = np.eye(2) * init_var
+        self.w = np.eye(2) * delta * obs_var
+
+    def update(self, y: float, x: float) -> tuple[float, float, float, float, float, float]:
+        """Run one predict + update step with today's ``(y, x)``.
+
+        Args:
+            y: Today's dependent value (log price of the first leg).
+            x: Today's regressor (log price of the second leg).
+
+        Returns:
+            ``(alpha_prior, beta_prior, alpha, beta, innovation, innovation_var)``, as in
+            :data:`COLUMNS`. If ``y`` or ``x`` is NaN the state is carried forward and the
+            innovation and its variance are NaN.
+
+        """
+        m_prior = self.m
+        p_prior = self.p + self.w
+        if np.isnan(y) or np.isnan(x):
+            self.m, self.p = m_prior, p_prior
+            return (m_prior[0], m_prior[1], m_prior[0], m_prior[1], math.nan, math.nan)
+        h = np.array([1.0, x])
+        innovation = y - h @ m_prior
+        s = h @ p_prior @ h + self.obs_var
         k = p_prior @ h / s
         m = m_prior + k * innovation
         p = p_prior - np.outer(k, h @ p_prior)
-        p = (p + p.T) / 2.0  # keep it symmetric against rounding drift
-        out[t, 2:4] = m
-        out[t, 4] = innovation
-        out[t, 5] = s
-    columns = ["alpha_prior", "beta_prior", "alpha", "beta", "innovation", "innovation_var"]
-    return pd.DataFrame(out, columns=columns, index=index)
+        self.m, self.p = m, (p + p.T) / 2.0  # keep it symmetric against rounding drift
+        return (m_prior[0], m_prior[1], m[0], m[1], innovation, s)
 
 
 def distance_gap(price_y: pd.Series, price_x: pd.Series) -> pd.Series:
@@ -308,13 +369,8 @@ def rolling_zscore(spread: pd.Series, lookback: int) -> pd.Series:
 # --------------------------------------------------------------------------- rules
 
 
-def generate_positions(
-    z: pd.Series,
-    rules: SignalRules,
-    active: pd.Series | None = None,
-    close_at_end: bool = True,
-) -> pd.DataFrame:
-    """Turn a z-score path into positions with a small state machine.
+class PositionMachine:
+    """The entry / exit / stop rules as a state machine that is fed one day at a time.
 
     Flat: go short the spread if ``entry_z < z < stop_z``, long if ``-stop_z < z < -entry_z``
     (no entry beyond the stop: that trade would be stopped at once). Long: exit if
@@ -323,12 +379,88 @@ def generate_positions(
     pair is not re-entered at once. At most one action per day. A NaN z-score holds the
     current position.
 
+    With ``close_at_end`` the end of the trading window is handled too: no entry on the last
+    ``no_entry_days`` trading days (rule 8), and any open position is closed on the last day
+    with event ``"end"`` (rule 7), even if an exit or stop is also signalled that day.
+
+    Args:
+        rules: Entry, exit and stop thresholds.
+        close_at_end: Apply the end-of-window rules 7 and 8.
+        no_entry_days: Number of final trading days without new entries (rule 8).
+
+    """
+
+    def __init__(
+        self, rules: SignalRules, close_at_end: bool = True, no_entry_days: int = NO_ENTRY_DAYS
+    ) -> None:
+        """Start flat; see the class docstring for the arguments."""
+        self.rules = rules
+        self.close_at_end = close_at_end
+        self.no_entry_days = no_entry_days if close_at_end else 0
+        self.stop = math.inf if rules.stop_z is None else rules.stop_z
+        self.position = FLAT
+        self.stopped = FLAT  # side of the last stop-out, until its exit condition re-arms us
+
+    def step(self, z: float, days_left: int) -> tuple[int, str]:
+        """Decide today's position at today's close.
+
+        Args:
+            z: Today's z-score (NaN holds the position).
+            days_left: Trading days left in the window after today (0 on the last day).
+                It comes from the trading calendar, which is known in advance.
+
+        Returns:
+            ``(position, event)``: the position after today's decision and what happened
+            (``"enter_long"``, ``"enter_short"``, ``"exit"``, ``"stop"``, ``"end"`` or ``""``).
+
+        """
+        rules = self.rules
+        if self.close_at_end and days_left == 0 and self.position != FLAT:
+            # Rule 7: the calendar close fills at today's close. An exit or stop signalled
+            # today would fill tomorrow, after the window, so the "end" close comes first.
+            self.position = FLAT
+            return FLAT, "end"
+        event = ""
+        if not np.isnan(z):
+            rearm_long = self.stopped == LONG and z >= -rules.exit_z
+            rearm_short = self.stopped == SHORT and z <= rules.exit_z
+            if rearm_long or rearm_short:
+                self.stopped = FLAT
+            if self.position == LONG:
+                if z < -self.stop:
+                    self.position, self.stopped, event = FLAT, LONG, "stop"
+                elif z >= -rules.exit_z:
+                    self.position, event = FLAT, "exit"
+            elif self.position == SHORT:
+                if z > self.stop:
+                    self.position, self.stopped, event = FLAT, SHORT, "stop"
+                elif z <= rules.exit_z:
+                    self.position, event = FLAT, "exit"
+            elif self.stopped == FLAT and days_left >= self.no_entry_days:  # rule 8
+                if rules.entry_z < z < self.stop:
+                    self.position, event = SHORT, "enter_short"
+                elif -self.stop < z < -rules.entry_z:
+                    self.position, event = LONG, "enter_long"
+        return self.position, event
+
+
+def generate_positions(
+    z: pd.Series,
+    rules: SignalRules,
+    active: pd.Series | None = None,
+    close_at_end: bool = True,
+    no_entry_days: int = NO_ENTRY_DAYS,
+) -> pd.DataFrame:
+    """Turn a z-score path into positions with :class:`PositionMachine`.
+
     Args:
         z: Z-score per day.
         rules: Entry, exit and stop thresholds.
         active: Boolean mask of trading days (contiguous). Outside it the position is 0.
             ``None`` = every day is a trading day.
-        close_at_end: Close any open position on the last active day.
+        close_at_end: Close any open position on the last active day (rule 7) and open
+            none on the last ``no_entry_days`` active days (rule 8).
+        no_entry_days: See ``close_at_end``.
 
     Returns:
         Frame with ``position`` (+1, 0, -1, decided at the close of that day) and ``event``
@@ -338,39 +470,13 @@ def generate_positions(
     zs = z.to_numpy(dtype=float)
     act = np.ones(len(zs), bool) if active is None else active.to_numpy(dtype=bool)
     active_days = np.flatnonzero(act)
-    last_active = active_days[-1] if len(active_days) else -1
-    stop = math.inf if rules.stop_z is None else rules.stop_z
+    machine = PositionMachine(rules, close_at_end, no_entry_days)
 
     positions = np.zeros(len(zs), dtype=int)
     events = [""] * len(zs)
-    pos = FLAT
-    stopped = FLAT  # side of the last stop-out, until its exit condition re-arms us
-    for t, zt in enumerate(zs):
-        if not act[t]:
-            continue
-        if not np.isnan(zt):
-            rearm_long = stopped == LONG and zt >= -rules.exit_z
-            rearm_short = stopped == SHORT and zt <= rules.exit_z
-            if rearm_long or rearm_short:
-                stopped = FLAT
-            if pos == LONG:
-                if zt < -stop:
-                    pos, stopped, events[t] = FLAT, LONG, "stop"
-                elif zt >= -rules.exit_z:
-                    pos, events[t] = FLAT, "exit"
-            elif pos == SHORT:
-                if zt > stop:
-                    pos, stopped, events[t] = FLAT, SHORT, "stop"
-                elif zt <= rules.exit_z:
-                    pos, events[t] = FLAT, "exit"
-            elif stopped == FLAT:
-                if rules.entry_z < zt < stop:
-                    pos, events[t] = SHORT, "enter_short"
-                elif -stop < zt < -rules.entry_z:
-                    pos, events[t] = LONG, "enter_long"
-        if close_at_end and t == last_active and pos != FLAT:
-            pos, events[t] = FLAT, "end"
-        positions[t] = pos
+    for k, t in enumerate(active_days):
+        days_left = len(active_days) - 1 - k
+        positions[t], events[t] = machine.step(zs[t], days_left)
     return pd.DataFrame({"position": positions, "event": events}, index=z.index)
 
 
@@ -473,20 +579,15 @@ def build_pair_signals(
     frame = pd.DataFrame({"price_y": price_y, "price_x": price_x})
     lookback: int | None = None
 
+    hedge = _resolve_hedge(spec.method, hedge)
     if spec.method == "distance":
-        if hedge not in (None, "equal"):
-            raise ValueError("distance candidates use equal-dollar legs (hedge=None)")
-        hedge = "equal"
         gap = pd.Series(np.nan, index=window.index)
         gap[trading] = distance_gap(price_y[trading], price_x[trading])
         frame["hedge_ratio"] = 1.0
         frame["intercept"] = 0.0
         frame["spread"] = gap
         frame["zscore"] = gap / spec.spread_std
-    elif spec.method == "cointegration":
-        hedge = hedge or "ols"
-        if hedge not in HEDGES:
-            raise ValueError(f"hedge must be one of {HEDGES}, got {hedge!r}")
+    else:  # cointegration (_resolve_hedge rejected anything else)
         log_y, log_x = np.log(price_y), np.log(price_x)
         if hedge == "ols":
             frame["hedge_ratio"] = spec.hedge_ratio
@@ -504,12 +605,12 @@ def build_pair_signals(
             spec.half_life, cfg.lookback_multiplier, cfg.min_lookback, cfg.max_lookback
         )
         frame["zscore"] = rolling_zscore(frame["spread"], lookback)
-    else:
-        raise ValueError(f"unknown selection method {spec.method!r}")
 
     rules = cfg.rules_for(spec.method)
     frame["trading"] = trading
-    frame = frame.join(generate_positions(frame["zscore"], rules, trading, cfg.close_at_end))
+    frame = frame.join(
+        generate_positions(frame["zscore"], rules, trading, cfg.close_at_end, cfg.no_entry_days)
+    )
     frame.attrs = {
         "ticker_y": spec.ticker_y,
         "ticker_x": spec.ticker_x,
@@ -522,6 +623,186 @@ def build_pair_signals(
         **spec.extra,
     }
     return frame
+
+
+# --------------------------------------------------------------------------- one bar at a time
+
+
+@dataclass(frozen=True)
+class SignalRow:
+    """One day of :class:`OnlinePairSignal` output (the columns of :func:`build_pair_signals`).
+
+    Attributes:
+        date: The bar's date.
+        spread: Today's spread.
+        zscore: Today's z-score.
+        hedge_ratio: The beta the spread was computed with ($ of ``x`` per $1 of ``y``).
+        intercept: The alpha the spread was computed with.
+        trading: Whether the date is inside the trading window.
+        position: Position decided at today's close (+1, 0, -1).
+        event: What happened today (see :meth:`PositionMachine.step`).
+
+    """
+
+    date: pd.Timestamp
+    spread: float
+    zscore: float
+    hedge_ratio: float
+    intercept: float
+    trading: bool
+    position: int
+    event: str
+
+
+def _resolve_hedge(method: str, hedge: str | None) -> str:
+    """Check that the hedge fits the selection method and fill in the default."""
+    if method == "distance":
+        if hedge not in (None, "equal"):
+            raise ValueError("distance candidates use equal-dollar legs (hedge=None)")
+        return "equal"
+    if method == "cointegration":
+        hedge = hedge or "ols"
+        if hedge not in HEDGES:
+            raise ValueError(f"hedge must be one of {HEDGES}, got {hedge!r}")
+        return hedge
+    raise ValueError(f"unknown selection method {method!r}")
+
+
+class OnlinePairSignal:
+    """The signal of :func:`build_pair_signals`, computed one bar at a time.
+
+    This is what a live trading system would have to do: it keeps a small running state
+    (the Kalman filter, the last ``lookback`` spreads, the position state machine) and
+    updates it with each new bar. It never holds a price series, so it cannot look ahead.
+
+    Feed it every bar from the formation start on, in date order: formation bars are a
+    warm-up (position 0). The Kalman filter needs the formation residual variance before
+    its first step, so formation bars are buffered and the filter is run over them when the
+    first bar after the formation window arrives (all of them are in the past by then).
+
+    The trading calendar is passed in up front: which day is the last of the window is
+    known in advance (rules 7 and 8).
+
+    Args:
+        pair: A :class:`PairSpec` or a ``pair_scores`` row.
+        trading_days: Every trading day of the window, in order.
+        hedge: As in :func:`build_pair_signals`.
+        config: Signal parameters (default :class:`SignalConfig`).
+
+    Raises:
+        ValueError: If the calendar is empty or starts inside the formation window, or the
+            hedge does not fit the selection method.
+
+    """
+
+    def __init__(
+        self,
+        pair: PairSpec | Mapping[str, object],
+        trading_days: Sequence[pd.Timestamp] | pd.DatetimeIndex,
+        hedge: str | None = None,
+        config: SignalConfig | None = None,
+    ) -> None:
+        """Set up the running state; see the class docstring for the arguments."""
+        self.spec = pair if isinstance(pair, PairSpec) else PairSpec.from_row(pair)
+        self.config = config or SignalConfig()
+        days = pd.DatetimeIndex(trading_days)
+        if len(days) == 0 or days[0] <= self.spec.formation_end:
+            raise ValueError("trading days must be non-empty and after the formation window")
+        self.hedge = _resolve_hedge(self.spec.method, hedge)
+        self.rules = self.config.rules_for(self.spec.method)
+        self.lookback: int | None = None
+        if self.spec.method == "cointegration":
+            cfg = self.config
+            self.lookback = lookback_from_half_life(
+                self.spec.half_life, cfg.lookback_multiplier, cfg.min_lookback, cfg.max_lookback
+            )
+        self._days_left = {day: len(days) - 1 - i for i, day in enumerate(days)}
+        self._last_day = days[-1]
+        self._machine = PositionMachine(
+            self.rules, self.config.close_at_end, self.config.no_entry_days
+        )
+        self._spreads: deque[float] = deque(maxlen=self.lookback or 1)
+        self._formation: list[tuple[pd.Timestamp, float, float]] = []  # Kalman warm-up buffer
+        self._kalman: KalmanHedge | None = None
+        self._base: tuple[float, float] | None = None  # distance: first trading-day prices
+        self._last_date: pd.Timestamp | None = None
+
+    def update(self, date: pd.Timestamp | str, price_y: float, price_x: float) -> SignalRow:
+        """Feed one bar (today's closes) and get today's signal.
+
+        Args:
+            date: The bar's date; must be later than the previous bar's.
+            price_y: Today's close of the first leg (NaN if missing).
+            price_x: Today's close of the second leg (NaN if missing).
+
+        Returns:
+            Today's :class:`SignalRow`. Rows of formation days have position 0; for the
+            Kalman hedge they also have NaN spread and z-score (the filter has not run yet).
+
+        Raises:
+            ValueError: If bars arrive out of order, before the formation start, or after
+                the last trading day.
+
+        """
+        day = pd.Timestamp(date)
+        if self._last_date is not None and day <= self._last_date:
+            raise ValueError("bars must arrive in date order")
+        if day < self.spec.formation_start or day > self._last_day:
+            raise ValueError(f"{day.date()} is outside the formation and trading window")
+        self._last_date = day
+        trading = day in self._days_left
+        py, px = float(price_y), float(price_x)
+
+        if self.spec.method == "distance":
+            beta, alpha, spread, z = 1.0, 0.0, math.nan, math.nan
+            if trading:
+                if self._base is None:
+                    self._base = (py, px)
+                spread = py / self._base[0] - px / self._base[1]
+                z = spread / self.spec.spread_std
+        else:
+            log_y, log_x = math.log(py), math.log(px)
+            if self.hedge == "ols":
+                beta, alpha = self.spec.hedge_ratio, self.spec.intercept
+                spread = log_y - alpha - beta * log_x
+                self._spreads.append(spread)
+                z = self._zscore()
+            elif day <= self.spec.formation_end:
+                self._formation.append((day, log_y, log_x))
+                beta = alpha = spread = z = math.nan
+            else:
+                if self._kalman is None:
+                    self._start_kalman()
+                assert self._kalman is not None
+                alpha, beta, _, _, spread, _ = self._kalman.update(log_y, log_x)
+                self._spreads.append(spread)
+                z = self._zscore()
+
+        position, event = FLAT, ""
+        if trading:
+            position, event = self._machine.step(z, self._days_left[day])
+        return SignalRow(day, spread, z, beta, alpha, trading, position, event)
+
+    def _start_kalman(self) -> None:
+        """Estimate ``R`` on the buffered formation bars and run the filter over them."""
+        spec = self.spec
+        log_y = pd.Series([b[1] for b in self._formation], dtype=float)
+        log_x = pd.Series([b[2] for b in self._formation], dtype=float)
+        resid = static_spread(log_y, log_x, spec.hedge_ratio, spec.intercept)
+        self._kalman = KalmanHedge(float(resid.var(ddof=1)), self.config.kalman_delta)
+        for _, ly, lx in self._formation:
+            self._spreads.append(self._kalman.update(ly, lx)[4])
+        self._formation.clear()
+
+    def _zscore(self) -> float:
+        """Z-score of the newest spread against the last ``lookback`` spreads (NaN if short)."""
+        if len(self._spreads) < (self.lookback or 0):
+            return math.nan
+        window = np.fromiter(self._spreads, dtype=float)
+        if np.isnan(window).any():
+            return math.nan
+        std = window.std(ddof=1)
+        return float((window[-1] - window.mean()) / std) if std > 0 else math.nan
 
 
 # --------------------------------------------------------------------------- plot
