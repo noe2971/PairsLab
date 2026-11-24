@@ -873,6 +873,32 @@ def save_scores(
         con.close()
 
 
+def load_candidates(
+    db_path: Path | str, config_id_: str, formation_start: str, formation_end: str
+) -> pd.DataFrame:
+    """Read the top-N candidates of one configuration and window from ``pair_scores``.
+
+    Args:
+        db_path: DuckDB file.
+        config_id_: Configuration id (as in the trials log).
+        formation_start: First day of the formation window.
+        formation_end: Last day of the formation window.
+
+    Returns:
+        Candidate rows, best rank first (empty if none are stored).
+
+    """
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        return con.execute(
+            "SELECT * FROM pair_scores WHERE candidate AND config_id = ? "
+            "AND formation_start = ? AND formation_end = ? ORDER BY rank",
+            [config_id_, formation_start, formation_end],
+        ).df()
+    finally:
+        con.close()
+
+
 def run_selection(
     db_path: Path | str,
     config: SelectionConfig,

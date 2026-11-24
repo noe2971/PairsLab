@@ -467,3 +467,21 @@ def test_run_selection_saves_both_methods_and_logs_trials(tmp_path) -> None:
     assert rows[1][0] == "distance" and rows[1][-1] is True  # no p-value for distance
     assert sel.count_trials(log) == 2
     assert len(log.read_text().splitlines()) == 4
+
+
+def test_load_candidates_reads_back_saved_top_n(tmp_path) -> None:
+    db = str(tmp_path / "t.duckdb")
+    make_db(db)
+    sel.run_selection(db, COINT, START, END, trials_path=tmp_path / "trials.jsonl")
+    cid = sel.config_id(COINT.as_dict())
+    rows = sel.load_candidates(db, cid, START, END)
+    assert len(rows) == 1
+    row = rows.iloc[0]
+    assert (row["method"], row["ticker_y"], row["ticker_x"], row["rank"]) == (
+        "cointegration",
+        "AAA",
+        "BBB",
+        1,
+    )
+    assert row["hedge_ratio"] == pytest.approx(1.5, abs=0.1)
+    assert sel.load_candidates(db, "no-such-id", START, END).empty

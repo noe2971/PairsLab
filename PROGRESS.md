@@ -126,3 +126,32 @@ accounted for.
 - Effect: 1,199 pairs (was 1,201), 429 tickers in at least one pair. Cointegration top 20 unchanged: among eligible pairs GOOG/GOOGL ranked 375th (p = 0.50) and NWS/NWSA 82nd (p = 0.08). The gap between share classes stayed small but drifted slowly, so Engle-Granger sees no mean reversion while SSD only sees that the paths stay close. Distance: GOOG/GOOGL (rank 4) removed, everything below moves up one, RSG/WM enters at 20.
 - 8 new tests (61 in total).
 - The walk-forward should use trials 4 and 5. Trials 2 and 3 stay in the log and in `pair_scores` for the record.
+
+## Session 5 (2026-11-24): signals
+
+**Done**
+- `src/pairslab/signals.py`: spreads, Kalman filter hedge ratio, rolling z-score, entry/exit/stop state machine, `build_pair_signals` for one `pair_scores` row, `plot_pair_signals`, CLI (`python -m pairslab.signals --config-id ... --rank 1 --hedge kalman`).
+- `selection.load_candidates` reads a configuration's top-N back from `pair_scores`.
+- 49 signal tests + 1 selection test (111 in total). Key ones: Kalman output rows 0..t are bit-for-bit identical when every input after t is scrambled, set to NaN or truncated (checked at 8 days, including days 0-2); the same check run on a centred moving average fails, so the test can catch a leak; the full pipeline (OLS, Kalman, distance) gives identical rows up to t when prices after t are replaced; Kalman with zero state noise reproduces full-sample OLS; on data simulated from the state-space model the standardized innovations have std 1.
+- Example plots in `results/` (formation 2015-2016 + trading 2017-H1): BAX/ISRG (cointegration rank 1) with Kalman and OLS hedges, ED/XEL (distance rank 1). BAX/ISRG: 4 trades with either hedge, same entry days; ED/XEL: 1 trade, still open at the end of June and force-closed.
+
+**Signal rules (fixed in code before any backtest or P&L was computed)**
+- Cointegration candidates: spread on **log** prices `log P_y - alpha - beta log P_x` (the stored hedge ratio came from a log regression, so beta is a dollar ratio: $beta of x short per $1 of y long). Hedge "ols" = stored formation alpha/beta; "kalman" = filter below. Rolling z-score, lookback = 3 x formation half-life, clipped to [30, 252] days. Enter |z| > 2, exit |z| < 0.5 (or overshoot), stop |z| > 4.
+- Distance candidates (GGR): $1 long / $1 short, prices normalized to 1 on the first trading day, z = gap / formation `spread_std` (no rolling window), enter |z| > 2, exit when prices cross, no stop.
+- Positions are forced flat on the last trading day. After a stop, no re-entry until the spread is back inside the exit band.
+- Kalman: state (alpha, beta) as random walks, W = delta * R * I with delta = 1e-6, R = formation OLS residual variance, vague prior (0, 0) with variance 1, run from formation start (formation = burn-in). The traded spread is the innovation y_t - alpha_{t|t-1} - beta_{t|t-1} x_t, so the hedge ratio used on day t was estimated from data up to t-1.
+
+**Decisions and why**
+- Lookback floor 30: with n points |z| can never exceed (n-1)/sqrt(n) (2.85 for n = 10), so a stop at 4 would be unreachable for short windows (tested). Multiplier 3: after 3 half-lives only 1/8 of a divergence is left, so the rolling mean measures the equilibrium, not the divergence itself.
+- delta = 1e-6: the filter adapts over roughly 1/sqrt(delta (1 + xbar^2)) days, about 200-250 days at typical log prices. That is several times the longest accepted half-life (60), so normal divergences are not absorbed into the hedge ratio. Chosen from this argument, not from data. W proportional to R makes delta unit-free.
+- Rolling z-score for both hedges (not the Kalman-native e/sqrt(S)), so OLS vs Kalman isolates the hedge ratio.
+- Distance spread re-based at the trading start: GGR's gap starts at 0, which makes "exit when prices cross" meaningful, and the base is a price already known on day 1.
+- Matplotlib `Figure` without pyplot: no GUI backend needed, safe in tests and CI.
+
+**Open questions**
+- Signal parameters (entry 2, exit 0.5, stop 4, lookback 3 half-lives, delta 1e-6) are new degrees of freedom. If any is changed after seeing backtest results it must be logged as a trial for the deflated Sharpe ratio. Proposal: add signal parameters to the trials log config.
+- With delta = 1e-6 the Kalman beta for BAX/ISRG moved only 0.82 -> 0.85 over 2017-H1, so the two hedges traded identically. A faster delta would differ more but is a new trial.
+- The Kalman beta swings a lot (0.3-0.9) in the first year of burn-in: alpha and beta are nearly collinear when log x barely moves. Harmless for trading (the trading period starts after 2 years), but an OLS-based prior would converge faster.
+- Backtest choices still open: execute at the next open or the next close (position[t] must earn the return from t to t+1 at the earliest); hold the hedge ratio fixed at entry or rebalance daily as beta changes; transaction costs.
+- Trading period length: 6 months (GGR) used for the plots; not yet fixed for the walk-forward.
+- The example plots show 2017-H1 prices: the first look at out-of-sample data. No P&L was computed and no parameter was changed afterwards.
