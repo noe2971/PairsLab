@@ -64,3 +64,33 @@
 - Zero pairs survive FDR. Options to decide: treat selection as ranking (trade the top-N by p-value, as in much of the literature) and judge it out of sample; longer formation window for more test power; BH within sectors; or accept that 2015-2016 has no robust pairs. Needs a decision before signals/backtest.
 - The p-value histogram is skewed toward 1 (not uniform), so the test is conservative on real data (drift, fat tails, cross-sectional dependence). Worth understanding.
 - Hedge ratio is static over the window; a Kalman filter or rolling OLS is a later option.
+
+## Session 4 (2026-11-24): pre-registered selection rules
+
+Written and committed **before** any backtest has been run on this data, so the rules below
+cannot have been tuned to backtest results (no data snooping). Any later change to them is a
+new trial and must be logged as one.
+
+**Decision: how to handle zero FDR survivors**
+1. Candidate pairs are restricted to the same GICS **sub-industry** (was: same sector). Tighter
+   economic link, and far fewer tests (about 1,200 instead of 11,444), so more power per test.
+2. Cointegration method becomes a **ranking**: the top N pairs by Engle-Granger p-value among
+   pairs with half-life in [1, 60] trading days and a positive hedge ratio. They are labelled
+   *candidates*, not significant pairs. Benjamini-Hochberg q-values stay as a reported
+   diagnostic only.
+3. Second method, Gatev, Goetzmann and Rouwenhorst (2006) **distance method**: top N pairs by
+   sum of squared deviations of normalized prices (each price divided by its value on the
+   first formation day), same sub-industry pairs. The walk-forward will compare both methods
+   out of sample.
+4. N = 20 for both methods, fixed now.
+5. Every selection configuration tried is logged in `research/selection_trials.jsonl`
+   (git-tracked, append-only), so the deflated Sharpe ratio (Step 5) knows the number of
+   trials. A trial is a distinct configuration (method + parameters), not a formation window:
+   rolling the same rule through walk-forward windows is one trial.
+6. The session-3 configuration (same sector, select by BH q < 0.05) counts as trial 1 even
+   though it produced no pairs.
+
+**Why this is not cheating:** with nothing passing FDR, the formation-period tests cannot tell
+us which pairs are real. Ranking just picks the most promising candidates; the evidence will
+come from out-of-sample trading on data the selection never saw, with the number of trials
+accounted for.
