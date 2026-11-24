@@ -563,3 +563,47 @@ cointegration variants from the b = 40 column.
   nanobind); the tests (including the plain-loop oracle) are the acceptance criteria, and
   the timing table above is the baseline. `log1p`/`cumsum` is computed twice (10-day tail
   and drawdown) and could be shared.
+
+## Session 10 (2026-11-24): C++ port of the bootstrap hot loop
+
+**Done**
+- `cpp/risk_core.hpp` (pure C++17), `cpp/bindings.cpp` (pybind11 module `pairslab._risk_cpp`),
+  `cpp/CMakeLists.txt`; build backend switched from hatchling to scikit-build-core, so
+  `uv sync` / `uv pip install -e .` compile it. `src/pairslab/risk_cpp.py` wraps it;
+  `backend="numpy"|"cpp"` on `stationary_bootstrap_indices`, `tail_risk`, `path_statistics`,
+  `bootstrap_risk`, `block_sensitivity` and `--backend` on the CLI. NumPy stays the default and
+  the reference.
+- Tests: the existing risk tests (plain-loop oracle included) now run on both backends;
+  `tests/test_risk_cpp.py` checks indices bit for bit, generator state, each stage and the
+  whole bootstrap (rtol 1e-10). 243 tests in total.
+- `bench/bench_risk.py` -> `results/benchmark.md`. CI builds the extension on Ubuntu and macOS.
+
+**Results (Apple M5 Pro, one thread, median of 3, 2,262 days)**
+
+| stage | 10k NumPy | 10k C++ | speedup | 100k speedup |
+|---|---|---|---|---|
+| index generation | 0.355 s | 0.093 s | 3.8x | 3.9x |
+| 1-day tail | 0.193 | 0.047 | 4.2x | 4.2x |
+| 10-day tail | 0.356 | 0.095 | 3.8x | 3.8x |
+| drawdown | 0.305 | 0.024 | 12.8x | 12.9x |
+| total | 1.245 | 0.279 | 4.5x | 4.5x |
+
+Real data with `--backend cpp`: every stored CSV reproduced to within 4e-15; full CLI run 8 s.
+
+**Decisions and why**
+- PCG64 reproduced exactly (state copied from/to the NumPy generator): same histories, so the
+  comparison is history by history and the speedup measures identical work.
+- Tail selection: a max-heap was tried first and was *slower* than NumPy (branch
+  mispredictions on ~340 inserts per row). Replaced by a branch-free filter whose threshold is
+  the previous row's 1.5k-th value, with a fallback to the full row; exact whatever the guess.
+- Drawdown compounds equity by multiplication (as `metrics.max_drawdown`) instead of
+  exp(cumsum(log1p)): no transcendental calls, 13x. Differences from NumPy are ~1e-14.
+- 10-day returns by direct 10-term products (the oracle's definition), SIMD-friendly loop order.
+- No -ffast-math or -march=native: they would change rounding / break portable builds.
+
+**Open questions / next**
+- Index generation is bound by the serial 128-bit LCG step; jump-ahead to run the uniform
+  and integer streams as two independent chains could roughly double it.
+- Fusing the stages per row (one pass, data in cache) and threads would add more; not done
+  to keep stage timings comparable.
+- `uv pip install -e .` was not run separately this session (`uv sync` builds the same way).

@@ -1,6 +1,6 @@
 # PairsLab
 
-A pairs-trading research platform in Python (C++ core planned).
+A pairs-trading research platform in Python, with a C++17 core for the bootstrap (pybind11).
 
 ## Data
 
@@ -118,8 +118,10 @@ Stationary block bootstrap (Politis and Romano) of the stitched out-of-sample da
 2,262 days per variant. Per history: 1-day and 10-day VaR and CVaR at 95% and 99%, maximum
 drawdown, total return and Sharpe ratio, so every number comes with its sampling spread.
 Output: `results/risk_summary.csv`, `risk_sharpe_ci.csv`, `risk_block_sensitivity.csv`,
-`risk_timing.csv` and three charts. Pure NumPy; the timing table shows where the time goes
-(10,000 histories in about 1.3 s) ahead of a C++ port.
+`risk_timing.csv` and three charts. `--backend cpp` runs the hot loop in C++ (`cpp/`), which
+simulates the same histories (exact copy of NumPy's PCG64) and is 4.5x faster end to end;
+`uv run python bench/bench_risk.py` writes the stage-by-stage comparison to
+`results/benchmark.md`.
 
 **Result (OLS hedge):** 1-day 99% CVaR 1.0% of equity, maximum drawdown 12.1% (95% interval
 across histories 5.8% to 22.7%), Sharpe 0.31 with a 95% interval of -0.36 to 0.95, which
