@@ -87,6 +87,26 @@ window). With zero costs: -0.75%, -0.46% and -2.6%. For the OLS hedge, the sprea
 six-month window is far too short to judge a strategy; this is a first data point, not a
 verdict.
 
+## Walk-forward
+
+```bash
+uv run python -m pairslab.walkforward --jobs 12   # 18 windows, about 80 s
+```
+
+18 rolling windows: 24 months of formation, then 6 months of trading, rolled forward 6
+months, so the trading windows cover 2017-01 to 2025-12 back to back. Each window reruns
+the selection (trials 4 and 5, unchanged) on its formation data only and trades the result
+on the next 6 months. The out-of-sample windows are chained into one equity curve per
+variant. Output: `results/walkforward.csv` (per window and overall, every cost level),
+four charts in `results/`, every run in DuckDB.
+
+**Result (base costs, 2017-2025):** trial 4 with the OLS hedge Sharpe 0.31 (1.3% a year,
+max drawdown 12%), with the Kalman hedge 0.11, trial 5 (distance) -0.21. In sample (the
+formation windows the pairs were picked on) the same strategies show Sharpe 3.5-3.6.
+**Deflated Sharpe ratio** (Bailey and Lopez de Prado), with 6 trials: 0.36, 0.17 and 0.03.
+None is close to the usual 0.95, so there is no evidence of a real edge after costs and
+after accounting for the strategies tried. With 10 bps costs the best variant breaks even.
+
 ## Setup
 
 ```bash

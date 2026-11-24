@@ -363,3 +363,105 @@ two trials)**
 - The locked backtest rules are inside the id, so a later switch to dollar-neutral legs or
   same-close execution is automatically a new trial.
 - Logged even with `--no-save`: looking at the P&L is what makes it a trial, not storing it.
+
+## Session 8 (2026-11-24): walk-forward over 18 windows and the deflated Sharpe ratio
+
+**Done**
+- `src/pairslab/walkforward.py`: 18 rolling windows (24-month formation, 6-month trading,
+  step 6 months, trading 2017-01 to 2025-12; rule 4). In each window: selection rerun with
+  trials 4 and 5 unchanged (their config ids are checked against the log at start-up), the
+  three variants backtested at zero, base, 10 and 20 bps (rule 3), plus an in-sample
+  diagnostic run at base costs. Out-of-sample windows stitched into one equity curve per
+  variant; results table; deflated Sharpe ratio; four charts; CLI
+  (`python -m pairslab.walkforward --jobs 12`, about 80 s).
+- 25 new tests (186 in total). Key ones: the 18 windows and their dates; trading windows back
+  to back and always after their formation window; selection unchanged when prices after
+  the formation end are scrambled; backtest unchanged when prices after the trading end are
+  scrambled; daily returns identical at $1M and $7M (so chaining returns = carrying capital);
+  stitching worked by hand; the Bailey-Lopez de Prado paper example (SR0 = 0.1132 per day,
+  DSR = 0.90); the expected-max-Sharpe formula matches a simulation of 20 skill-less
+  strategies within 8%.
+- Code committed (3987d93) **before** the real run, so the DSR method below was on record
+  before any walk-forward result existed. The run used that commit with a clean tree.
+- Stored: 252 runs in DuckDB (18 windows x (3 variants x 4 costs + 2 in-sample)), labels
+  `wf-pNN-<variant>-<costs>` and `wf-pNN-<variant>-insample`; 720 candidate rows in
+  `pair_scores`; `results/walkforward.csv`; charts `results/walkforward_equity.png`,
+  `walkforward_sharpe_by_period.png`, `walkforward_is_vs_oos.png`, `walkforward_costs.png`.
+- Trials logs: 36 selection lines (2 per window) and 3 strategy lines (one per variant, whole
+  walk-forward) appended. All have existing ids: **trial count still 6** (checked in code).
+- Reproducibility check: window 1 reproduces session 7 exactly (OLS -0.71 / 63 trades,
+  Kalman -0.69 / 72, distance -3.15 / 11).
+
+**Results, out of sample 2017-01-03 to 2025-12-31 (2,262 days, stitched), base costs**
+
+| variant | Sharpe | CAGR | max DD | hit | trades | windows > 0 | in-sample Sharpe (mean) | PSR(0) | DSR |
+|---|---|---|---|---|---|---|---|---|---|
+| trial 4, OLS | 0.31 | 1.3% | 12.1% | 59.8% | 1,287 | 12 / 18 | 3.61 | 0.83 | **0.36** |
+| trial 4, Kalman | 0.11 | 0.4% | 13.7% | 59.7% | 1,320 | 9 / 18 | n/a | 0.63 | 0.17 |
+| trial 5, distance | -0.21 | -0.6% | 9.3% | 52.4% | 269 | 7 / 18 | 3.54 | 0.27 | 0.03 |
+
+Overall Sharpe by cost level (zero / base / 10 / 20 bps): OLS 0.67 / 0.31 / 0.00 / -0.62;
+Kalman 0.50 / 0.11 / -0.22 / -0.90; distance -0.05 / -0.21 / -0.31 / -0.51.
+DSR inputs: N = 6, T = 2,262, V[SR] empirical 2.7e-4, null 1/(T-1) = 4.4e-4, used 4.4e-4
+(per day squared), so SR0 = 0.43 annualized. Per-window numbers: `results/walkforward.csv`.
+
+**What the numbers say**
+- **No variant passes the deflated Sharpe test.** The best one (OLS) has Sharpe 0.31, below
+  the 0.43 that the best of 6 worthless strategies would be expected to show by luck. DSR
+  0.36 means about a 36% probability that its true Sharpe beats that bar (a common threshold
+  is 95%). Even without deflation (PSR against 0), 0.83 is short of 0.95.
+- **In sample vs out of sample:** every in-sample Sharpe is between 2.6 and 4.9 (mean 3.6),
+  out-of-sample mean 0.34 (OLS) and -0.41 (distance). All 36 dots in
+  `walkforward_is_vs_oos.png` sit far below the diagonal. Pairs chosen because they looked
+  good on a window look good on that window by construction (for OLS the hedge ratio was
+  also fitted on it, so the spread is mean-zero there by design).
+- **Costs decide it.** OLS earns a Sharpe of 0.67 before costs; 5 bps per side halves it and
+  10 bps erases it (turnover about 26x a year). Summed over windows (each starting at $1M):
+  gross +$276k, commission and slippage -$129k, borrow -$19k.
+- **OLS vs Kalman:** same pairs, per-window Sharpe correlation 0.85; Kalman is worse overall
+  (0.11 vs 0.31). Not evidence for a faster filter: it is one more comparison on the same data.
+- **Distance (GGR):** 211 of 269 trades never converged and were closed by rule 7 at the
+  window end (average -$1,251); the 58 that converged made +$3,607 on average.
+- **Pattern of wins and losses:** cointegration normal exits average +$327 (OLS), stops
+  -$2,740 and end-of-window closes -$1,371. Hit rate 60% but small wins and larger losses.
+- Rule 10 never triggered, no order was rejected or scaled by the gross limit in any base
+  run (empty counters in all 54 base runs). Survivorship bias (today's constituents) makes
+  all of this an optimistic upper bound.
+
+**Decisions and why** (all fixed in code and committed before the run)
+- Each window is backtested from $1M and the daily returns are chained. Sizing is a fixed
+  share of equity with fractional shares, so returns do not depend on capital (tested).
+- In-sample diagnostic: the same pairs traded on their own formation window with the
+  parameters estimated on it. The online signal only trades after `formation_end`, so the
+  pair's formation dates are moved to the day before the window (`in_sample_spec`). No
+  in-sample run for Kalman: its burn-in *is* the formation window. In-sample results are
+  never used to choose anything.
+- Overall rows report both the Sharpe of the stitched series and the mean of the 18
+  per-window Sharpe ratios. The in-sample overall is the mean (formation windows overlap,
+  so they cannot be stitched).
+- DSR: per-day Sharpe, plain (not excess) kurtosis, N from `count_strategy_trials`. V = max
+  of the empirical variance of the three backtested trials' Sharpe ratios and 1/(T-1), the
+  variance a zero-Sharpe strategy's estimate has. Three values are too few to estimate a
+  variance; the floor is what luck alone produces. The floor was the one used.
+- DuckDB rows are written before the trials logs are appended, so every run records a clean
+  tree (the logs are git-tracked).
+- One strategy-log line per variant for the whole walk-forward (not 18), with the 18 base
+  run ids, the stitched Sharpe and the DSR.
+
+**Proposed changes (NOT run, NOT logged; each would be a new trial and raise N)**
+- Distance: let trades stay open past the window end (GGR closes them too, but here 78%
+  never converge in 6 months).
+- Cointegration: a wider entry band or a minimum expected profit per trade, to cut turnover,
+  since costs are the main drag.
+- Either would be judged on the same 2017-2025 data, so a positive result would carry a
+  higher DSR bar (N = 7 or 8) and would still be suspect. A cleaner test needs new data
+  (e.g. 2026 onwards, or a point-in-time universe).
+
+**Open questions**
+- N = 6 counts configurations that were logged. Parameters fixed by reasoning before any
+  result (entry 2, exit 0.5, N = 20, delta) are not counted. OLS and Kalman are highly
+  correlated (0.85), so they are closer to 1.3 independent trials than 2; the formula
+  assumes independent trials, which makes N = 6 conservative on that side.
+- Return distribution: kurtosis 12.7 (OLS), 60 (distance), positive skew. The DSR accounts
+  for this; a normal-returns assumption would overstate confidence.
+- Survivorship bias and today's GICS labels are still unaddressed (sessions 2-3).
