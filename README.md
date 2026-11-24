@@ -23,6 +23,25 @@ look better than reality would have: the losers are missing. Dropping tickers wi
 histories also removes recent IPOs. Treat every backtest result on this data as an optimistic
 upper bound until a point-in-time constituent list is used.
 
+## Pair selection
+
+```bash
+uv run python -m pairslab.selection --start 2015-01-01 --end 2016-12-31 --jobs 8
+```
+
+Uses only the formation window. For every pair of stocks in the same GICS sector it fits
+`log P_y = a + b log P_x + spread` by OLS, runs the Engle-Granger cointegration test in both
+directions (the pair's p-value is the larger of the two), an ADF test on the spread, and an
+AR(1)/Ornstein-Uhlenbeck fit for the half-life. P-values are corrected with Benjamini-Hochberg
+across all pairs tested. A pair is selected if q < 0.05, its half-life is 1-60 trading days and
+its hedge ratio is positive. Results (all pairs, with a `selected` flag and `rank`) go to the
+`pair_selection` table, keyed by formation window.
+
+**2015-2016 result:** 11,444 pairs tested, 298 pass the raw 5% test (fewer than the 572 that
+pure chance would produce), and **none survive the FDR correction**. The p-value distribution
+shows no excess of small values, so on this window the data gives no statistical evidence of
+cointegration for any pair once we account for testing thousands of them.
+
 ## Setup
 
 ```bash

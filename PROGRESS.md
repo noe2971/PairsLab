@@ -41,3 +41,26 @@
 - The 5% missing filter uses the whole 2015-2025 sample, so it also removes recent IPOs. It selects tickers using future knowledge, which is a mild look-ahead in universe construction. Revisit in walk-forward selection.
 - Review the 76 flagged jumps (e.g. DHR 2016-07-05 +61%) and decide whether to patch, drop or keep them.
 - No filled days occurred in the real data (zero NULL volumes); that path is covered by tests only.
+
+## Session 3 (2026-11-24): pair selection
+
+**Done**
+- `src/pairslab/selection.py`: same-sector pairs, OLS hedge ratio on log prices, Engle-Granger (both directions), ADF on the spread, AR(1)/OU half-life, Benjamini-Hochberg (own implementation, tested against statsmodels), ranking, DuckDB table `pair_selection`, CLI with `--jobs` for a process pool.
+- 21 tests in `tests/test_selection.py`: synthetic cointegrated pair is selected; independent random walks pass the raw test at most 10/100 times; BH worked example; half-life matches theory; prices after the window do not change results (look-ahead test); serial == parallel; DB roundtrip idempotent.
+- Real run, formation 2015-01-01 to 2016-12-31 (504 days): 457 tickers (GDDY, KHC, PYPL dropped for listing mid-window), 11,444 pairs, 298 raw passes, 298 also pass half-life, **0 pass BH at q < 0.05** (also 0 at 0.10 and 0.20). Best raw p = 2.1e-4 (LNT/PCG); BH would need about 4.4e-6 for the first discovery. Runtime about 45 s with 8 workers.
+
+**Decisions and why**
+- Log prices, so the hedge ratio is in return terms and the spread does not depend on price level.
+- Engle-Granger p-value = max of both regression directions: still a valid p-value, whereas taking the min is a hidden second test (min-of-two would give 1,018 raw passes instead of 298).
+- ADF on the spread is reported, not used to select: same statistic as Engle-Granger, but ordinary Dickey-Fuller critical values ignore that beta was estimated, so its p-values are about 5-10x too small.
+- BH is applied over all tested pairs **before** the half-life filter, because half-life comes from the same AR coefficient as the test statistic.
+- Added a `hedge_ratio > 0` requirement (not in the spec): a negative ratio is not a long/short pair. Two of the raw top 10 (SMCI/TYL, RL/TJX) have negative ratios.
+- Half-life `phi <= 0` returns 0 (rejected); `phi >= 1` returns inf (stored as NULL).
+- Every ticker must have a price on every day of the window, so all pairs use identical dates.
+
+**Known biases and open questions**
+- Sectors are **today's** GICS labels. GICS moved GOOGL, META, NFLX, etc. into Communication Services in 2018, so the 2015-2016 grouping uses later information. Needs point-in-time sectors.
+- Survivorship bias from session 2 still applies (today's index members).
+- Zero pairs survive FDR. Options to decide: treat selection as ranking (trade the top-N by p-value, as in much of the literature) and judge it out of sample; longer formation window for more test power; BH within sectors; or accept that 2015-2016 has no robust pairs. Needs a decision before signals/backtest.
+- The p-value histogram is skewed toward 1 (not uniform), so the test is conservative on real data (drift, fat tails, cross-sectional dependence). Worth understanding.
+- Hedge ratio is static over the window; a Kalman filter or rolling OLS is a later option.
