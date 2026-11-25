@@ -41,7 +41,7 @@ class Variant:
 VARIANTS: dict[str, Variant] = {
     "trial4-ols": Variant(
         "trial4-ols",
-        "OLS",
+        "OLS hedge",
         "Cointegration, OLS hedge",
         "#2A78D6",
         "Pairs ranked by an Engle-Granger cointegration test; hedge ratio fixed from the "
@@ -49,7 +49,7 @@ VARIANTS: dict[str, Variant] = {
     ),
     "trial4-kalman": Variant(
         "trial4-kalman",
-        "Kalman",
+        "Kalman hedge",
         "Cointegration, Kalman hedge",
         "#EB6834",
         "Same pairs, but the hedge ratio is updated every day by a Kalman filter.",

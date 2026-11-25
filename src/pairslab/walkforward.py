@@ -658,29 +658,56 @@ def _style(ax: object) -> None:
         ax.spines[side].set_visible(False)  # type: ignore[attr-defined]
 
 
-def plot_equity(outputs: Sequence[WindowOutput], path: Path) -> None:
-    """Stitched out-of-sample equity per variant: base costs solid, zero costs dashed."""
+VARIANT_LABELS = {
+    "trial4-ols": "OLS hedge",
+    "trial4-kalman": "Kalman hedge",
+    "trial5-distance": "Distance",
+}
+
+
+def plot_equity_curves(curves: dict[tuple[str, str], pd.Series], path: Path) -> None:
+    """Draw stitched out-of-sample equity curves, one colour per variant.
+
+    Args:
+        curves: Equity curve (starting at 1) keyed by ``(variant, scenario)``; the base-cost
+            scenario is drawn solid and the zero-cost scenario dashed.
+        path: Output PNG path.
+
+    """
     from matplotlib.figure import Figure
 
     fig = Figure(figsize=(11, 5.5), layout="tight")
     ax = fig.subplots()
-    variants = [v for v, s in outputs[0].oos if s == BASE]
+    variants = list(dict.fromkeys(v for v, _ in curves))
     for v in variants:
         color = VARIANT_COLORS.get(v, "0.3")
+        name = VARIANT_LABELS.get(v, v)
         for scenario, ls, width in ((BASE, "-", 2.0), ("zero", "--", 1.2)):
-            curve = equity_from_returns(stitch_returns([o.oos[(v, scenario)] for o in outputs]))
-            ax.plot(curve, ls=ls, lw=width, color=color, label=f"{v} ({scenario} costs)")
+            curve = curves[(v, scenario)]
+            ax.plot(curve, ls=ls, lw=width, color=color, label=f"{name} ({scenario} costs)")
         ax.annotate(
-            f" {v}", (curve.index[-1], curve.iloc[-1]), fontsize=8, color="0.25", va="center"
+            f" {name}", (curve.index[-1], curve.iloc[-1]), fontsize=8, color="0.25", va="center"
         )
-    for o in outputs[1:]:
-        ax.axvline(pd.Timestamp(o.window.trading_start), color="0.85", lw=0.6, zorder=0)
+    for year in range(2017, 2026):
+        for month in (1, 7):
+            ax.axvline(pd.Timestamp(year=year, month=month, day=1), color="0.85", lw=0.6, zorder=0)
     ax.axhline(1.0, color="0.5", lw=0.8)
     ax.set_ylabel("equity / starting capital")
     ax.set_title("Walk-forward, out of sample: 18 six-month windows, 2017-2025")
     _style(ax)
     ax.legend(fontsize=8, ncol=3, loc="lower left")
     _save(fig, path)
+
+
+def plot_equity(outputs: Sequence[WindowOutput], path: Path) -> None:
+    """Stitched out-of-sample equity per variant: base costs solid, zero costs dashed."""
+    variants = [v for v, s in outputs[0].oos if s == BASE]
+    curves = {
+        (v, sc): equity_from_returns(stitch_returns([o.oos[(v, sc)] for o in outputs]))
+        for v in variants
+        for sc in (BASE, "zero")
+    }
+    plot_equity_curves(curves, path)
 
 
 def plot_period_sharpes(table: pd.DataFrame, path: Path) -> None:

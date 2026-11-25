@@ -764,3 +764,9 @@ snooping, metric errors and dashboard numbers that do not match `results/`.
 **Open questions**
 - The dashboard URL answered HTTP 303 when checked from the shell (likely a redirect or a sleeping app); open it in a browser to confirm it is live.
 - Point-in-time universe (data v2) is still the planned fix for survivorship bias, the full-sample missing-data filter and today's GICS labels.
+
+## README polish (session 13)
+- One-line pitch reworded to say what the platform measures rather than announcing the result.
+- Equity chart legend and dashboard variant names now read "OLS hedge", "Kalman hedge", "Distance" instead of trial ids (ids stay in the code and result files).
+- `plot_equity` split so the chart can be redrawn from `results/app/oos_daily_returns.csv` without rerunning the walk-forward (a rerun would append to the trials logs and DuckDB).
+- Mermaid diagram changed to `flowchart TD` so GitHub does not cut it off.

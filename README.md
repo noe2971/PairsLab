@@ -4,7 +4,7 @@
 ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-**A walk-forward pairs-trading research platform (Python + C++17) that tests honestly whether the strategy survives costs and multiple-testing, and reports that it does not.**
+**A walk-forward pairs-trading research platform (Python + C++17) that measures how much of a backtest edge survives transaction costs, out-of-sample testing and multiple-testing correction.**
 
 ### Live dashboard: **<https://pairslab.streamlit.app>**
 
@@ -23,7 +23,7 @@ mistakes and to measure how much of a result survives.
 ## Method
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[S&P 500 prices<br/>2015-2025, DuckDB] --> B[Formation window<br/>24 months]
     B --> C[Pair selection<br/>same sub-industry<br/>cointegration or distance<br/>top 20]
     C --> D[Signals<br/>OLS or Kalman hedge<br/>rolling z-score]
