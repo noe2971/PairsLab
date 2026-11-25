@@ -15,8 +15,9 @@ PAGES = ["overview", "explorer", "risk", "costs", "method"]
 
 sys.path.insert(0, str(APP_DIR))
 
-from pairslab_app import data  # noqa: E402
+from pairslab_app import charts, data, theme  # noqa: E402
 from pairslab_app.screens.costs import break_even, cost_table  # noqa: E402
+from pairslab_app.screens.risk import block_note  # noqa: E402
 
 
 def _page_script(app_dir: str, page: str) -> None:
@@ -90,6 +91,68 @@ def test_overview_headline_matches_the_walkforward_table():
     assert f"{best['sharpe']:.2f}" in text
     assert f"{best['dsr']:.2f}" in text
     assert best["dsr"] < 0.95  # the verdict the page states
+
+
+def _overall_base() -> pd.DataFrame:
+    """The ``overall`` base-cost rows of walkforward.csv, indexed by variant."""
+    wf = pd.read_csv(RESULTS / "walkforward.csv")
+    rows = wf[(wf["period"].astype(str) == "overall") & (wf["costs"] == "base")]
+    return rows.set_index("variant")
+
+
+def test_in_sample_card_compares_averages_per_window():
+    """In-sample Sharpe is a mean over windows, so the out-of-sample side must be one too.
+
+    The card used to put the in-sample mean (3.61) next to the stitched Sharpe (0.31).
+    """
+    base = _overall_base()
+    best = base["sharpe"].idxmax()
+    text = _text(_run("overview"))
+    in_sample, out_of_sample = base.loc[best, ["is_sharpe", "mean_period_sharpe"]]
+    assert f"{in_sample:.2f} &rarr; {out_of_sample:.2f}" in text
+
+
+def test_in_vs_out_chart_plots_the_mean_per_window_out_of_sample():
+    """Each out-of-sample bar is the mean per-window Sharpe, not the stitched one."""
+    base = _overall_base()
+    fig = charts.in_vs_out_chart(base)
+    for key in base.index:
+        name = f"{theme.VARIANTS[key].short}, out of sample"
+        bar = next(t for t in fig.data if t.name == name)
+        assert bar.y[0] == pytest.approx(base.loc[key, "mean_period_sharpe"])
+
+
+def test_costs_page_quotes_the_exported_turnover():
+    """The turnover in the text comes from results/app/turnover.csv (it used to say 26)."""
+    turnover = pd.read_csv(RESULTS / "app" / "turnover.csv")
+    row = turnover[
+        (turnover["variant"] == "trial4-ols")
+        & (turnover["costs"] == "base")
+        & (turnover["period"].astype(str) == "overall")
+    ].iloc[0]
+    assert f"about {row['turnover']:.0f} times its capital" in _text(_run("costs"))
+
+
+def test_block_note_uses_each_strategys_own_block_length():
+    """The note quotes the stored block length and counts, never a generic 'about one day'."""
+    alt = pd.read_csv(RESULTS / "risk_tail_alt_block.csv")
+    for variant in alt["variant"].unique():
+        rows = alt[(alt["variant"] == variant) & alt["statistic"].str.contains("_10d_")]
+        note = block_note(alt, variant, 10)
+        assert f"b = {rows['main_block'].iloc[0]:.1f} days" in note
+        n_main = int((~rows["main_covers"]).sum())
+        n_alt = int((~rows["alt_covers"]).sum())
+        assert f"{n_main} fall outside" in note and f"and {n_alt} with 40-day blocks" in note
+    distance = block_note(alt, "trial5-distance", 10)
+    assert "one-day blocks" not in distance  # its automatic block is 18 days
+
+
+def test_method_page_takes_the_trial_count_from_the_results():
+    """No hard-coded trial count or precision claim on the Method page."""
+    n_trials = int(_overall_base()["n_trials"].iloc[0])
+    text = _text(_run("method"))
+    assert f"(here {n_trials})" in text and f"N = {n_trials} logged" in text
+    assert "1e-13" not in text and "{n_trials}" not in text and "{psr_sentence}" not in text
 
 
 # --------------------------------------------------------------------------- interactions

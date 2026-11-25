@@ -53,7 +53,8 @@ STEPS = [
         "If you try many strategies, the best one looks good by luck. The deflated Sharpe ratio "
         "(Bailey and L&oacute;pez de Prado, 2014) asks how likely it is that the true Sharpe "
         "exceeds what the best of N <i>worthless</i> strategies would show. Every strategy "
-        "configuration the lab tried is logged in git, and the count (here 6) feeds the test. "
+        "configuration the lab tried is logged in git, and the count (here {n_trials}) feeds the "
+        "test. "
         "Rules and parameters were written down before any result existed.",
     ),
     (
@@ -62,7 +63,8 @@ STEPS = [
         "The risk analysis simulates 10,000 nine-year histories. Its hot loop (random block "
         "indices, VaR/CVaR tails, drawdowns) was ported to C++17 with pybind11. The C++ copies "
         "NumPy's random-number generator exactly, so both simulate the <i>same</i> histories and "
-        "the speedup is for identical work, with results equal to about 1e-13.",
+        "the speedup is for identical work; the tests require the two to agree to within a "
+        "relative 1e-10.",
     ),
 ]
 
@@ -93,9 +95,10 @@ LIMITATIONS = [
     ),
     (
         "A judgement in the trial count",
-        "The deflated Sharpe uses N = 6 strategy configurations. OLS and Kalman are highly "
-        "correlated, so the effective number is smaller; the verdict does not hinge on it, "
-        "since even the undeflated test (probability Sharpe &gt; 0) is below 0.95.",
+        "The deflated Sharpe uses N = {n_trials} logged strategy configurations. OLS and Kalman "
+        "are highly correlated, so the effective number is smaller; but thresholds fixed by "
+        "reasoning (entry 2, exit 0.5, 20 pairs, 24-month formation) are not counted, so it "
+        "could also be larger. {psr_sentence}",
     ),
     (
         "One sample",
@@ -116,6 +119,23 @@ def _body(root: str) -> None:
     meta = data.load_meta(root)
     wf = data.load_walkforward(root)
     head = data.headline(wf)
+    if head["psr"] < head["threshold"]:
+        psr_sentence = (
+            "The verdict does not hinge on it: even the undeflated test (probability Sharpe "
+            f"&gt; 0) is {num(head['psr'])}, below {num(head['threshold'])}."
+        )
+    else:
+        psr_sentence = (
+            f"Without deflation the probability that Sharpe &gt; 0 is {num(head['psr'])}, so "
+            "here the trial count decides the verdict."
+        )
+    fill = {"{n_trials}": str(head["n_trials"]), "{psr_sentence}": psr_sentence}
+
+    def filled(text: str) -> str:
+        """Put the numbers from the result files into a text with placeholders."""
+        for key, value in fill.items():
+            text = text.replace(key, value)
+        return text
 
     ui.kicker("Method")
     st.markdown("## How it works")
@@ -125,7 +145,8 @@ def _body(root: str) -> None:
         "whether that makes money. The interesting part is not the strategy but the testing."
     )
     steps = "".join(
-        f'<div class="pl-card pl-step"><div class="n">{n}</div><h3>{title}</h3><p>{body}</p></div>'
+        f'<div class="pl-card pl-step"><div class="n">{n}</div><h3>{title}</h3>'
+        f"<p>{filled(body)}</p></div>"
         for n, title, body in STEPS
     )
     ui.html_block(f'<div class="pl-steps">{steps}</div>')
@@ -175,7 +196,7 @@ def _body(root: str) -> None:
         "not less."
     )
     cards = "".join(
-        f'<div class="pl-card pl-step"><h3>{esc(title)}</h3><p>{body}</p></div>'
+        f'<div class="pl-card pl-step"><h3>{esc(title)}</h3><p>{filled(body)}</p></div>'
         for title, body in LIMITATIONS
     )
     ui.html_block(f'<div class="pl-steps">{cards}</div>')

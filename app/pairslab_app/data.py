@@ -65,7 +65,10 @@ def load_walkforward(root: str) -> pd.DataFrame:
     frame = _csv(
         root,
         "walkforward.csv",
-        {"variant", "costs", "period", "sharpe", "cagr", "max_drawdown", "n_trades"},
+        {
+            "variant", "costs", "period", "sharpe", "cagr", "max_drawdown", "n_trades",
+            "mean_period_sharpe",
+        },  # fmt: skip
     )
     frame["period"] = frame["period"].astype(str)
     return frame
@@ -116,6 +119,31 @@ def headline(wf: pd.DataFrame) -> dict[str, float | str | bool]:
         "threshold": DSR_THRESHOLD,
         "passes": bool(row["dsr"] >= DSR_THRESHOLD),
     }
+
+
+@st.cache_data(show_spinner=False)
+def load_turnover(root: str) -> pd.DataFrame:
+    """Annual turnover per variant, cost level and window, plus ``overall`` rows."""
+    frame = _csv(root, f"{APP_SUBDIR}/turnover.csv", {"variant", "costs", "period", "turnover"})
+    frame["period"] = frame["period"].astype(str)
+    return frame
+
+
+def overall_turnover(turnover: pd.DataFrame, variant: str, costs: str = "base") -> float:
+    """Return the stitched out-of-sample turnover of one variant (multiples of equity a year).
+
+    Raises:
+        DataError: If the file has no overall row for that variant and cost level.
+
+    """
+    rows = turnover[
+        (turnover["variant"] == variant)
+        & (turnover["costs"] == costs)
+        & (turnover["period"] == "overall")
+    ]
+    if rows.empty:
+        raise DataError(f"results/app/turnover.csv has no overall row for {variant} / {costs}.")
+    return float(rows["turnover"].iloc[0])
 
 
 @st.cache_data(show_spinner=False)

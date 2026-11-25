@@ -19,6 +19,8 @@ Files written (all small enough to commit):
 * ``pairs_index.csv``, ``pairs_daily.parquet``, ``pairs_trades.csv``: for every pair traded in
   every window and variant: formation statistics, prices / spread / z-score on the trading
   window, and the executed trades (base costs) with their P&L.
+* ``turnover.csv``: annual turnover per window, variant and cost level, plus overall (the
+  costs page quotes it; it is stored per run in DuckDB but not in ``walkforward.csv``).
 
 If the walk-forward was run more than once, only the newest run of each label is read.
 
@@ -328,6 +330,62 @@ def _window_trades(con: duckdb.DuckDBPyConnection, window: Window, variant: str)
     ).df()
 
 
+def export_turnover(db_path: Path | str) -> pd.DataFrame:
+    """Annual turnover of every walk-forward window, variant and cost level, plus overall.
+
+    Turnover is traded dollars per year as a multiple of average equity
+    (:func:`pairslab.backtest.metrics.annual_turnover`), stored per run in the ``runs``
+    table. The overall value weights each window by its number of days:
+    ``sum(turnover_k * days_k) / sum(days_k)``. Each window is a ratio that does not depend
+    on its starting capital, so this is the turnover of the stitched history.
+
+    Args:
+        db_path: DuckDB run store written by the walk-forward.
+
+    Returns:
+        Columns ``variant``, ``costs``, ``period`` (``"1"`` ... ``"18"`` or ``"overall"``, as
+        in ``walkforward.csv``), ``n_days`` and ``turnover``.
+
+    Raises:
+        ValueError: If a variant and cost level does not have exactly one run per window.
+
+    """
+    pattern = r"^wf-p([0-9]+)-(.+)-(zero|base|10bps|20bps)$"
+    con = duckdb.connect(str(db_path), read_only=True)
+    try:
+        runs = con.execute(
+            f"SELECT label, n_days, turnover FROM ({LATEST_RUNS_SQL}) "
+            "WHERE regexp_matches(label, ?)",
+            [pattern],
+        ).df()
+    finally:
+        con.close()
+    parts = runs["label"].str.extract(pattern)
+    runs = runs.assign(period=parts[0].astype(int), variant=parts[1], costs=parts[2])
+    runs = runs[runs["variant"].isin(VARIANTS) & runs["costs"].isin(COSTS)]
+    # Fixed row order (variants and costs as listed, then window), so reruns give the same file.
+    runs = runs.assign(
+        v_order=runs["variant"].map(VARIANTS.index), c_order=runs["costs"].map(COSTS.index)
+    ).sort_values(["v_order", "c_order", "period"])
+    n_windows = len(make_windows())
+    rows: list[dict[str, object]] = []
+    for (variant, costs), group in runs.groupby(["variant", "costs"], sort=False):
+        if sorted(group["period"]) != list(range(1, n_windows + 1)):
+            raise ValueError(f"{variant}/{costs}: expected one run per window 1..{n_windows}")
+        group = group.sort_values("period")
+        for r in group.itertuples():
+            rows.append(
+                {"variant": variant, "costs": costs, "period": str(r.period),
+                 "n_days": int(r.n_days), "turnover": float(r.turnover)}
+            )  # fmt: skip
+        days = group["n_days"].to_numpy(dtype=float)
+        rows.append(
+            {"variant": variant, "costs": costs, "period": "overall", "n_days": int(days.sum()),
+             "turnover": float(np.sum(group["turnover"].to_numpy() * days) / days.sum())}
+        )  # fmt: skip
+    return pd.DataFrame(rows, columns=["variant", "costs", "period", "n_days", "turnover"])
+
+
 def export_pairs(
     db_path: Path | str,
 ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -473,6 +531,10 @@ def write_all(
     written.append(path)
     path = out / "pairs_trades.csv"
     trades.round({c: 6 for c in trades.select_dtypes("float64").columns}).to_csv(path, index=False)
+    written.append(path)
+
+    path = out / "turnover.csv"
+    export_turnover(db_path).round({"turnover": 6}).to_csv(path, index=False)
     written.append(path)
 
     meta = {

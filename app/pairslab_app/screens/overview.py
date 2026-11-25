@@ -41,7 +41,10 @@ def _body(root: str) -> None:
         f"Sharpe of <b>{num(head['benchmark'])}</b>; the best variant managed "
         f"{num(head['sharpe'])}."
     )
+    # Like for like: the formation windows overlap, so in-sample results cannot be stitched and
+    # are averaged over windows; compare them with the out-of-sample average over windows too.
     is_sharpe = base.loc[best.key, "is_sharpe"]
+    oos_mean = base.loc[best.key, "mean_period_sharpe"]
     ui.card_grid(
         [
             ui.stat_card(
@@ -61,9 +64,10 @@ def _body(root: str) -> None:
             ),
             ui.stat_card(
                 "Same pairs, in sample vs out",
-                f"{num(is_sharpe, 1)} &rarr; {num(head['sharpe'], 1)}",
-                "Sharpe on the window the pairs were picked on, then on the six months that "
-                "followed. Looking good on the data you chose from is not evidence.",
+                f"{num(is_sharpe)} &rarr; {num(oos_mean)}",
+                "Average Sharpe per window: on the two years the pairs were picked on, then on "
+                "the six months that followed. Looking good on the data you chose from is not "
+                "evidence.",
             ),
         ]
     )

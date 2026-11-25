@@ -63,6 +63,7 @@ def _body(root: str) -> None:
     """Page content."""
     wf = data.load_walkforward(root)
     returns = data.load_returns(root)
+    turnover = data.overall_turnover(data.load_turnover(root), "trial4-ols")
     table = cost_table(wf)
     levels = sorted(table["bps"].unique())
     if len(levels) < 2:
@@ -72,9 +73,10 @@ def _body(root: str) -> None:
     st.markdown("## How much of the edge do costs eat?")
     st.markdown(
         "Pairs trading opens and closes positions all the time: the OLS variant trades about "
-        "26 times its capital per year. Each trade buys one stock and sells another, then reverses "
-        "both, so a round trip pays the cost **four times**. The lab ran the whole walk-forward at "
-        "four cost levels. Move the slider to switch between the stored results."
+        f"{num(turnover, 0)} times its capital per year. Each trade buys one stock and sells "
+        "another, then reverses both, so a round trip pays the cost **four times**. The lab ran "
+        "the whole walk-forward at four cost levels. Move the slider to switch between the stored "
+        "results."
     )
 
     bps = st.select_slider(
@@ -106,8 +108,9 @@ def _body(root: str) -> None:
         )
     ui.card_grid(cards)
     st.caption(
-        f"At {bps} bps a round trip costs about {4 * bps} bps of the traded amount "
-        "(four fills), plus a 0.5% annual fee on borrowed shares."
+        f"At {bps} bps per fill, a round trip (four fills: each leg opened and closed) costs "
+        f"about {2 * bps} bps of the pair's whole position (long plus short), plus a 0.5% "
+        "annual fee on borrowed shares."
         if bps
         else "With no costs and no borrow fee this is the strategy's gross result."
     )

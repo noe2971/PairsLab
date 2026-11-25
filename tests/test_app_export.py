@@ -9,6 +9,7 @@ from pairslab.app_export import (
     N_BINS,
     _window_trades,
     count_in_bins,
+    export_turnover,
     histogram_edges,
     open_pnl_path,
     pooled_return_histograms,
@@ -56,6 +57,32 @@ def test_window_trades_reads_only_the_newest_run_after_a_rerun(tmp_path):
         con.close()
     assert len(trades) == 2
     assert set(trades["run_id"]) == {"g1-p1"}  # the newer generation
+
+
+def test_export_turnover_weights_windows_by_days_and_uses_the_newest_run(tmp_path):
+    """Overall turnover = sum(turnover_k * days_k) / sum(days_k), on the newest runs only."""
+    db = tmp_path / "runs.duckdb"
+    _run_store(db, [("2026-01-01", 100.0), ("2026-02-01", 0.0)])
+    out = export_turnover(db)
+    windows = out[out["period"] != "overall"]
+    assert len(windows) == 18 and set(out["variant"]) == {"trial4-ols"}
+    assert windows["turnover"].tolist() == [float(k) for k in range(1, 19)]  # not the +100 copy
+    days = np.arange(1, 19) + 100.0
+    expected = float(np.sum(np.arange(1, 19) * days) / days.sum())
+    overall = out[out["period"] == "overall"].iloc[0]
+    assert overall["turnover"] == pytest.approx(expected)
+    assert overall["n_days"] == days.sum()
+
+
+def test_export_turnover_rejects_a_missing_window(tmp_path):
+    """Seventeen windows instead of eighteen is an error, not a quietly wrong average."""
+    db = tmp_path / "runs.duckdb"
+    _run_store(db, [("2026-01-01", 0.0)])
+    con = duckdb.connect(str(db))
+    con.execute("DELETE FROM runs WHERE label = 'wf-p07-trial4-ols-base'")
+    con.close()
+    with pytest.raises(ValueError):
+        export_turnover(db)
 
 
 def test_count_in_bins_keeps_every_observation():

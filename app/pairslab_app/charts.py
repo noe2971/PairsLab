@@ -118,9 +118,14 @@ def equity_chart(growth: pd.DataFrame, height: int = 460) -> go.Figure:
 def in_vs_out_chart(base: pd.DataFrame, height: int = 400) -> go.Figure:
     """In-sample (formation window) vs out-of-sample Sharpe ratio for each variant.
 
+    Both bars are the mean of the 18 per-window Sharpe ratios. The formation windows overlap,
+    so the in-sample runs cannot be stitched into one history; comparing their average with
+    the stitched out-of-sample Sharpe would mix two different statistics.
+
     Args:
-        base: ``overall`` rows at base costs (index = variant) with ``sharpe`` (out of sample)
-            and ``is_sharpe`` (mean in-sample Sharpe; NaN when there is no in-sample run).
+        base: ``overall`` rows at base costs (index = variant) with ``mean_period_sharpe``
+            (mean out-of-sample Sharpe per window) and ``is_sharpe`` (mean in-sample Sharpe per
+            window; NaN when there is no in-sample run).
         height: Figure height in pixels.
 
     Returns:
@@ -128,6 +133,7 @@ def in_vs_out_chart(base: pd.DataFrame, height: int = 400) -> go.Figure:
 
     """
     fig = go.Figure()
+    out_column = "mean_period_sharpe"
     for key in base.index:
         v = theme.VARIANTS[key]
         is_sharpe = base.loc[key, "is_sharpe"]
@@ -149,7 +155,7 @@ def in_vs_out_chart(base: pd.DataFrame, height: int = 400) -> go.Figure:
                     showlegend=False,
                 )
             )
-        out = base.loc[key, "sharpe"]
+        out = base.loc[key, out_column]
         fig.add_trace(
             go.Bar(
                 x=[v.short],
@@ -175,7 +181,8 @@ def in_vs_out_chart(base: pd.DataFrame, height: int = 400) -> go.Figure:
     base_layout(fig, height, hover="closest")
     fig.update_layout(barmode="group", bargap=0.35, bargroupgap=0.08)
     fig.update_yaxes(
-        title_text="Sharpe ratio (annualized)", range=[min(-0.8, base["sharpe"].min() - 0.5), 4.4]
+        title_text="Sharpe ratio (annualized, mean per window)",
+        range=[min(-0.8, base[out_column].min() - 0.5), 4.4],
     )
     fig.add_hline(y=0, line={"color": INK, "width": 1})
     return fig

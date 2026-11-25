@@ -148,14 +148,51 @@ def _body(root: str) -> None:
         charts.block_comparison_chart(alt, variant, horizon), key=f"risk-blocks-{variant}-{horizon}"
     )
     _block_table(alt, variant, horizon)
-    ui.note(
-        "The automatic rule (Politis-White) looks at the autocorrelation of returns, which is "
-        "tiny here, so it picks blocks of about one day. But the <i>size</i> of daily moves "
-        "clusters: calm stretches and wild stretches come in streaks. Short blocks break up those "
-        "streaks and understate multi-day tail risk. With 40-day blocks the clusters survive and "
-        "the real 10-day tail falls inside the simulated range. <b>For tails beyond one day, read "
-        "the long-block numbers.</b> Drawdowns and the Sharpe interval barely move between the two."
+    ui.note(block_note(alt, variant, horizon))
+
+
+def block_note(alt: pd.DataFrame, variant: str, horizon: int) -> str:
+    """Explain the block-length comparison with this strategy's numbers from the file.
+
+    Args:
+        alt: Rows of ``risk_tail_alt_block.csv``.
+        variant: Variant key.
+        horizon: 1 or 10 (days).
+
+    Returns:
+        HTML text: the automatic block length actually chosen for this strategy, and how many
+        of its VaR/CVaR values at this horizon fall outside each simulated 95% range.
+
+    Raises:
+        DataError: If the file has no rows for this strategy and horizon.
+
+    """
+    rows = alt[(alt["variant"] == variant) & alt["statistic"].str.contains(f"_{horizon}d_")]
+    if rows.empty:
+        raise data.DataError(f"results/risk_tail_alt_block.csv has no rows for {variant}.")
+    main_block = float(rows["main_block"].iloc[0])
+    alt_block = float(rows["alt_block"].iloc[0])
+
+    def outside(column: str) -> int:
+        """Count the statistics whose real value is outside that column's interval."""
+        return int(sum(str(v).lower() != "true" for v in rows[column]))
+
+    text = (
+        "The automatic rule (Politis-White) sets the block length from the autocorrelation of "
+        f"returns; for this strategy it picks <b>b = {num(main_block, 1)} days</b>. "
     )
+    if main_block < 2:
+        text += (
+            "Returns barely predict each other here, but the <i>size</i> of daily moves clusters: "
+            "calm stretches and wild stretches come in streaks, and one-day blocks break them up. "
+        )
+    text += (
+        f"Of the {HORIZONS[horizon]} VaR and CVaR values above, {outside('main_covers')} fall "
+        f"outside the simulated range with the automatic blocks and {outside('alt_covers')} with "
+        f"{num(alt_block, 0)}-day blocks. <b>For tails beyond one day, read the long-block "
+        "numbers.</b> Drawdowns and the Sharpe interval barely move between the two."
+    )
+    return text
 
 
 def _range(stats: pd.DataFrame, variant: str, name: str) -> str:
