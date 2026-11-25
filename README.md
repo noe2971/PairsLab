@@ -141,8 +141,9 @@ A five-page Streamlit app in `app/` (Overview, Pair explorer, Risk, Costs, Metho
 who will not read the code. It reads **only committed files in `results/`**: the existing
 `walkforward.csv`, `risk_*.csv` and `benchmark.md`, plus a few small files that
 `pairslab.app_export` writes to `results/app/` from the local DuckDB (stitched daily returns,
-bootstrap histograms, and prices, spread, z-score, trades and P&L of every pair in every
-window; about 4 MB in total). The deployed app therefore needs no DuckDB, no C++ build and no
+bootstrap histograms, annual turnover, and prices, spread, z-score, trades and P&L of every
+pair in every window; about 4 MB in total). If the walk-forward has been run more than once,
+the risk analysis and the export read only the newest run of each label. The deployed app therefore needs no DuckDB, no C++ build and no
 rerun; its dependencies are in `app/requirements.txt`. The theme is in
 `.streamlit/config.toml`. Tests (`tests/test_app.py`) load every page, check the error
 states and interactions, and compare the headline numbers with the result files.

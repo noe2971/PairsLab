@@ -660,3 +660,92 @@ Real data with `--backend cpp`: every stored CSV reproduced to within 4e-15; ful
   would be a natural extension.
 - The sandboxed shell stopped responding late in the session; the last test runs went through
   the Terminal panel. Not a project issue.
+
+## Session 12 (2026-11-25): pre-resume audit
+
+A skeptical review of the whole repo (data, selection, signals, backtest, walk-forward, risk,
+export, dashboard) for look-ahead, survivorship, return off-by-ones, fills and costs, data
+snooping, metric errors and dashboard numbers that do not match `results/`.
+
+**Checked and found correct** (independent scripts against DuckDB, not only the unit tests)
+- Every one of the 11,504 out-of-sample fills: entries fill exactly one trading day after the
+  signal; exits and stops one day after; only rule-7 "end" closes fill on the signal day, and
+  always on the window's last day. No entry is signalled on the last two days (rule 8).
+- Fill prices equal the stored close on the fill day; gross P&L = shares x price change; holding
+  days = borrow nights; long$/short$ = the hedge ratio (distance pairs: exactly $1 : $1); each
+  pair gets 9-11% of equity; sum of trade P&L = final equity - capital in every run (to 5e-9).
+- Stitched returns, Sharpe, CAGR, max drawdown, hit rate and per-window Sharpe recomputed from
+  `results/app/oos_daily_returns.csv` equal `walkforward.csv`; DSR recomputed by hand (0.358);
+  PSR, expected-max-Sharpe and Politis-White formulas checked against the papers; the risk tables
+  in `results/app/` equal `risk_summary.csv` and `risk_tail_alt_block.csv` exactly.
+- Dashboard headline numbers, trade counts, window P&L and per-pair P&L paths match the result
+  files. All 252 walk-forward runs come from one clean commit (3987d93).
+
+**Fixed (no backtest, walk-forward or risk result changed)**
+1. *Rerun pipeline (latent, high):* runs are append-only, so a second walk-forward run stores
+   every label twice. `risk.load_oos_returns` then refused to load (36 runs for 18 windows),
+   and `app_export._window_trades` silently read both copies of every trade, doubling trade
+   counts and P&L on the dashboard while its own P&L check still passed (both sides doubled).
+   New `store.LATEST_RUNS_SQL` keeps the newest run per label; both readers use it. Tests
+   build a store with two generations of runs and fail on the old code.
+2. *Dashboard, in sample vs out:* the card and chart put the in-sample mean of 18 per-window
+   Sharpe ratios (3.61) next to the stitched out-of-sample Sharpe (0.31). Formation windows
+   overlap, so in-sample cannot be stitched; the like-for-like comparison is the out-of-sample
+   mean per window (0.34). Both now use `mean_period_sharpe`.
+3. *Dashboard, turnover:* the Costs page said the OLS variant trades "about 26 times its
+   capital per year". That was the 2017-H1 window (25.9x); over the walk-forward it is 28.7x
+   (Kalman 29.5x, distance 6.0x). Turnover was not in `results/` at all. New export
+   `results/app/turnover.csv` (per window and overall, days-weighted, newest runs) and the page
+   reads it. The session-8 note above ("turnover about 26x") has the same error.
+4. *Dashboard, risk note:* it said Politis-White "picks blocks of about one day" for every
+   strategy; for the distance variant it picks 18.3. The note now quotes each strategy's block
+   length and counts how many VaR/CVaR values fall outside each simulated range, from the file.
+5. *Dashboard, method page:* the trial count (6) and "results equal to about 1e-13" were typed
+   in. The count now comes from `walkforward.csv`; the precision claim now states what the tests
+   check (relative 1e-10). The trial-count limitation now also says N could be too *small*.
+6. *Dashboard, costs caption:* "a round trip costs 4 x bps of the traded amount" was ambiguous;
+   it is 2 x bps of the pair's whole position (four fills, each on one leg).
+- `uv run python -m pairslab.app_export` rerun: every existing file in `results/app/` is
+  byte-identical; only `turnover.csv` is new. 9 new tests (283 in total).
+
+**Not fixed: known biases and choices (each would change the data or a locked rule)**
+- *Critical:* survivorship bias. The universe is today's S&P 500 (`data.fetch_sp500_table`).
+  For pairs trading this is worse than for long-only: the pairs that diverge because one firm
+  fails or is taken over are exactly the ones missing. Results are an upper bound.
+- *High:* universe look-ahead. The 5%-missing filter (`data.clean_prices`) is applied over the
+  whole 2015-2025 sample, so a ticker must have traded for almost all of it to be eligible in
+  any window. Per-window completeness (`selection.formation_window`) already does the job.
+  The 43 dropped tickers are not stored, so fixing this needs a new download.
+- *High:* today's GICS sub-industries define the candidate pairs in every window.
+- *Medium:* N = 6 counts logged configurations only. Thresholds fixed by reasoning (entry 2,
+  exit 0.5, stop 4, lookback 3 half-lives in [30, 252], N = 20, 24-month formation, half-life
+  [1, 60], Kalman delta) are not counted, and the 2017-H1 prices were plotted (session 5) before
+  the backtest rules were locked. The DSR is therefore an upper bound; it already fails.
+- *Medium (locked rule 9):* the Kalman variant's z-score is the filter's one-step forecast
+  error with a moving beta, while the position keeps the entry beta.
+- *Low:* 5 bps per side per leg, 0.5% borrow, no impact, closes only, no interest on cash.
+  Reasonable for $100k per pair in S&P 500 names at the close auction; not a source of bias
+  in the strategy's favour.
+
+**Proposed new trials / data versions (NOT run; each raises N or changes the data)**
+- Data v2: point-in-time S&P 500 membership and GICS labels, no global missing-data filter.
+  Rerun trials 4 and 5 unchanged on it; this is the test that matters most.
+- Kalman variant trading the spread of the portfolio actually held (entry beta), or
+  rebalancing to the current beta: removes the rule-9 mismatch. A new strategy config.
+- (Already proposed in session 8) distance trades allowed past the window end; a wider entry
+  band or minimum expected profit for cointegration to cut the 29x turnover.
+
+**Decisions and why**
+- Newest run per label, not "fail if duplicated": the walk-forward is deterministic, so two
+  runs of one label from the same code give the same numbers; failing would only block the
+  documented "rerun, then export" workflow. Ties are broken by run id so the choice is stable.
+- Turnover went into the app export, not `walkforward.csv`: adding a column there needs a full
+  walk-forward rerun, which would append 252 runs and 39 trial-log lines for no new result.
+- The walk-forward and risk analysis were not rerun: no fix touches a strategy, a cost, a
+  window or a statistic, and the export reproduced every existing file bit for bit.
+
+**Open questions**
+- Where to get point-in-time constituents and GICS history (CRSP/Compustat via a university
+  licence, or reconstructing membership from the Wikipedia change log).
+- The built-in browser preview could not start the dashboard this session ("Current
+  directory does not exist"); the pages were checked with Streamlit's AppTest instead.
