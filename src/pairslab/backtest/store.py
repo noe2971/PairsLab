@@ -140,6 +140,17 @@ RUN_METRIC_COLUMNS = [
 ]  # fmt: skip
 
 
+# Runs are append-only, so rerunning the walk-forward stores a second run under every label.
+# Readers that want "the" run of a label use this view: it keeps only the newest run per
+# label (ties broken by run id, so the choice is deterministic). The walk-forward is
+# deterministic, so two runs of one label from the same code give the same numbers anyway;
+# this only stops a rerun from counting every window, and every trade, twice.
+LATEST_RUNS_SQL = """
+SELECT * FROM runs
+QUALIFY row_number() OVER (PARTITION BY label ORDER BY created_at DESC, run_id DESC) = 1
+"""
+
+
 def git_state() -> tuple[str | None, bool | None]:
     """Return the current commit hash and whether tracked files have uncommitted changes."""
     try:

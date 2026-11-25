@@ -1,17 +1,61 @@
 """Tests for the dashboard data export (histograms, P&L paths, pooled bootstrap)."""
 
+import duckdb
 import numpy as np
 import pandas as pd
 import pytest
 
 from pairslab.app_export import (
     N_BINS,
+    _window_trades,
     count_in_bins,
     histogram_edges,
     open_pnl_path,
     pooled_return_histograms,
 )
 from pairslab.risk import stationary_bootstrap_indices
+from pairslab.walkforward import make_windows
+
+
+def _run_store(path, generations):
+    """A minimal ``runs`` + ``trades`` store; each generation repeats every label.
+
+    ``generations`` is a list of ``(created_at, turnover_shift)``. Every generation holds one
+    base run per window for trial4-ols (turnover = window number + shift, window k lasting
+    100 + k days), an in-sample run that must be ignored, and two trades in window 1.
+    """
+    con = duckdb.connect(str(path))
+    con.execute(
+        "CREATE TABLE runs (run_id VARCHAR, label VARCHAR, created_at TIMESTAMP, "
+        "n_days INTEGER, turnover DOUBLE)"
+    )
+    con.execute("CREATE TABLE trades (run_id VARCHAR, pair_id VARCHAR, entry_date DATE)")
+    for g, (created_at, shift) in enumerate(generations):
+        for w in make_windows():
+            run_id = f"g{g}-p{w.period}"
+            label = f"wf-p{w.period:02d}-trial4-ols-base"
+            row = [run_id, label, created_at, 100 + w.period, w.period + shift]
+            con.execute("INSERT INTO runs VALUES (?, ?, ?, ?, ?)", row)
+            insample = [f"{run_id}-is", f"wf-p{w.period:02d}-trial4-ols-insample", created_at,
+                        500, 999.0]  # fmt: skip
+            con.execute("INSERT INTO runs VALUES (?, ?, ?, ?, ?)", insample)
+            if w.period == 1:
+                for day in ("2017-01-04", "2017-02-01"):
+                    con.execute("INSERT INTO trades VALUES (?, 'A/B', ?)", [run_id, day])
+    con.close()
+
+
+def test_window_trades_reads_only_the_newest_run_after_a_rerun(tmp_path):
+    """A second walk-forward run must not list every trade twice (it used to, silently)."""
+    db = tmp_path / "runs.duckdb"
+    _run_store(db, [("2026-01-01", 0.0), ("2026-02-01", 0.0)])
+    con = duckdb.connect(str(db), read_only=True)
+    try:
+        trades = _window_trades(con, make_windows()[0], "trial4-ols")
+    finally:
+        con.close()
+    assert len(trades) == 2
+    assert set(trades["run_id"]) == {"g1-p1"}  # the newer generation
 
 
 def test_count_in_bins_keeps_every_observation():

@@ -20,6 +20,8 @@ Files written (all small enough to commit):
   every window and variant: formation statistics, prices / spread / z-score on the trading
   window, and the executed trades (base costs) with their P&L.
 
+If the walk-forward was run more than once, only the newest run of each label is read.
+
 Look-ahead: every number is a stored result of the walk-forward. The z-scores are rebuilt with
 :func:`pairslab.signals.build_pair_signals`, which only uses prices up to each day (the
 backtest's online signal was checked against it).
@@ -36,6 +38,7 @@ import duckdb
 import numpy as np
 import pandas as pd
 
+from pairslab.backtest.store import LATEST_RUNS_SQL
 from pairslab.data import DEFAULT_DB_PATH
 from pairslab.risk import (
     ALT_BLOCK,
@@ -308,11 +311,17 @@ def open_pnl_path(trades: pd.DataFrame, prices: pd.DataFrame, dates: pd.Datetime
 
 
 def _window_trades(con: duckdb.DuckDBPyConnection, window: Window, variant: str) -> pd.DataFrame:
-    """Trades of one base-cost run (the window's run for a variant)."""
+    """Trades of one base-cost run (the newest run of the window's label for a variant).
+
+    Only the newest run of the label is read: after a second walk-forward run every label
+    exists twice, and reading both would list every trade twice. The P&L check in
+    :func:`export_pairs` would not catch that, because both of its sides would double.
+    """
     label = f"wf-p{window.period:02d}-{variant}-base"
     return con.execute(
-        """
-        SELECT t.* FROM trades t JOIN runs r ON t.run_id = r.run_id WHERE r.label = ?
+        f"""
+        SELECT t.* FROM trades t JOIN ({LATEST_RUNS_SQL}) r ON t.run_id = r.run_id
+        WHERE r.label = ?
         ORDER BY t.pair_id, t.entry_date
         """,
         [label],

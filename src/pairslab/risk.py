@@ -79,6 +79,7 @@ import numpy as np
 import pandas as pd
 
 from pairslab.backtest.metrics import PERIODS_PER_YEAR
+from pairslab.backtest.store import LATEST_RUNS_SQL
 from pairslab.data import DEFAULT_DB_PATH
 from pairslab.walkforward import VARIANT_COLORS, return_moments
 
@@ -128,7 +129,8 @@ def load_oos_returns(
 
     The walk-forward stored one run per window under the label ``wf-pNN-<variant>-<costs>``;
     this concatenates their daily returns in date order (the same series as
-    :func:`pairslab.walkforward.stitch_returns`).
+    :func:`pairslab.walkforward.stitch_returns`). If the walk-forward was run more than once,
+    only the newest run of each label is used (:data:`pairslab.backtest.store.LATEST_RUNS_SQL`).
 
     Args:
         db_path: DuckDB file written by the backtest/walk-forward.
@@ -148,9 +150,9 @@ def load_oos_returns(
     con = duckdb.connect(str(db_path), read_only=True)
     try:
         rows = con.execute(
-            """
+            f"""
             SELECT e.date, e.daily_return, r.run_id
-            FROM equity_curve e JOIN runs r ON e.run_id = r.run_id
+            FROM equity_curve e JOIN ({LATEST_RUNS_SQL}) r ON e.run_id = r.run_id
             WHERE regexp_matches(r.label, ?)
             ORDER BY e.date
             """,

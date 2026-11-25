@@ -270,21 +270,37 @@ def test_summary_and_sensitivity_tables() -> None:
 # ------------------------------------------------------------------ loading and charts
 
 
-def fake_store(path: str, windows: int = 3, label: str = "base", overlap: bool = False) -> None:
-    """Write the two tables the loader reads, with ``windows`` consecutive 5-day windows."""
+def fake_store(
+    path: str,
+    windows: int = 3,
+    label: str = "base",
+    overlap: bool = False,
+    created_at: str = "2026-01-01 00:00:00",
+    shift: float = 0.0,
+    generation: str = "a",
+) -> None:
+    """Write the two tables the loader reads, with ``windows`` consecutive 5-day windows.
+
+    Calling it again on the same file adds another generation of runs under the same labels
+    (as a second walk-forward run would), with returns moved up by ``shift``.
+    """
     con = duckdb.connect(path)
-    con.execute("CREATE TABLE runs (run_id VARCHAR, label VARCHAR)")
-    con.execute("CREATE TABLE equity_curve (run_id VARCHAR, date DATE, daily_return DOUBLE)")
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS runs (run_id VARCHAR, label VARCHAR, created_at TIMESTAMP)"
+    )
+    con.execute(
+        "CREATE TABLE IF NOT EXISTS equity_curve (run_id VARCHAR, date DATE, daily_return DOUBLE)"
+    )
     days = pd.bdate_range("2020-01-01", periods=5 * windows)
     for w in range(windows):
         window_days = days[0:5] if overlap else days[5 * w : 5 * w + 5]
         for run_id, label_ in (
-            (f"main-{w}", f"wf-p{w + 1:02d}-trial4-ols-{label}"),
-            (f"ins-{w}", f"wf-p{w + 1:02d}-trial4-ols-insample"),
+            (f"main-{generation}-{w}", f"wf-p{w + 1:02d}-trial4-ols-{label}"),
+            (f"ins-{generation}-{w}", f"wf-p{w + 1:02d}-trial4-ols-insample"),
         ):
-            con.execute("INSERT INTO runs VALUES (?, ?)", [run_id, label_])
+            con.execute("INSERT INTO runs VALUES (?, ?, ?)", [run_id, label_, created_at])
             for i, d in enumerate(window_days):
-                value = 0.001 * (w * 5 + i) + (9.0 if run_id.startswith("ins") else 0.0)
+                value = 0.001 * (w * 5 + i) + (9.0 if run_id.startswith("ins") else 0.0) + shift
                 con.execute("INSERT INTO equity_curve VALUES (?, ?, ?)", [run_id, d.date(), value])
     con.close()
 
@@ -295,6 +311,17 @@ def test_loader_stitches_windows_in_date_order(tmp_path) -> None:
     out = load_oos_returns(db, "trial4-ols", n_windows=3)
     assert len(out) == 15 and out.index.is_monotonic_increasing
     np.testing.assert_allclose(out.to_numpy(), 0.001 * np.arange(15))  # insample rows ignored
+
+
+def test_loader_uses_the_newest_run_of_each_label_after_a_rerun(tmp_path) -> None:
+    # A second walk-forward run stores every label again. Before the fix the loader found 6
+    # runs for 3 windows and refused to load; it must take the newest generation only.
+    db = str(tmp_path / "t.duckdb")
+    fake_store(db, created_at="2026-01-01 00:00:00", generation="old")
+    fake_store(db, created_at="2026-02-01 00:00:00", shift=0.5, generation="new")
+    out = load_oos_returns(db, "trial4-ols", n_windows=3)
+    assert len(out) == 15
+    np.testing.assert_allclose(out.to_numpy(), 0.001 * np.arange(15) + 0.5)
 
 
 def test_loader_rejects_wrong_window_count_overlap_and_unknown_costs(tmp_path) -> None:
