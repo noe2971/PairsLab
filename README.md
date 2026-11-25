@@ -1,158 +1,155 @@
 # PairsLab
 
-A pairs-trading research platform in Python, with a C++17 core for the bootstrap (pybind11).
+[![CI](https://github.com/noe2971/pairslab/actions/workflows/ci.yml/badge.svg)](https://github.com/noe2971/pairslab/actions/workflows/ci.yml)
+![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-## Data
+**A walk-forward pairs-trading research platform (Python + C++17) that tests honestly whether the strategy survives costs and multiple-testing, and reports that it does not.**
+
+### Live dashboard: **<https://pairslab.streamlit.app>**
+
+![Out-of-sample equity curves, 2017-2025](results/walkforward_equity.png)
+
+*Out-of-sample equity curves, 18 stitched six-month windows, 2017-2025 (base costs).*
+
+## The problem
+
+Pairs trading bets that two related stocks, such as two utilities, drift apart only
+temporarily. You buy the cheap one, short the expensive one, and wait for the gap to close.
+It is easy to make this look profitable on a backtest by picking pairs with hindsight, ignoring
+costs, or trying many variants and reporting the best. PairsLab is built to avoid those
+mistakes and to measure how much of a result survives.
+
+## Method
+
+```mermaid
+flowchart LR
+    A[S&P 500 prices<br/>2015-2025, DuckDB] --> B[Formation window<br/>24 months]
+    B --> C[Pair selection<br/>same sub-industry<br/>cointegration or distance<br/>top 20]
+    C --> D[Signals<br/>OLS or Kalman hedge<br/>rolling z-score]
+    D --> E[Event-driven backtest<br/>next-close fills<br/>costs and borrow]
+    E --> F[Walk-forward<br/>18 x 6-month windows<br/>stitched out of sample]
+    F --> G[Deflated Sharpe ratio<br/>6 logged trials]
+    F --> H[Bootstrap VaR, CVaR,<br/>drawdown: C++ core]
+    G --> I[Streamlit dashboard]
+    H --> I
+```
+
+1. **Select** pairs on 24 months of data only, within the same GICS sub-industry, two ways:
+   Engle-Granger cointegration ranking and the Gatev-Goetzmann-Rouwenhorst distance method.
+2. **Signal**: enter at |z| > 2, exit at |z| < 0.5, stop at |z| > 4. The hedge ratio is either a
+   fixed OLS fit or a Kalman filter.
+3. **Backtest** event by event. A signal at the close of day t fills at the close of day t+1.
+   Costs are 5 bps per side per leg plus 0.5% a year short borrow.
+4. **Walk forward**: re-select pairs every six months and trade them on the next six, never on
+   data they were chosen from.
+5. **Judge** with the deflated Sharpe ratio, which charges the result for the 6 strategy
+   configurations tried, and a block bootstrap for tail risk. The bootstrap hot loop is in C++
+   (4.5x faster than NumPy, same results to 1e-14).
+
+Rules were written down and committed **before** results were seen, and every configuration
+tried is logged in [`research/`](research/). No-look-ahead is enforced by tests that scramble
+all future prices and check that earlier results do not change.
+
+## Results (real out of sample, 2017-01-03 to 2025-12-31, 2,262 days)
+
+Base costs. Source: [`results/walkforward.csv`](results/walkforward.csv).
+
+| Strategy | Sharpe | CAGR | Max drawdown | Hit rate | Trades | Windows > 0 | Deflated Sharpe |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Cointegration, OLS hedge | **0.31** | 1.3% | 12.1% | 59.8% | 1,287 | 12 / 18 | 0.36 |
+| Cointegration, Kalman hedge | 0.11 | 0.4% | 13.7% | 59.7% | 1,320 | 9 / 18 | 0.17 |
+| Distance (GGR) | -0.21 | -0.6% | 9.3% | 52.4% | 269 | 7 / 18 | 0.03 |
+
+Sharpe by cost level (zero / 5 / 10 / 20 bps per side per leg):
+
+| Strategy | 0 bps | 5 bps (base) | 10 bps | 20 bps |
+|---|---:|---:|---:|---:|
+| OLS | 0.67 | 0.31 | 0.00 | -0.62 |
+| Kalman | 0.50 | 0.11 | -0.22 | -0.90 |
+| Distance | -0.05 | -0.21 | -0.31 | -0.51 |
+
+What this says:
+
+- **No variant passes the deflated Sharpe test** (a common bar is 0.95). The best Sharpe, 0.31,
+  is below the 0.43 that the best of 6 worthless strategies would show by luck.
+- The 95% bootstrap interval for the best Sharpe is -0.36 to 0.95, which includes zero.
+- **In sample the same strategies look excellent** (mean Sharpe about 3.6 on the windows the
+  pairs were chosen on, against 0.34 out of sample). That gap is the point of walking forward.
+- **Costs decide it.** The OLS variant trades about 29x its capital a year; a 10 bps cost
+  erases the edge.
+- 1-day 99% CVaR for the OLS variant is 0.99% of equity; the real 10-day 99% CVaR (3.16%) is
+  larger than the automatic-block bootstrap interval, so read tails from the 40-day-block
+  numbers in [`results/risk_tail_alt_block.csv`](results/risk_tail_alt_block.csv).
+
+A full write-up is in [`docs/writeup.md`](docs/writeup.md).
+
+## Limitations
+
+These all bias the results, and the first three flatter the strategy.
+
+- **Survivorship bias.** The universe is today's S&P 500. Firms that failed or were acquired
+  between 2015 and 2025 are missing, and for pairs trading those are exactly the pairs that
+  diverge and never return. The results are an upper bound.
+- **Full-sample missing-data filter.** Tickers with more than 5% missing days over the whole
+  2015-2025 sample are dropped, so a stock must have traded for almost all of it to be eligible
+  in any window. That uses future knowledge when building the universe. It also removes recent
+  IPOs.
+- **Today's GICS labels.** Pairs are formed within today's sub-industries, even for windows
+  years earlier (for example, GICS moved GOOGL and META into Communication Services in 2018).
+- **Cost assumptions.** 5 bps per side per leg, 0.5% a year borrow, fills at the next close,
+  no market impact, no interest on cash. Reasonable for liquid S&P 500 names and modest size;
+  not tested at scale. Sensitivity at 0, 10 and 20 bps is reported and never used to choose
+  anything.
+- **Trial count.** The deflated Sharpe uses N = 6, which only counts logged configurations.
+  Thresholds fixed by reasoning (entry 2, exit 0.5, 20 pairs) are not counted, so N may be
+  too small.
+- **Kalman variant** trades the filter's forecast error while holding the entry hedge ratio
+  (a locked rule, documented in PROGRESS.md).
+
+## What's next
+
+1. **Data v2: a point-in-time universe.** Historical S&P 500 membership and GICS labels at each
+   date, and no global missing-data filter (per-window completeness only). Rerun trials 4 and 5
+   unchanged on it. This is the test that matters most, because it fixes survivorship bias,
+   the full-sample filter and today's-labels look-ahead together.
+2. Kalman variant that trades the spread of the position actually held.
+3. Cost-aware entry (wider band or minimum expected profit) to cut turnover, and distance trades
+   allowed past the window end. Each is a new trial and raises N.
+4. Fresh data (2026 onwards) as a true holdout.
+
+## Run it
 
 ```bash
-uv run python -m pairslab.data download   # S&P 500 prices, 2015-01-01 to 2025-12-31
+git clone https://github.com/noe2971/pairslab && cd pairslab
+uv sync                                          # builds the C++ extension (needs CMake and a C++17 compiler)
+uv run ruff check . && uv run pytest             # 283 tests
+uv run streamlit run app/streamlit_app.py        # dashboard on committed results, no data download needed
 ```
 
-Writes `data/prices.duckdb` (git-ignored) with three tables: `tickers` (symbol, name, GICS
-sector, sub-industry), `prices` (ticker, date, adj_close, volume) and `price_flags` (one-day
-jumps worth a manual look). Quality checks: tickers with more than 5% missing days are dropped,
-gaps of up to 2 days are forward-filled (never backward, so no look-ahead), and one-day moves
-beyond +/-30% are flagged rather than deleted.
-
-### Survivorship bias warning
-
-The ticker list is **today's** S&P 500, taken from Wikipedia. Companies that were removed
-between 2015 and today (bankruptcies, acquisitions, shrinking market cap) are not in it, so
-the dataset contains only firms that did well enough to stay in the index. Backtests on it
-look better than reality would have: the losers are missing. Dropping tickers with short
-histories also removes recent IPOs. Treat every backtest result on this data as an optimistic
-upper bound until a point-in-time constituent list is used.
-
-## Pair selection
+To rebuild everything from raw data:
 
 ```bash
-uv run python -m pairslab.selection --start 2015-01-01 --end 2016-12-31 --jobs 8 --note "why"
+uv run python -m pairslab.data download          # S&P 500 prices into DuckDB
+uv run python -m pairslab.walkforward --jobs 12  # 18 windows, about 80 s
+uv run python -m pairslab.risk --backend cpp     # bootstrap risk
+uv run python -m pairslab.app_export             # refresh files used by the dashboard
 ```
 
-Uses only the formation window and only pairs in the same GICS **sub-industry**; two share
-classes of one company (GOOG/GOOGL, NWS/NWSA) are never paired. Two methods,
-each returning the top N = 20 pairs as **candidates** (ranked, not significance-tested):
+## Repository map
 
-* **cointegration**: OLS hedge ratio on log prices, Engle-Granger test in both directions
-  (pair p-value = the larger one), ADF on the spread, AR(1)/OU half-life. Candidates are the
-  smallest p-values among pairs with half-life 1-60 days and a positive hedge ratio.
-  Benjamini-Hochberg q-values are reported as a diagnostic.
-* **distance** (Gatev, Goetzmann and Rouwenhorst, 2006): normalize prices to 1 on the first
-  day, rank by the sum of squared deviations between the two normalized series.
+| Path | What |
+|---|---|
+| `src/pairslab/` | data, selection, signals, backtest engine, walk-forward, risk, trials log |
+| `cpp/` | C++17 bootstrap core (pybind11) |
+| `app/` | Streamlit dashboard |
+| `results/` | every number quoted above, as CSV and PNG |
+| `research/` | append-only logs of every configuration tried |
+| `PROGRESS.md` | session-by-session decisions, audits and open questions |
 
-Every scored pair goes to the DuckDB table `pair_scores` (keyed by configuration and window).
-Every run is appended to [`research/selection_trials.jsonl`](research/selection_trials.jsonl),
-a git-tracked log of selection configurations; the number of distinct configurations is the
-trial count for the deflated Sharpe ratio.
+## Module details
 
-**2015-2016:** 1,199 same-sub-industry pairs, 53 pass the raw 5% Engle-Granger test (about 60
-would by chance), 0 pass BH (smallest q = 0.73). Counting the earlier same-sector run and the
-runs before share classes were excluded, 5 configurations have been tried so far. No pair is statistically significant in the
-formation window, so whether either method works can only be judged out of sample.
+Per-stage notes on data, selection, backtest, walk-forward, risk and the dashboard are in
+[`PROGRESS.md`](PROGRESS.md) (sessions 2 to 12).
 
-## Backtest
-
-```bash
-uv run python -m pairslab.backtest   # 2017-H1: trial 4 (OLS, Kalman) and trial 5, 4 cost levels
-```
-
-An event-driven engine (`src/pairslab/backtest/`). A bar feed releases one day of closing
-prices at a time; the strategy turns it into signals, the portfolio into orders, and a
-simulated broker into fills, all through a first-in-first-out event queue. A decision at
-day t's close fills at day t+1's close (the end-of-window close fills the same day: it
-depends only on the calendar). Costs: commission + slippage per side per leg (base case
-5 bps in total) and 0.5% a year short borrow. Each pair gets 10% of equity in gross
-exposure (2x gross limit / 20 pairs), legs in the ratio $1 of y : $beta of x.
-
-Every run goes to DuckDB: `runs` (settings + metrics), `trades` (trade log) and
-`equity_curve` (daily), so results can be queried with SQL:
-
-```sql
-SELECT label, round(sharpe, 2) AS sharpe, n_trades FROM runs ORDER BY created_at;
-```
-
-Seeing a strategy's P&L makes it a trial, so the base-cost run of every variant is also
-appended to [`research/strategy_trials.jsonl`](research/strategy_trials.jsonl). The trial
-count for the deflated Sharpe ratio (`pairslab.trials.count_strategy_trials`) takes each
-selection configuration once if it was never backtested, and once per distinct strategy
-(selection + signal and backtest rules, e.g. OLS vs Kalman hedge) if it was. Windows and
-cost levels are not trials. **Count so far: 6.**
-
-**2017-H1 (first out-of-sample window), base case:** every variant lost money. Trial 4 with
-the OLS hedge -1.5% (Sharpe -0.71, 63 trades), with the Kalman hedge -1.3% (Sharpe -0.69, 72
-trades); trial 5 (distance) -2.8% (Sharpe -3.15, 11 trades, none converged within the
-window). With zero costs: -0.75%, -0.46% and -2.6%. For the OLS hedge, the spread moved
-+49 bps in our favour between the entry and exit *signal* closes but -5 bps between the
-*fill* closes one day later: the one-day execution delay removes the whole edge. One
-six-month window is far too short to judge a strategy; this is a first data point, not a
-verdict.
-
-## Walk-forward
-
-```bash
-uv run python -m pairslab.walkforward --jobs 12   # 18 windows, about 80 s
-```
-
-18 rolling windows: 24 months of formation, then 6 months of trading, rolled forward 6
-months, so the trading windows cover 2017-01 to 2025-12 back to back. Each window reruns
-the selection (trials 4 and 5, unchanged) on its formation data only and trades the result
-on the next 6 months. The out-of-sample windows are chained into one equity curve per
-variant. Output: `results/walkforward.csv` (per window and overall, every cost level),
-four charts in `results/`, every run in DuckDB.
-
-**Result (base costs, 2017-2025):** trial 4 with the OLS hedge Sharpe 0.31 (1.3% a year,
-max drawdown 12%), with the Kalman hedge 0.11, trial 5 (distance) -0.21. In sample (the
-formation windows the pairs were picked on) the same strategies show Sharpe 3.5-3.6.
-**Deflated Sharpe ratio** (Bailey and Lopez de Prado), with 6 trials: 0.36, 0.17 and 0.03.
-None is close to the usual 0.95, so there is no evidence of a real edge after costs and
-after accounting for the strategies tried. With 10 bps costs the best variant breaks even.
-
-## Risk (bootstrap)
-
-```bash
-uv run python -m pairslab.risk   # reads the stored walk-forward runs, about 25 s
-```
-
-Stationary block bootstrap (Politis and Romano) of the stitched out-of-sample daily returns
-(base costs, read from DuckDB, nothing is re-backtested): 10,000 alternative histories of
-2,262 days per variant. Per history: 1-day and 10-day VaR and CVaR at 95% and 99%, maximum
-drawdown, total return and Sharpe ratio, so every number comes with its sampling spread.
-Output: `results/risk_summary.csv`, `risk_sharpe_ci.csv`, `risk_block_sensitivity.csv`,
-`risk_timing.csv` and three charts. `--backend cpp` runs the hot loop in C++ (`cpp/`), which
-simulates the same histories (exact copy of NumPy's PCG64) and is 4.5x faster end to end;
-`uv run python bench/bench_risk.py` writes the stage-by-stage comparison to
-`results/benchmark.md`.
-
-**Result (OLS hedge):** 1-day 99% CVaR 1.0% of equity, maximum drawdown 12.1% (95% interval
-across histories 5.8% to 22.7%), Sharpe 0.31 with a 95% interval of -0.36 to 0.95, which
-contains zero. Daily returns are not autocorrelated but their size is (volatility
-clustering), so the 10-day 99% tail is understated under the automatic block length. The
-real 3.2% CVaR falls outside its interval (1.95-2.92%) but inside the one for 40-day blocks
-(1.98-4.01%); both are in `results/risk_tail_alt_block.csv`. Details in PROGRESS.md.
-
-## Dashboard
-
-```bash
-uv run python -m pairslab.app_export        # once, after a new walk-forward or risk run
-uv run streamlit run app/streamlit_app.py   # http://localhost:8501
-```
-
-A five-page Streamlit app in `app/` (Overview, Pair explorer, Risk, Costs, Method) for people
-who will not read the code. It reads **only committed files in `results/`**: the existing
-`walkforward.csv`, `risk_*.csv` and `benchmark.md`, plus a few small files that
-`pairslab.app_export` writes to `results/app/` from the local DuckDB (stitched daily returns,
-bootstrap histograms, annual turnover, and prices, spread, z-score, trades and P&L of every
-pair in every window; about 4 MB in total). If the walk-forward has been run more than once,
-the risk analysis and the export read only the newest run of each label. The deployed app therefore needs no DuckDB, no C++ build and no
-rerun; its dependencies are in `app/requirements.txt`. The theme is in
-`.streamlit/config.toml`. Tests (`tests/test_app.py`) load every page, check the error
-states and interactions, and compare the headline numbers with the result files.
-
-## Setup
-
-```bash
-uv sync
-./scripts/install-hooks.sh
-uv run ruff check .
-uv run pytest
-```
+Licensed under the [MIT License](LICENSE).

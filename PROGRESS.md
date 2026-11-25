@@ -749,3 +749,18 @@ snooping, metric errors and dashboard numbers that do not match `results/`.
   licence, or reconstructing membership from the Wikipedia change log).
 - The built-in browser preview could not start the dashboard this session ("Current
   directory does not exist"); the pages were checked with Streamlit's AppTest instead.
+
+## Session 13 (2026-11-25): recruiter polish
+
+**Done**
+- `README.md` rewritten: pitch, live dashboard link (https://pairslab.streamlit.app), CI / Python / licence badges, equity-curve image, problem, method with a mermaid diagram, out-of-sample results table, limitations, what's next, run instructions.
+- `docs/writeup.md`: two-page research note. `docs/demo-script.md`: 80-second screen-recording script.
+- Every number was read from `results/` (`walkforward.csv`, `risk_*.csv`, `benchmark.md`); no code or result changed.
+
+**Decisions and why**
+- The old README's per-module sections (data, selection, backtest, risk detail) were dropped in favour of a short recruiter-facing page; the detail lives in this file.
+- A static PNG is used instead of a GIF: recording one needs a screen capture. The demo script explains how to make one.
+
+**Open questions**
+- The dashboard URL answered HTTP 303 when checked from the shell (likely a redirect or a sleeping app); open it in a browser to confirm it is live.
+- Point-in-time universe (data v2) is still the planned fix for survivorship bias, the full-sample missing-data filter and today's GICS labels.
