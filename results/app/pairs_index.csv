@@ -1,0 +1,1081 @@
+window,variant,pair,ticker_y,ticker_x,sub_industry,rank,formation_hedge_ratio,half_life,eg_pvalue,ssd,lookback,entry_z,exit_z,stop_z,n_trades,gross_pnl,net_pnl,name_y,name_x
+1,trial4-ols,BAX/ISRG,BAX,ISRG,Health Care Equipment,1,0.81957447,10.02118781,0.00228759,,30.0,2.0,0.5,4.0,4,5910.46592425,5485.12168177,Baxter International,Intuitive Surgical
+1,trial4-ols,LII/MAS,LII,MAS,Building Products,2,0.93238456,9.61613792,0.00311995,,30.0,2.0,0.5,4.0,3,-2141.98135179,-2490.11853739,Lennox International,Masco
+1,trial4-ols,GPN/V,GPN,V,Transaction & Payment Processing Services,3,2.17229096,7.05807244,0.00384367,,30.0,2.0,0.5,4.0,3,-1774.14848464,-2134.45403707,Global Payments,Visa Inc.
+1,trial4-ols,BSX/PODD,BSX,PODD,Health Care Equipment,4,0.50256832,26.24242471,0.00392305,,79.0,2.0,0.5,4.0,2,2725.22575597,2443.7702917,Boston Scientific,Insulet Corporation
+1,trial4-ols,AAPL/STX,AAPL,STX,"Technology Hardware, Storage & Peripherals",5,0.26113171,14.7967108,0.00408014,,44.0,2.0,0.5,4.0,3,-3062.95028491,-3510.76651113,Apple Inc.,Seagate Technology
+1,trial4-ols,BDX/ISRG,BDX,ISRG,Health Care Equipment,6,0.69141233,10.79600225,0.00453417,,32.0,2.0,0.5,4.0,4,-3763.85121658,-4214.43211543,Becton Dickinson,Intuitive Surgical
+1,trial4-ols,BAX/BDX,BAX,BDX,Health Care Equipment,7,1.11855488,11.88579679,0.0060628,,36.0,2.0,0.5,4.0,2,-3173.04365671,-3457.02592072,Baxter International,Becton Dickinson
+1,trial4-ols,FRT/KIM,FRT,KIM,Retail REITs,8,0.77240183,10.54000596,0.00674749,,32.0,2.0,0.5,4.0,4,-1041.62844531,-1509.37312499,Federal Realty Investment Trust,Kimco Realty
+1,trial4-ols,AEP/WEC,AEP,WEC,Electric Utilities,9,0.7912031,8.79231954,0.00687603,,30.0,2.0,0.5,4.0,3,-2096.63356177,-2464.7215651,American Electric Power,WEC Energy Group
+1,trial4-ols,BAX/BSX,BAX,BSX,Health Care Equipment,10,0.67945484,17.40488894,0.00695675,,52.0,2.0,0.5,4.0,3,-2032.77414395,-2411.00856307,Baxter International,Boston Scientific
+1,trial4-ols,EMR/ETN,EMR,ETN,Electrical Components & Equipment,11,0.784084,11.26735833,0.00732612,,34.0,2.0,0.5,4.0,4,6652.41198649,6213.3998253,Emerson Electric,Eaton Corporation
+1,trial4-ols,EXPD/UPS,EXPD,UPS,Air Freight & Logistics,12,0.71882941,11.77619057,0.00831508,,35.0,2.0,0.5,4.0,5,3199.52945048,2639.15670199,Expeditors International,United Parcel Service
+1,trial4-ols,IEX/XYL,IEX,XYL,Industrial Machinery & Supplies & Components,13,0.5610262,11.8726952,0.01001661,,36.0,2.0,0.5,4.0,2,-3586.43815187,-3874.30290157,IDEX Corporation,Xylem Inc.
+1,trial4-ols,IVZ/KKR,IVZ,KKR,Asset Management & Custody Banks,14,0.54565098,10.22749088,0.0102802,,31.0,2.0,0.5,4.0,4,-35.47011611,-487.8543778,Invesco,KKR & Co.
+1,trial4-ols,AAPL/WDC,AAPL,WDC,"Technology Hardware, Storage & Peripherals",15,0.23567336,17.22033906,0.01070523,,52.0,2.0,0.5,4.0,2,-7465.1307777,-7798.29421689,Apple Inc.,Western Digital
+1,trial4-ols,CMS/XEL,CMS,XEL,Multi-Utilities,16,1.0809523,3.97577761,0.01094281,,30.0,2.0,0.5,4.0,4,1218.69214753,777.02807323,CMS Energy,Xcel Energy
+1,trial4-ols,PODD/STE,PODD,STE,Health Care Equipment,17,1.32965235,15.92396539,0.01129686,,48.0,2.0,0.5,4.0,3,-2444.84026529,-2834.58696989,Insulet Corporation,Steris
+1,trial4-ols,ADBE/CDNS,ADBE,CDNS,Application Software,18,0.93880591,11.50349881,0.011315,,35.0,2.0,0.5,4.0,4,4878.53761969,4432.78815581,Adobe Inc.,Cadence Design Systems
+1,trial4-ols,APO/ARES,APO,ARES,Asset Management & Custody Banks,19,0.75301988,12.30516647,0.01224792,,37.0,2.0,0.5,4.0,1,-1492.9600849,-1632.40767424,Apollo Global Management,Ares Management
+1,trial4-ols,BSX/ISRG,BSX,ISRG,Health Care Equipment,20,0.96940904,14.70446607,0.01242699,,44.0,2.0,0.5,4.0,3,2010.7887087,1645.52430601,Boston Scientific,Intuitive Surgical
+1,trial4-kalman,BAX/ISRG,BAX,ISRG,Health Care Equipment,1,0.81957447,10.02118781,0.00228759,,30.0,2.0,0.5,4.0,4,5718.0487222,5293.2635074,Baxter International,Intuitive Surgical
+1,trial4-kalman,LII/MAS,LII,MAS,Building Products,2,0.93238456,9.61613792,0.00311995,,30.0,2.0,0.5,4.0,5,-2610.75025587,-3166.12630575,Lennox International,Masco
+1,trial4-kalman,GPN/V,GPN,V,Transaction & Payment Processing Services,3,2.17229096,7.05807244,0.00384367,,30.0,2.0,0.5,4.0,4,-1623.66125962,-2084.09122158,Global Payments,Visa Inc.
+1,trial4-kalman,BSX/PODD,BSX,PODD,Health Care Equipment,4,0.50256832,26.24242471,0.00392305,,79.0,2.0,0.5,4.0,2,4378.98060817,4120.68722316,Boston Scientific,Insulet Corporation
+1,trial4-kalman,AAPL/STX,AAPL,STX,"Technology Hardware, Storage & Peripherals",5,0.26113171,14.7967108,0.00408014,,44.0,2.0,0.5,4.0,3,-3144.14076136,-3583.88619201,Apple Inc.,Seagate Technology
+1,trial4-kalman,BDX/ISRG,BDX,ISRG,Health Care Equipment,6,0.69141233,10.79600225,0.00453417,,32.0,2.0,0.5,4.0,4,-2680.9491938,-3138.06293804,Becton Dickinson,Intuitive Surgical
+1,trial4-kalman,BAX/BDX,BAX,BDX,Health Care Equipment,7,1.11855488,11.88579679,0.0060628,,36.0,2.0,0.5,4.0,3,720.84085545,334.19177899,Baxter International,Becton Dickinson
+1,trial4-kalman,FRT/KIM,FRT,KIM,Retail REITs,8,0.77240183,10.54000596,0.00674749,,32.0,2.0,0.5,4.0,5,1498.93389473,945.86488008,Federal Realty Investment Trust,Kimco Realty
+1,trial4-kalman,AEP/WEC,AEP,WEC,Electric Utilities,9,0.7912031,8.79231954,0.00687603,,30.0,2.0,0.5,4.0,3,-1702.88227617,-2056.89078013,American Electric Power,WEC Energy Group
+1,trial4-kalman,BAX/BSX,BAX,BSX,Health Care Equipment,10,0.67945484,17.40488894,0.00695675,,52.0,2.0,0.5,4.0,3,-636.29596765,-1006.26318047,Baxter International,Boston Scientific
+1,trial4-kalman,EMR/ETN,EMR,ETN,Electrical Components & Equipment,11,0.784084,11.26735833,0.00732612,,34.0,2.0,0.5,4.0,4,6170.72927151,5735.64254729,Emerson Electric,Eaton Corporation
+1,trial4-kalman,EXPD/UPS,EXPD,UPS,Air Freight & Logistics,12,0.71882941,11.77619057,0.00831508,,35.0,2.0,0.5,4.0,3,-1510.45165402,-1851.97136641,Expeditors International,United Parcel Service
+1,trial4-kalman,IEX/XYL,IEX,XYL,Industrial Machinery & Supplies & Components,13,0.5610262,11.8726952,0.01001661,,36.0,2.0,0.5,4.0,3,-2381.7960236,-2747.4800338,IDEX Corporation,Xylem Inc.
+1,trial4-kalman,IVZ/KKR,IVZ,KKR,Asset Management & Custody Banks,14,0.54565098,10.22749088,0.0102802,,31.0,2.0,0.5,4.0,4,-272.53750855,-726.22794186,Invesco,KKR & Co.
+1,trial4-kalman,AAPL/WDC,AAPL,WDC,"Technology Hardware, Storage & Peripherals",15,0.23567336,17.22033906,0.01070523,,52.0,2.0,0.5,4.0,3,-9668.936856,-10055.06284708,Apple Inc.,Western Digital
+1,trial4-kalman,CMS/XEL,CMS,XEL,Multi-Utilities,16,1.0809523,3.97577761,0.01094281,,30.0,2.0,0.5,4.0,5,1096.71610945,557.56090516,CMS Energy,Xcel Energy
+1,trial4-kalman,PODD/STE,PODD,STE,Health Care Equipment,17,1.32965235,15.92396539,0.01129686,,48.0,2.0,0.5,4.0,3,-2962.97172929,-3354.381665,Insulet Corporation,Steris
+1,trial4-kalman,ADBE/CDNS,ADBE,CDNS,Application Software,18,0.93880591,11.50349881,0.011315,,35.0,2.0,0.5,4.0,5,4623.10303674,4045.53252054,Adobe Inc.,Cadence Design Systems
+1,trial4-kalman,APO/ARES,APO,ARES,Asset Management & Custody Banks,19,0.75301988,12.30516647,0.01224792,,37.0,2.0,0.5,4.0,3,2673.22074172,2334.52322432,Apollo Global Management,Ares Management
+1,trial4-kalman,BSX/ISRG,BSX,ISRG,Health Care Equipment,20,0.96940904,14.70446607,0.01242699,,44.0,2.0,0.5,4.0,3,-2237.41232297,-2618.07381831,Boston Scientific,Intuitive Surgical
+1,trial5-distance,ED/XEL,ED,XEL,Multi-Utilities,1,,12.20997344,,0.18420262,,2.0,0.0,,1,540.64316258,361.73080897,Consolidated Edison,Xcel Energy
+1,trial5-distance,AEE/PNW,AEE,PNW,Multi-Utilities,2,,11.20377796,,0.24265714,,2.0,0.0,,1,-887.43932545,-1050.57680261,Ameren,Pinnacle West Capital
+1,trial5-distance,AEP/SO,AEP,SO,Electric Utilities,3,,11.44890603,,0.2780021,,2.0,0.0,,1,-3933.83819143,-4131.84236316,American Electric Power,Southern Company
+1,trial5-distance,ES/SO,ES,SO,Electric Utilities,4,,24.53620777,,0.39563234,,2.0,0.0,,1,-3214.70747526,-3382.34470579,Eversource Energy,Southern Company
+1,trial5-distance,AEE/DTE,AEE,DTE,Multi-Utilities,5,,28.95907549,,0.40274962,,2.0,0.0,,0,0.0,0.0,Ameren,DTE Energy
+1,trial5-distance,AEP/ES,AEP,ES,Electric Utilities,6,,27.69302601,,0.43262926,,2.0,0.0,,0,0.0,0.0,American Electric Power,Eversource Energy
+1,trial5-distance,DTE/PNW,DTE,PNW,Multi-Utilities,7,,27.80360442,,0.45669841,,2.0,0.0,,1,1448.40324359,1261.18231597,DTE Energy,Pinnacle West Capital
+1,trial5-distance,NEE/XEL,NEE,XEL,Multi-Utilities,8,,19.90087763,,0.46307144,,2.0,0.0,,0,0.0,0.0,NextEra Energy,Xcel Energy
+1,trial5-distance,NEE/PCG,NEE,PCG,Multi-Utilities,9,,14.63279094,,0.50109684,,2.0,0.0,,1,-502.64835557,-634.00276446,NextEra Energy,PG&E Corporation
+1,trial5-distance,PCG/XEL,PCG,XEL,Multi-Utilities,10,,28.80889945,,0.5020366,,2.0,0.0,,0,0.0,0.0,PG&E Corporation,Xcel Energy
+1,trial5-distance,FRT/KIM,FRT,KIM,Retail REITs,11,,22.85408288,,0.51113393,,2.0,0.0,,1,-5976.10271993,-6136.28879858,Federal Realty Investment Trust,Kimco Realty
+1,trial5-distance,AEP/EIX,AEP,EIX,Electric Utilities,12,,31.44389057,,0.52891451,,2.0,0.0,,0,0.0,0.0,American Electric Power,Edison International
+1,trial5-distance,AON/MRSH,AON,MRSH,Insurance Brokers,13,,30.39542016,,0.53711703,,2.0,0.0,,0,0.0,0.0,Aon plc,Marsh McLennan
+1,trial5-distance,ED/NEE,ED,NEE,Multi-Utilities,14,,25.89785578,,0.60628468,,2.0,0.0,,1,-357.47266023,-456.88234839,Consolidated Edison,NextEra Energy
+1,trial5-distance,KIM/REG,KIM,REG,Retail REITs,15,,19.26469565,,0.6079495,,2.0,0.0,,1,-7447.96686108,-7626.52711288,Kimco Realty,Regency Centers
+1,trial5-distance,FRT/SPG,FRT,SPG,Retail REITs,16,,22.508591,,0.62020624,,2.0,0.0,,0,0.0,0.0,Federal Realty Investment Trust,Simon Property Group
+1,trial5-distance,LNT/WEC,LNT,WEC,Electric Utilities,17,,43.7103982,,0.64762002,,2.0,0.0,,0,0.0,0.0,Alliant Energy,WEC Energy Group
+1,trial5-distance,KIM/SPG,KIM,SPG,Retail REITs,18,,29.17362681,,0.71718743,,2.0,0.0,,1,-5306.54678846,-5474.92017891,Kimco Realty,Simon Property Group
+1,trial5-distance,ED/PCG,ED,PCG,Multi-Utilities,19,,30.50601775,,0.75002415,,2.0,0.0,,0,0.0,0.0,Consolidated Edison,PG&E Corporation
+1,trial5-distance,RSG/WM,RSG,WM,Environmental & Facilities Services,20,,31.30005962,,0.77229369,,2.0,0.0,,1,-591.24512574,-766.24946885,Republic Services,Waste Management
+2,trial4-ols,AOS/LII,AOS,LII,Building Products,1,1.16741514,8.89887942,0.00010914,,30.0,2.0,0.5,4.0,3,-4804.38287818,-5189.83670282,A. O. Smith,Lennox International
+2,trial4-ols,DOV/NDSN,DOV,NDSN,Industrial Machinery & Supplies & Components,2,0.47804476,7.4326212,0.00044756,,30.0,2.0,0.5,4.0,3,415.45545125,41.28605759,Dover Corporation,Nordson Corporation
+2,trial4-ols,BAX/ISRG,BAX,ISRG,Health Care Equipment,3,0.85839239,9.00966735,0.000694,,30.0,2.0,0.5,4.0,5,1920.16504739,1362.66561475,Baxter International,Intuitive Surgical
+2,trial4-ols,LMT/RTX,LMT,RTX,Aerospace & Defense,4,1.02460908,15.7341856,0.00088792,,47.0,2.0,0.5,4.0,2,-4356.31692275,-4607.21068719,Lockheed Martin,RTX Corporation
+2,trial4-ols,BDX/BSX,BDX,BSX,Health Care Equipment,5,0.67082075,8.418553,0.00104449,,30.0,2.0,0.5,4.0,3,-10536.22034547,-10938.92558751,Becton Dickinson,Boston Scientific
+2,trial4-ols,JPM/USB,JPM,USB,Diversified Banks,6,1.39560562,7.92721152,0.00140726,,30.0,2.0,0.5,4.0,5,1442.51057398,903.71494365,JPMorgan Chase,U.S. Bancorp
+2,trial4-ols,CHD/CL,CHD,CL,Household Products,7,1.1391145,10.06493161,0.00165055,,30.0,2.0,0.5,4.0,3,-1304.67851204,-1659.30961011,Church & Dwight,Colgate-Palmolive
+2,trial4-ols,MDT/ZBH,MDT,ZBH,Health Care Equipment,8,0.63657213,15.72720795,0.00183626,,47.0,2.0,0.5,4.0,4,6450.13477415,6009.1468096,Medtronic,Zimmer Biomet
+2,trial4-ols,PCG/PNW,PCG,PNW,Multi-Utilities,9,0.82801305,9.43088332,0.00219073,,30.0,2.0,0.5,4.0,5,4067.66775193,3512.15599619,PG&E Corporation,Pinnacle West Capital
+2,trial4-ols,INTU/TRMB,INTU,TRMB,Application Software,10,0.55926924,9.04915104,0.00231775,,30.0,2.0,0.5,4.0,4,4688.62876288,4244.37707393,Intuit,Trimble Inc.
+2,trial4-ols,DLR/EQIX,DLR,EQIX,Data Center REITs,11,1.25102705,11.18235161,0.00428456,,34.0,2.0,0.5,4.0,4,-1261.60107067,-1735.4053704,Digital Realty,Equinix
+2,trial4-ols,DOV/ITW,DOV,ITW,Industrial Machinery & Supplies & Components,12,0.64951674,10.42106909,0.00428618,,31.0,2.0,0.5,4.0,3,-1559.48118253,-1893.77136395,Dover Corporation,Illinois Tool Works
+2,trial4-ols,CNP/D,CNP,D,Multi-Utilities,13,2.61272889,11.32437469,0.00588103,,34.0,2.0,0.5,4.0,4,268.8872405,-213.12246191,CenterPoint Energy,Dominion Energy
+2,trial4-ols,PTC/SNPS,PTC,SNPS,Application Software,14,1.1610428,11.91119281,0.00704275,,36.0,2.0,0.5,4.0,4,-990.28237326,-1459.15531655,PTC Inc.,Synopsys
+2,trial4-ols,ADBE/CDNS,ADBE,CDNS,Application Software,15,0.96420413,12.91514127,0.00752154,,39.0,2.0,0.5,4.0,1,4029.90899777,3902.56938111,Adobe Inc.,Cadence Design Systems
+2,trial4-ols,NUE/STLD,NUE,STLD,Steel,16,0.62569775,10.04944179,0.00822253,,30.0,2.0,0.5,4.0,4,987.9683495,541.42625026,Nucor,Steel Dynamics
+2,trial4-ols,HON/MMM,HON,MMM,Industrial Conglomerates,17,0.85555106,8.61043063,0.01045423,,30.0,2.0,0.5,4.0,4,1279.45873548,861.24282924,Honeywell Technologies,3M
+2,trial4-ols,ETR/WEC,ETR,WEC,Electric Utilities,18,0.75662606,16.06689106,0.01062627,,48.0,2.0,0.5,4.0,3,-1303.20945789,-1670.62347464,Entergy,WEC Energy Group
+2,trial4-ols,AEP/ETR,AEP,ETR,Electric Utilities,19,1.09089962,13.67448322,0.01184134,,41.0,2.0,0.5,4.0,4,-977.57565568,-1437.06703615,American Electric Power,Entergy
+2,trial4-ols,MCHP/NVDA,MCHP,NVDA,Semiconductors,20,0.35885425,14.13898746,0.0127997,,42.0,2.0,0.5,4.0,2,-206.45199531,-439.28332066,Microchip Technology,Nvidia
+2,trial4-kalman,AOS/LII,AOS,LII,Building Products,1,1.16741514,8.89887942,0.00010914,,30.0,2.0,0.5,4.0,4,-4000.25679121,-4493.00132808,A. O. Smith,Lennox International
+2,trial4-kalman,DOV/NDSN,DOV,NDSN,Industrial Machinery & Supplies & Components,2,0.47804476,7.4326212,0.00044756,,30.0,2.0,0.5,4.0,3,2355.59727553,2008.54719679,Dover Corporation,Nordson Corporation
+2,trial4-kalman,BAX/ISRG,BAX,ISRG,Health Care Equipment,3,0.85839239,9.00966735,0.000694,,30.0,2.0,0.5,4.0,6,2784.05305682,2142.83202419,Baxter International,Intuitive Surgical
+2,trial4-kalman,LMT/RTX,LMT,RTX,Aerospace & Defense,4,1.02460908,15.7341856,0.00088792,,47.0,2.0,0.5,4.0,3,-3663.94712512,-4030.70758556,Lockheed Martin,RTX Corporation
+2,trial4-kalman,BDX/BSX,BDX,BSX,Health Care Equipment,5,0.67082075,8.418553,0.00104449,,30.0,2.0,0.5,4.0,3,-11475.64340601,-11876.1347652,Becton Dickinson,Boston Scientific
+2,trial4-kalman,JPM/USB,JPM,USB,Diversified Banks,6,1.39560562,7.92721152,0.00140726,,30.0,2.0,0.5,4.0,5,4340.45999993,3799.75153707,JPMorgan Chase,U.S. Bancorp
+2,trial4-kalman,CHD/CL,CHD,CL,Household Products,7,1.1391145,10.06493161,0.00165055,,30.0,2.0,0.5,4.0,4,343.35154258,-125.22445308,Church & Dwight,Colgate-Palmolive
+2,trial4-kalman,MDT/ZBH,MDT,ZBH,Health Care Equipment,8,0.63657213,15.72720795,0.00183626,,47.0,2.0,0.5,4.0,3,2032.38464066,1705.23907588,Medtronic,Zimmer Biomet
+2,trial4-kalman,PCG/PNW,PCG,PNW,Multi-Utilities,9,0.82801305,9.43088332,0.00219073,,30.0,2.0,0.5,4.0,5,4748.62392704,4190.04709829,PG&E Corporation,Pinnacle West Capital
+2,trial4-kalman,INTU/TRMB,INTU,TRMB,Application Software,10,0.55926924,9.04915104,0.00231775,,30.0,2.0,0.5,4.0,5,5451.02317961,4900.34595966,Intuit,Trimble Inc.
+2,trial4-kalman,DLR/EQIX,DLR,EQIX,Data Center REITs,11,1.25102705,11.18235161,0.00428456,,34.0,2.0,0.5,4.0,4,-885.1232989,-1341.49781955,Digital Realty,Equinix
+2,trial4-kalman,DOV/ITW,DOV,ITW,Industrial Machinery & Supplies & Components,12,0.64951674,10.42106909,0.00428618,,31.0,2.0,0.5,4.0,4,4009.53034833,3579.4678808,Dover Corporation,Illinois Tool Works
+2,trial4-kalman,CNP/D,CNP,D,Multi-Utilities,13,2.61272889,11.32437469,0.00588103,,34.0,2.0,0.5,4.0,4,-1666.24227007,-2148.39605132,CenterPoint Energy,Dominion Energy
+2,trial4-kalman,PTC/SNPS,PTC,SNPS,Application Software,14,1.1610428,11.91119281,0.00704275,,36.0,2.0,0.5,4.0,5,-1449.06515591,-2017.34206364,PTC Inc.,Synopsys
+2,trial4-kalman,ADBE/CDNS,ADBE,CDNS,Application Software,15,0.96420413,12.91514127,0.00752154,,39.0,2.0,0.5,4.0,2,4715.81924629,4460.30337918,Adobe Inc.,Cadence Design Systems
+2,trial4-kalman,NUE/STLD,NUE,STLD,Steel,16,0.62569775,10.04944179,0.00822253,,30.0,2.0,0.5,4.0,4,1626.4743647,1179.38263073,Nucor,Steel Dynamics
+2,trial4-kalman,HON/MMM,HON,MMM,Industrial Conglomerates,17,0.85555106,8.61043063,0.01045423,,30.0,2.0,0.5,4.0,4,608.89209994,188.38508177,Honeywell Technologies,3M
+2,trial4-kalman,ETR/WEC,ETR,WEC,Electric Utilities,18,0.75662606,16.06689106,0.01062627,,48.0,2.0,0.5,4.0,3,-2428.3528752,-2791.77028263,Entergy,WEC Energy Group
+2,trial4-kalman,AEP/ETR,AEP,ETR,Electric Utilities,19,1.09089962,13.67448322,0.01184134,,41.0,2.0,0.5,4.0,4,-1838.2553612,-2289.59420102,American Electric Power,Entergy
+2,trial4-kalman,MCHP/NVDA,MCHP,NVDA,Semiconductors,20,0.35885425,14.13898746,0.0127997,,42.0,2.0,0.5,4.0,3,-2541.46104373,-2876.11162744,Microchip Technology,Nvidia
+2,trial5-distance,AEE/PNW,AEE,PNW,Multi-Utilities,1,,15.33326667,,0.34698121,,2.0,0.0,,1,-1554.56797879,-1728.52652398,Ameren,Pinnacle West Capital
+2,trial5-distance,ED/XEL,ED,XEL,Multi-Utilities,2,,19.1376592,,0.40266031,,2.0,0.0,,0,0.0,0.0,Consolidated Edison,Xcel Energy
+2,trial5-distance,AEP/ES,AEP,ES,Electric Utilities,3,,24.23777718,,0.45114053,,2.0,0.0,,1,1718.25877417,1593.22142892,American Electric Power,Eversource Energy
+2,trial5-distance,HON/MMM,HON,MMM,Industrial Conglomerates,4,,13.86790263,,0.46475105,,2.0,0.0,,1,7088.95834162,6918.23477447,Honeywell Technologies,3M
+2,trial5-distance,CMS/ED,CMS,ED,Multi-Utilities,5,,25.34281222,,0.48257031,,2.0,0.0,,0,0.0,0.0,CMS Energy,Consolidated Edison
+2,trial5-distance,CMS/XEL,CMS,XEL,Multi-Utilities,6,,13.06702351,,0.48666739,,2.0,0.0,,1,101.64375144,-108.48633595,CMS Energy,Xcel Energy
+2,trial5-distance,NEE/PCG,NEE,PCG,Multi-Utilities,7,,22.19593153,,0.51469641,,2.0,0.0,,1,-13409.66727144,-13560.10427239,NextEra Energy,PG&E Corporation
+2,trial5-distance,ES/PPL,ES,PPL,Electric Utilities,8,,16.9790826,,0.53044173,,2.0,0.0,,1,-7968.3940039,-8104.95727143,Eversource Energy,PPL Corporation
+2,trial5-distance,FRT/SPG,FRT,SPG,Retail REITs,9,,20.43647975,,0.62789007,,2.0,0.0,,1,2193.65331478,2063.39109046,Federal Realty Investment Trust,Simon Property Group
+2,trial5-distance,DTE/PCG,DTE,PCG,Multi-Utilities,10,,34.55329104,,0.75200533,,2.0,0.0,,1,-8386.14622746,-8535.64525778,DTE Energy,PG&E Corporation
+2,trial5-distance,AEE/CMS,AEE,CMS,Multi-Utilities,11,,25.14835915,,0.82666609,,2.0,0.0,,1,532.87295534,363.31574774,Ameren,CMS Energy
+2,trial5-distance,EXR/PSA,EXR,PSA,Self-Storage REITs,12,,21.63628068,,0.8496117,,2.0,0.0,,1,-1402.53663405,-1542.8801313,Extra Space Storage,Public Storage
+2,trial5-distance,CMS/PNW,CMS,PNW,Multi-Utilities,13,,39.22729008,,0.87100881,,2.0,0.0,,0,0.0,0.0,CMS Energy,Pinnacle West Capital
+2,trial5-distance,EIX/LNT,EIX,LNT,Electric Utilities,14,,31.71294138,,0.8954881,,2.0,0.0,,1,-8508.26662286,-8654.71551313,Edison International,Alliant Energy
+2,trial5-distance,JPM/PNC,JPM,PNC,Diversified Banks,15,,34.28561454,,0.92069406,,2.0,0.0,,0,0.0,0.0,JPMorgan Chase,PNC Financial Services
+2,trial5-distance,DTE/NEE,DTE,NEE,Multi-Utilities,16,,29.45845967,,0.96315601,,2.0,0.0,,1,-186.89198409,-287.72489313,DTE Energy,NextEra Energy
+2,trial5-distance,AEP/SO,AEP,SO,Electric Utilities,17,,247.35086068,,0.96659088,,2.0,0.0,,0,0.0,0.0,American Electric Power,Southern Company
+2,trial5-distance,CLX/KMB,CLX,KMB,Household Products,18,,19.81788596,,0.9941938,,2.0,0.0,,1,-5127.03864479,-5330.95470147,Clorox,Kimberly-Clark
+2,trial5-distance,IEX/SWK,IEX,SWK,Industrial Machinery & Supplies & Components,19,,26.13872815,,1.00892096,,2.0,0.0,,0,0.0,0.0,IDEX Corporation,Stanley Black & Decker
+2,trial5-distance,DTE/XEL,DTE,XEL,Multi-Utilities,20,,58.97622575,,1.02067493,,2.0,0.0,,0,0.0,0.0,DTE Energy,Xcel Energy
+3,trial4-ols,MPWR/MU,MPWR,MU,Semiconductors,1,0.45800623,9.39692454,2.916e-05,,30.0,2.0,0.5,4.0,4,5541.88061252,5077.11949466,Monolithic Power Systems,Micron Technology
+3,trial4-ols,ISRG/RVTY,ISRG,RVTY,Health Care Equipment,2,1.61526721,7.51782409,9.15e-05,,30.0,2.0,0.5,4.0,3,-483.0396534,-819.1661851,Intuitive Surgical,Revvity
+3,trial4-ols,HON/MMM,HON,MMM,Industrial Conglomerates,3,0.8973575,8.09326322,0.00060218,,30.0,2.0,0.5,4.0,3,-4944.53413937,-5299.89574269,Honeywell Technologies,3M
+3,trial4-ols,AON/WTW,AON,WTW,Insurance Brokers,4,1.20604538,10.74617404,0.00061467,,32.0,2.0,0.5,4.0,4,2081.30548297,1632.837989,Aon plc,Willis Towers Watson
+3,trial4-ols,MCO/MSCI,MCO,MSCI,Financial Exchanges & Data,5,0.82371079,9.2369196,0.00065961,,30.0,2.0,0.5,4.0,7,10879.82860343,10141.72016074,Moody's Corporation,MSCI
+3,trial4-ols,ED/XEL,ED,XEL,Multi-Utilities,6,0.82716019,8.27845661,0.00072628,,30.0,2.0,0.5,4.0,4,476.98030475,40.21250068,Consolidated Edison,Xcel Energy
+3,trial4-ols,ADBE/CDNS,ADBE,CDNS,Application Software,7,0.95991448,11.71301311,0.00081636,,35.0,2.0,0.5,4.0,2,-13496.83160667,-13791.95173949,Adobe Inc.,Cadence Design Systems
+3,trial4-ols,PODD/RMD,PODD,RMD,Health Care Equipment,8,1.68710187,11.37505381,0.00194675,,34.0,2.0,0.5,4.0,5,9022.809515,8497.03745948,Insulet Corporation,ResMed
+3,trial4-ols,BAX/RVTY,BAX,RVTY,Health Care Equipment,9,1.23930939,11.15650283,0.00195942,,33.0,2.0,0.5,4.0,3,-1211.84719413,-1549.35647491,Baxter International,Revvity
+3,trial4-ols,RVTY/SYK,RVTY,SYK,Health Care Equipment,10,0.87649478,14.04222097,0.00236225,,42.0,2.0,0.5,4.0,4,3832.02114656,3387.42780665,Revvity,Stryker Corporation
+3,trial4-ols,APO/IVZ,APO,IVZ,Asset Management & Custody Banks,11,2.56124623,13.20605874,0.00236239,,40.0,2.0,0.5,4.0,2,-7391.1762575,-7623.43332363,Apollo Global Management,Invesco
+3,trial4-ols,COP/FANG,COP,FANG,Oil & Gas Exploration & Production,12,0.69067966,13.73198322,0.00246544,,41.0,2.0,0.5,4.0,3,-2659.4770117,-3059.04046994,ConocoPhillips,Diamondback Energy
+3,trial4-ols,FICO/WDAY,FICO,WDAY,Application Software,13,0.75181232,15.24423232,0.00269412,,46.0,2.0,0.5,4.0,4,544.70726184,91.41392378,Fair Isaac,"Workday, Inc."
+3,trial4-ols,FRT/SPG,FRT,SPG,Retail REITs,14,0.77854934,8.7855268,0.00308045,,30.0,2.0,0.5,4.0,4,212.64406249,-222.30444855,Federal Realty Investment Trust,Simon Property Group
+3,trial4-ols,CFG/MTB,CFG,MTB,Regional Banks,15,1.38810662,22.6306561,0.00361373,,68.0,2.0,0.5,4.0,3,3767.35665993,3390.6770312,Citizens Financial Group,M&T Bank
+3,trial4-ols,MCO/NDAQ,MCO,NDAQ,Financial Exchanges & Data,16,1.86109568,14.19346642,0.00379565,,43.0,2.0,0.5,4.0,4,-27.08735914,-523.40999906,Moody's Corporation,"Nasdaq, Inc."
+3,trial4-ols,CCL/RCL,CCL,RCL,"Hotels, Resorts & Cruise Lines",17,0.71372525,10.81430932,0.00461943,,32.0,2.0,0.5,4.0,4,-3341.49548816,-3787.91638047,Carnival Corporation,Royal Caribbean Group
+3,trial4-ols,MRVL/ON,MRVL,ON,Semiconductors,18,0.93433959,11.50731444,0.00521741,,35.0,2.0,0.5,4.0,3,2510.58509263,2169.85079389,Marvell Technology,ON Semiconductor
+3,trial4-ols,APO/KKR,APO,KKR,Asset Management & Custody Banks,19,1.62617301,11.85963064,0.00529608,,36.0,2.0,0.5,4.0,4,-684.21719481,-1160.41501925,Apollo Global Management,KKR & Co.
+3,trial4-ols,MRVL/MU,MRVL,MU,Semiconductors,20,0.56024654,12.63376673,0.00584183,,38.0,2.0,0.5,4.0,3,-732.96206805,-1069.83916776,Marvell Technology,Micron Technology
+3,trial4-kalman,MPWR/MU,MPWR,MU,Semiconductors,1,0.45800623,9.39692454,2.916e-05,,30.0,2.0,0.5,4.0,4,3464.42727391,2994.97419303,Monolithic Power Systems,Micron Technology
+3,trial4-kalman,ISRG/RVTY,ISRG,RVTY,Health Care Equipment,2,1.61526721,7.51782409,9.15e-05,,30.0,2.0,0.5,4.0,3,-397.83492509,-733.17753564,Intuitive Surgical,Revvity
+3,trial4-kalman,HON/MMM,HON,MMM,Industrial Conglomerates,3,0.8973575,8.09326322,0.00060218,,30.0,2.0,0.5,4.0,4,-4036.39994067,-4484.53718175,Honeywell Technologies,3M
+3,trial4-kalman,AON/WTW,AON,WTW,Insurance Brokers,4,1.20604538,10.74617404,0.00061467,,32.0,2.0,0.5,4.0,4,1814.82241594,1366.25590379,Aon plc,Willis Towers Watson
+3,trial4-kalman,MCO/MSCI,MCO,MSCI,Financial Exchanges & Data,5,0.82371079,9.2369196,0.00065961,,30.0,2.0,0.5,4.0,7,8465.39831854,7725.20395556,Moody's Corporation,MSCI
+3,trial4-kalman,ED/XEL,ED,XEL,Multi-Utilities,6,0.82716019,8.27845661,0.00072628,,30.0,2.0,0.5,4.0,4,1128.09953684,692.58640365,Consolidated Edison,Xcel Energy
+3,trial4-kalman,ADBE/CDNS,ADBE,CDNS,Application Software,7,0.95991448,11.71301311,0.00081636,,35.0,2.0,0.5,4.0,4,-14478.33862459,-14992.9414795,Adobe Inc.,Cadence Design Systems
+3,trial4-kalman,PODD/RMD,PODD,RMD,Health Care Equipment,8,1.68710187,11.37505381,0.00194675,,34.0,2.0,0.5,4.0,5,6063.43841949,5540.65943261,Insulet Corporation,ResMed
+3,trial4-kalman,BAX/RVTY,BAX,RVTY,Health Care Equipment,9,1.23930939,11.15650283,0.00195942,,33.0,2.0,0.5,4.0,3,-1055.73558488,-1395.5210413,Baxter International,Revvity
+3,trial4-kalman,RVTY/SYK,RVTY,SYK,Health Care Equipment,10,0.87649478,14.04222097,0.00236225,,42.0,2.0,0.5,4.0,4,4306.33098507,3850.57318796,Revvity,Stryker Corporation
+3,trial4-kalman,APO/IVZ,APO,IVZ,Asset Management & Custody Banks,11,2.56124623,13.20605874,0.00236239,,40.0,2.0,0.5,4.0,2,-5210.99757477,-5443.11355764,Apollo Global Management,Invesco
+3,trial4-kalman,COP/FANG,COP,FANG,Oil & Gas Exploration & Production,12,0.69067966,13.73198322,0.00246544,,41.0,2.0,0.5,4.0,4,2849.32348713,2362.69359078,ConocoPhillips,Diamondback Energy
+3,trial4-kalman,FICO/WDAY,FICO,WDAY,Application Software,13,0.75181232,15.24423232,0.00269412,,46.0,2.0,0.5,4.0,4,-148.92372847,-601.77350201,Fair Isaac,"Workday, Inc."
+3,trial4-kalman,FRT/SPG,FRT,SPG,Retail REITs,14,0.77854934,8.7855268,0.00308045,,30.0,2.0,0.5,4.0,6,-466.95809804,-1108.29354465,Federal Realty Investment Trust,Simon Property Group
+3,trial4-kalman,CFG/MTB,CFG,MTB,Regional Banks,15,1.38810662,22.6306561,0.00361373,,68.0,2.0,0.5,4.0,3,3617.02839644,3235.18335167,Citizens Financial Group,M&T Bank
+3,trial4-kalman,MCO/NDAQ,MCO,NDAQ,Financial Exchanges & Data,16,1.86109568,14.19346642,0.00379565,,43.0,2.0,0.5,4.0,3,-29.23824103,-391.0576392,Moody's Corporation,"Nasdaq, Inc."
+3,trial4-kalman,CCL/RCL,CCL,RCL,"Hotels, Resorts & Cruise Lines",17,0.71372525,10.81430932,0.00461943,,32.0,2.0,0.5,4.0,4,-4162.30760574,-4604.93331901,Carnival Corporation,Royal Caribbean Group
+3,trial4-kalman,MRVL/ON,MRVL,ON,Semiconductors,18,0.93433959,11.50731444,0.00521741,,35.0,2.0,0.5,4.0,3,4678.52668677,4335.65199981,Marvell Technology,ON Semiconductor
+3,trial4-kalman,APO/KKR,APO,KKR,Asset Management & Custody Banks,19,1.62617301,11.85963064,0.00529608,,36.0,2.0,0.5,4.0,4,-489.52277363,-964.45340715,Apollo Global Management,KKR & Co.
+3,trial4-kalman,MRVL/MU,MRVL,MU,Semiconductors,20,0.56024654,12.63376673,0.00584183,,38.0,2.0,0.5,4.0,4,-306.98321838,-747.49363938,Marvell Technology,Micron Technology
+3,trial5-distance,DTE/PNW,DTE,PNW,Multi-Utilities,1,,17.60843283,,0.21681911,,2.0,0.0,,0,0.0,0.0,DTE Energy,Pinnacle West Capital
+3,trial5-distance,AEP/DUK,AEP,DUK,Electric Utilities,2,,38.74990445,,0.25900531,,2.0,0.0,,0,0.0,0.0,American Electric Power,Duke Energy
+3,trial5-distance,CMS/XEL,CMS,XEL,Multi-Utilities,3,,45.56182088,,0.35564037,,2.0,0.0,,1,-241.74452088,-346.82998895,CMS Energy,Xcel Energy
+3,trial5-distance,CMS/ED,CMS,ED,Multi-Utilities,4,,14.51149996,,0.39670248,,2.0,0.0,,1,-1770.62972398,-1915.68218967,CMS Energy,Consolidated Edison
+3,trial5-distance,ED/XEL,ED,XEL,Multi-Utilities,5,,37.62850379,,0.45060282,,2.0,0.0,,0,0.0,0.0,Consolidated Edison,Xcel Energy
+3,trial5-distance,AEP/ES,AEP,ES,Electric Utilities,6,,26.95106479,,0.46638757,,2.0,0.0,,2,3911.77592654,3696.06787352,American Electric Power,Eversource Energy
+3,trial5-distance,DUK/ES,DUK,ES,Electric Utilities,7,,34.33775527,,0.51164678,,2.0,0.0,,1,3770.19797604,3664.51586455,Duke Energy,Eversource Energy
+3,trial5-distance,FRT/SPG,FRT,SPG,Retail REITs,8,,14.85201076,,0.53404933,,2.0,0.0,,1,1405.47274868,1195.87272007,Federal Realty Investment Trust,Simon Property Group
+3,trial5-distance,AEE/DTE,AEE,DTE,Multi-Utilities,9,,24.48547436,,0.54346832,,2.0,0.0,,1,-936.82987471,-1062.35237741,Ameren,DTE Energy
+3,trial5-distance,AEE/XEL,AEE,XEL,Multi-Utilities,10,,37.58355781,,0.6571953,,2.0,0.0,,1,-1114.25467611,-1239.68846641,Ameren,Xcel Energy
+3,trial5-distance,ESS/UDR,ESS,UDR,Multi-Family Residential REITs,11,,33.4504877,,0.68063385,,2.0,0.0,,1,3442.35867331,3300.13431734,Essex Property Trust,"UDR, Inc."
+3,trial5-distance,AEE/PNW,AEE,PNW,Multi-Utilities,12,,36.2906443,,0.72414428,,2.0,0.0,,1,-727.39196903,-853.01919069,Ameren,Pinnacle West Capital
+3,trial5-distance,CMS/NI,CMS,NI,Multi-Utilities,13,,26.13633876,,0.734943,,2.0,0.0,,0,0.0,0.0,CMS Energy,NiSource
+3,trial5-distance,CMS/PNW,CMS,PNW,Multi-Utilities,14,,42.2179065,,0.75025144,,2.0,0.0,,0,0.0,0.0,CMS Energy,Pinnacle West Capital
+3,trial5-distance,DUK/ETR,DUK,ETR,Electric Utilities,15,,26.36629605,,0.79415295,,2.0,0.0,,0,0.0,0.0,Duke Energy,Entergy
+3,trial5-distance,TFC/USB,TFC,USB,Diversified Banks,16,,66.26069646,,0.84268522,,2.0,0.0,,1,-725.68190276,-911.80019475,Truist Financial,U.S. Bancorp
+3,trial5-distance,AEP/ETR,AEP,ETR,Electric Utilities,17,,32.57858116,,0.84552764,,2.0,0.0,,0,0.0,0.0,American Electric Power,Entergy
+3,trial5-distance,DUK/WEC,DUK,WEC,Electric Utilities,18,,25.57556347,,0.87593662,,2.0,0.0,,0,0.0,0.0,Duke Energy,WEC Energy Group
+3,trial5-distance,AEE/CMS,AEE,CMS,Multi-Utilities,19,,62.28662243,,0.89230303,,2.0,0.0,,0,0.0,0.0,Ameren,CMS Energy
+3,trial5-distance,ES/ETR,ES,ETR,Electric Utilities,20,,42.76756699,,0.90285996,,2.0,0.0,,1,1217.92835032,1096.18811432,Eversource Energy,Entergy
+4,trial4-ols,DHR/ILMN,DHR,ILMN,Life Sciences Tools & Services,1,0.41186493,2.70826546,0.0,,30.0,2.0,0.5,4.0,5,3939.43882929,3392.81598759,Danaher Corporation,"Illumina, Inc."
+4,trial4-ols,DHR/WAT,DHR,WAT,Life Sciences Tools & Services,2,0.59475888,4.0900821,1.1e-07,,30.0,2.0,0.5,4.0,4,60.66387795,-424.20998041,Danaher Corporation,Waters Corporation
+4,trial4-ols,A/DHR,A,DHR,Life Sciences Tools & Services,3,1.43643526,6.65528478,2.4e-07,,30.0,2.0,0.5,4.0,5,4520.70050706,3989.87679817,Agilent Technologies,Danaher Corporation
+4,trial4-ols,CRL/DHR,CRL,DHR,Life Sciences Tools & Services,4,1.11324229,7.53163884,4.3e-07,,30.0,2.0,0.5,4.0,5,2397.92915498,1873.04223126,Charles River Laboratories,Danaher Corporation
+4,trial4-ols,DHR/IQV,DHR,IQV,Life Sciences Tools & Services,5,0.64844814,4.42931902,5.97e-06,,30.0,2.0,0.5,4.0,4,1110.82591813,661.92858295,Danaher Corporation,IQVIA
+4,trial4-ols,CCI/SBAC,CCI,SBAC,Telecom Tower REITs,6,0.54591929,8.03698916,1.936e-05,,30.0,2.0,0.5,4.0,5,-1031.20402375,-1626.99190404,Crown Castle,SBA Communications
+4,trial4-ols,CMS/SRE,CMS,SRE,Multi-Utilities,7,1.03286231,7.40306578,0.00030296,,30.0,2.0,0.5,4.0,4,1007.49303722,565.04515145,CMS Energy,Sempra
+4,trial4-ols,PODD/RMD,PODD,RMD,Health Care Equipment,8,1.73178465,8.3784522,0.00100409,,30.0,2.0,0.5,4.0,5,-5664.70125919,-6264.6058997,Insulet Corporation,ResMed
+4,trial4-ols,AAPL/HPQ,AAPL,HPQ,"Technology Hardware, Storage & Peripherals",9,1.02917718,13.25273894,0.00109543,,40.0,2.0,0.5,4.0,3,1550.84704823,1186.22508782,Apple Inc.,HP Inc.
+4,trial4-ols,FIS/V,FIS,V,Transaction & Payment Processing Services,10,0.61920663,8.51631251,0.00131237,,30.0,2.0,0.5,4.0,5,4341.2241482,3809.6576798,Fidelity National Information Services,Visa Inc.
+4,trial4-ols,BDX/ISRG,BDX,ISRG,Health Care Equipment,11,0.43340449,8.96488979,0.00251782,,30.0,2.0,0.5,4.0,3,169.09840963,-161.97979837,Becton Dickinson,Intuitive Surgical
+4,trial4-ols,CRM/FICO,CRM,FICO,Application Software,12,1.27215772,10.53827822,0.00252095,,32.0,2.0,0.5,4.0,4,6077.65208661,5609.55945235,Salesforce,Fair Isaac
+4,trial4-ols,CFG/MTB,CFG,MTB,Regional Banks,13,1.31189543,13.85199974,0.00259347,,42.0,2.0,0.5,4.0,4,2964.38550844,2528.26719367,Citizens Financial Group,M&T Bank
+4,trial4-ols,MPWR/MU,MPWR,MU,Semiconductors,14,0.43628734,9.15269538,0.00350141,,30.0,2.0,0.5,4.0,4,-7283.08297294,-7745.42540599,Monolithic Power Systems,Micron Technology
+4,trial4-ols,CCL/NCLH,CCL,NCLH,"Hotels, Resorts & Cruise Lines",15,0.97548419,14.00623007,0.0038968,,42.0,2.0,0.5,4.0,5,5768.01093361,5234.99520986,Carnival Corporation,Norwegian Cruise Line Holdings
+4,trial4-ols,LHX/NOC,LHX,NOC,Aerospace & Defense,16,1.22304297,12.40014764,0.00426958,,37.0,2.0,0.5,4.0,3,-1750.28282484,-2086.29512063,L3Harris,Northrop Grumman
+4,trial4-ols,MSCI/SPGI,MSCI,SPGI,Financial Exchanges & Data,17,1.23227122,10.70979403,0.0058763,,32.0,2.0,0.5,4.0,4,4572.81334136,4124.58922093,MSCI,S&P Global
+4,trial4-ols,BAC/PNC,BAC,PNC,Diversified Banks,18,1.24226472,10.44883065,0.00607333,,31.0,2.0,0.5,4.0,5,5799.12499191,5265.00297466,Bank of America,PNC Financial Services
+4,trial4-ols,HLT/MAR,HLT,MAR,"Hotels, Resorts & Cruise Lines",19,0.78119263,10.12092693,0.00650753,,30.0,2.0,0.5,4.0,4,4878.83253825,4452.11596327,Hilton Worldwide,Marriott International
+4,trial4-ols,BDX/RMD,BDX,RMD,Health Care Equipment,20,0.64296408,10.75731505,0.00796401,,32.0,2.0,0.5,4.0,3,-7340.25050723,-7690.96552839,Becton Dickinson,ResMed
+4,trial4-kalman,DHR/ILMN,DHR,ILMN,Life Sciences Tools & Services,1,0.41186493,2.70826546,0.0,,30.0,2.0,0.5,4.0,3,3765.04094957,3426.76623364,Danaher Corporation,"Illumina, Inc."
+4,trial4-kalman,DHR/WAT,DHR,WAT,Life Sciences Tools & Services,2,0.59475888,4.0900821,1.1e-07,,30.0,2.0,0.5,4.0,4,-161.39569303,-638.87815747,Danaher Corporation,Waters Corporation
+4,trial4-kalman,A/DHR,A,DHR,Life Sciences Tools & Services,3,1.43643526,6.65528478,2.4e-07,,30.0,2.0,0.5,4.0,6,4803.56669705,4170.24818993,Agilent Technologies,Danaher Corporation
+4,trial4-kalman,CRL/DHR,CRL,DHR,Life Sciences Tools & Services,4,1.11324229,7.53163884,4.3e-07,,30.0,2.0,0.5,4.0,5,3215.1295947,2687.36569186,Charles River Laboratories,Danaher Corporation
+4,trial4-kalman,DHR/IQV,DHR,IQV,Life Sciences Tools & Services,5,0.64844814,4.42931902,5.97e-06,,30.0,2.0,0.5,4.0,4,650.35873083,199.83478421,Danaher Corporation,IQVIA
+4,trial4-kalman,CCI/SBAC,CCI,SBAC,Telecom Tower REITs,6,0.54591929,8.03698916,1.936e-05,,30.0,2.0,0.5,4.0,5,1141.45339737,567.03147817,Crown Castle,SBA Communications
+4,trial4-kalman,CMS/SRE,CMS,SRE,Multi-Utilities,7,1.03286231,7.40306578,0.00030296,,30.0,2.0,0.5,4.0,5,1440.26843474,898.00991344,CMS Energy,Sempra
+4,trial4-kalman,PODD/RMD,PODD,RMD,Health Care Equipment,8,1.73178465,8.3784522,0.00100409,,30.0,2.0,0.5,4.0,5,-1437.48490586,-2028.23881854,Insulet Corporation,ResMed
+4,trial4-kalman,AAPL/HPQ,AAPL,HPQ,"Technology Hardware, Storage & Peripherals",9,1.02917718,13.25273894,0.00109543,,40.0,2.0,0.5,4.0,3,-218.12535938,-578.54614527,Apple Inc.,HP Inc.
+4,trial4-kalman,FIS/V,FIS,V,Transaction & Payment Processing Services,10,0.61920663,8.51631251,0.00131237,,30.0,2.0,0.5,4.0,5,3688.74918766,3154.20008596,Fidelity National Information Services,Visa Inc.
+4,trial4-kalman,BDX/ISRG,BDX,ISRG,Health Care Equipment,11,0.43340449,8.96488979,0.00251782,,30.0,2.0,0.5,4.0,3,250.26703642,-84.16650417,Becton Dickinson,Intuitive Surgical
+4,trial4-kalman,CRM/FICO,CRM,FICO,Application Software,12,1.27215772,10.53827822,0.00252095,,32.0,2.0,0.5,4.0,7,6408.98934064,5644.13131752,Salesforce,Fair Isaac
+4,trial4-kalman,CFG/MTB,CFG,MTB,Regional Banks,13,1.31189543,13.85199974,0.00259347,,42.0,2.0,0.5,4.0,4,2192.10090288,1753.89981127,Citizens Financial Group,M&T Bank
+4,trial4-kalman,MPWR/MU,MPWR,MU,Semiconductors,14,0.43628734,9.15269538,0.00350141,,30.0,2.0,0.5,4.0,4,-4594.72554515,-5054.05394922,Monolithic Power Systems,Micron Technology
+4,trial4-kalman,CCL/NCLH,CCL,NCLH,"Hotels, Resorts & Cruise Lines",15,0.97548419,14.00623007,0.0038968,,42.0,2.0,0.5,4.0,5,6527.78762696,5988.18831964,Carnival Corporation,Norwegian Cruise Line Holdings
+4,trial4-kalman,LHX/NOC,LHX,NOC,Aerospace & Defense,16,1.22304297,12.40014764,0.00426958,,37.0,2.0,0.5,4.0,2,1498.59785965,1272.60335607,L3Harris,Northrop Grumman
+4,trial4-kalman,MSCI/SPGI,MSCI,SPGI,Financial Exchanges & Data,17,1.23227122,10.70979403,0.0058763,,32.0,2.0,0.5,4.0,4,2081.2023819,1635.22216303,MSCI,S&P Global
+4,trial4-kalman,BAC/PNC,BAC,PNC,Diversified Banks,18,1.24226472,10.44883065,0.00607333,,31.0,2.0,0.5,4.0,5,5477.98698608,4943.41059758,Bank of America,PNC Financial Services
+4,trial4-kalman,HLT/MAR,HLT,MAR,"Hotels, Resorts & Cruise Lines",19,0.78119263,10.12092693,0.00650753,,30.0,2.0,0.5,4.0,4,5166.27708731,4736.90975975,Hilton Worldwide,Marriott International
+4,trial4-kalman,BDX/RMD,BDX,RMD,Health Care Equipment,20,0.64296408,10.75731505,0.00796401,,32.0,2.0,0.5,4.0,3,-7407.27121893,-7760.89535732,Becton Dickinson,ResMed
+4,trial5-distance,CMS/ED,CMS,ED,Multi-Utilities,1,,41.40010621,,0.16432061,,2.0,0.0,,1,-748.05436505,-918.28164175,CMS Energy,Consolidated Edison
+4,trial5-distance,FRT/REG,FRT,REG,Retail REITs,2,,16.76911288,,0.19789803,,2.0,0.0,,2,5577.63794909,5282.5988998,Federal Realty Investment Trust,Regency Centers
+4,trial5-distance,AEP/ES,AEP,ES,Electric Utilities,3,,19.41221819,,0.25335221,,2.0,0.0,,1,105.96609792,-13.57511193,American Electric Power,Eversource Energy
+4,trial5-distance,ETR/WEC,ETR,WEC,Electric Utilities,4,,18.16301628,,0.29467304,,2.0,0.0,,1,2421.84840889,2308.13755094,Entergy,WEC Energy Group
+4,trial5-distance,CMS/XEL,CMS,XEL,Multi-Utilities,5,,53.25605626,,0.37624516,,2.0,0.0,,1,607.6678687,478.0634577,CMS Energy,Xcel Energy
+4,trial5-distance,AEP/WEC,AEP,WEC,Electric Utilities,6,,24.87217882,,0.3934654,,2.0,0.0,,0,0.0,0.0,American Electric Power,WEC Energy Group
+4,trial5-distance,ED/XEL,ED,XEL,Multi-Utilities,7,,46.46158221,,0.40721304,,2.0,0.0,,1,-1999.1148724,-2169.9109418,Consolidated Edison,Xcel Energy
+4,trial5-distance,AEP/LNT,AEP,LNT,Electric Utilities,8,,23.56105108,,0.418982,,2.0,0.0,,1,-2355.45546366,-2501.06021056,American Electric Power,Alliant Energy
+4,trial5-distance,FRT/SPG,FRT,SPG,Retail REITs,9,,29.10896777,,0.48628305,,2.0,0.0,,1,280.61886467,125.94959634,Federal Realty Investment Trust,Simon Property Group
+4,trial5-distance,AEE/DTE,AEE,DTE,Multi-Utilities,10,,186.94429198,,0.48972118,,2.0,0.0,,0,0.0,0.0,Ameren,DTE Energy
+4,trial5-distance,PNW/XEL,PNW,XEL,Multi-Utilities,11,,73.53304381,,0.4915744,,2.0,0.0,,1,4019.90794486,3865.90279804,Pinnacle West Capital,Xcel Energy
+4,trial5-distance,AEP/DUK,AEP,DUK,Electric Utilities,12,,65.73787924,,0.50664125,,2.0,0.0,,0,0.0,0.0,American Electric Power,Duke Energy
+4,trial5-distance,ES/LNT,ES,LNT,Electric Utilities,13,,41.56606895,,0.51130864,,2.0,0.0,,1,-2530.49661013,-2676.11088137,Eversource Energy,Alliant Energy
+4,trial5-distance,DUK/WEC,DUK,WEC,Electric Utilities,14,,113.75921506,,0.51176331,,2.0,0.0,,0,0.0,0.0,Duke Energy,WEC Energy Group
+4,trial5-distance,CMS/SRE,CMS,SRE,Multi-Utilities,15,,8.19046038,,0.54981059,,2.0,0.0,,1,-1975.96034334,-2121.37914305,CMS Energy,Sempra
+4,trial5-distance,AEP/ETR,AEP,ETR,Electric Utilities,16,,39.5299929,,0.55825082,,2.0,0.0,,0,0.0,0.0,American Electric Power,Entergy
+4,trial5-distance,EIX/PPL,EIX,PPL,Electric Utilities,17,,17.30929579,,0.55912432,,2.0,0.0,,1,8110.09163299,7978.97952838,Edison International,PPL Corporation
+4,trial5-distance,REG/SPG,REG,SPG,Retail REITs,18,,29.44187706,,0.60730646,,2.0,0.0,,1,312.15829193,190.88685884,Regency Centers,Simon Property Group
+4,trial5-distance,CPT/UDR,CPT,UDR,Multi-Family Residential REITs,19,,42.14404526,,0.62595183,,2.0,0.0,,1,-1363.46925144,-1504.62748421,Camden Property Trust,"UDR, Inc."
+4,trial5-distance,EXC/PEG,EXC,PEG,Electric Utilities,20,,19.94786729,,0.6391789,,2.0,0.0,,2,1861.44151988,1582.13988148,Exelon,Public Service Enterprise Group
+5,trial4-ols,FIS/V,FIS,V,Transaction & Payment Processing Services,1,0.58839048,7.56443093,0.00051463,,30.0,2.0,0.5,4.0,3,1487.20587041,1146.8707213,Fidelity National Information Services,Visa Inc.
+5,trial4-ols,CRM/FICO,CRM,FICO,Application Software,2,1.15697826,9.82707898,0.00142187,,30.0,2.0,0.5,4.0,2,-16398.0899556,-16732.92700296,Salesforce,Fair Isaac
+5,trial4-ols,FIS/MA,FIS,MA,Transaction & Payment Processing Services,3,0.45044956,9.13455797,0.00250933,,30.0,2.0,0.5,4.0,5,4898.03502845,4334.05760092,Fidelity National Information Services,Mastercard
+5,trial4-ols,HBAN/RF,HBAN,RF,Regional Banks,4,0.64575412,12.05026275,0.00254028,,36.0,2.0,0.5,4.0,4,2946.8815229,2496.90468155,Huntington Bancshares,Regions Financial Corporation
+5,trial4-ols,CNP/SRE,CNP,SRE,Multi-Utilities,5,0.8267386,9.4105662,0.00297457,,30.0,2.0,0.5,4.0,3,-2670.92564576,-3048.41587769,CenterPoint Energy,Sempra
+5,trial4-ols,ISRG/SYK,ISRG,SYK,Health Care Equipment,6,2.32776239,9.19112932,0.00370433,,30.0,2.0,0.5,4.0,3,-5338.38969605,-5732.87124427,Intuitive Surgical,Stryker Corporation
+5,trial4-ols,ITW/PNR,ITW,PNR,Industrial Machinery & Supplies & Components,7,1.22315849,9.62881919,0.00414572,,30.0,2.0,0.5,4.0,3,276.82776102,-60.00258221,Illinois Tool Works,Pentair
+5,trial4-ols,CRM/INTU,CRM,INTU,Application Software,8,0.98068063,9.83746682,0.00490075,,30.0,2.0,0.5,4.0,4,-2574.21047442,-3054.79525865,Salesforce,Intuit
+5,trial4-ols,CPRT/CTAS,CPRT,CTAS,Diversified Support Services,9,1.32481303,12.86237469,0.00663569,,39.0,2.0,0.5,4.0,2,3983.6594846,3756.30152441,Copart,Cintas
+5,trial4-ols,NI/SRE,NI,SRE,Multi-Utilities,10,1.19220135,8.04911328,0.00882284,,30.0,2.0,0.5,4.0,3,1458.01059195,1101.46356995,NiSource,Sempra
+5,trial4-ols,CRL/IQV,CRL,IQV,Life Sciences Tools & Services,11,0.84390298,11.07252388,0.01499108,,33.0,2.0,0.5,4.0,4,2151.51049119,1697.38792094,Charles River Laboratories,IQVIA
+5,trial4-ols,PODD/SYK,PODD,SYK,Health Care Equipment,12,2.54504695,12.24927027,0.01527429,,37.0,2.0,0.5,4.0,3,410.1593738,54.41302437,Insulet Corporation,Stryker Corporation
+5,trial4-ols,KEYS/ZBRA,KEYS,ZBRA,Electronic Equipment & Instruments,13,0.81224419,12.04438615,0.01547809,,36.0,2.0,0.5,4.0,3,7281.33760081,6929.36703998,Keysight Technologies,Zebra Technologies
+5,trial4-ols,BDX/ISRG,BDX,ISRG,Health Care Equipment,14,0.44756029,11.39796878,0.01719314,,34.0,2.0,0.5,4.0,3,5156.89016895,4820.26599545,Becton Dickinson,Intuitive Surgical
+5,trial4-ols,LULU/NKE,LULU,NKE,"Apparel, Accessories & Luxury Goods",15,2.15312586,11.60797137,0.01759498,,35.0,2.0,0.5,4.0,3,5651.97756999,5291.10792423,Lululemon Athletica,"Nike, Inc."
+5,trial4-ols,CNC/UNH,CNC,UNH,Managed Health Care,16,1.38075014,9.30641417,0.01789057,,30.0,2.0,0.5,4.0,2,5332.47452472,5115.30981014,Centene Corporation,UnitedHealth Group
+5,trial4-ols,FISV/V,FISV,V,Transaction & Payment Processing Services,17,0.63631834,8.76742716,0.01827178,,30.0,2.0,0.5,4.0,5,3465.78995755,2918.77480307,Fiserv,Visa Inc.
+5,trial4-ols,FISV/JKHY,FISV,JKHY,Transaction & Payment Processing Services,18,0.67719026,12.97064353,0.01832823,,39.0,2.0,0.5,4.0,3,-115.56675096,-479.54930203,Fiserv,Jack Henry & Associates
+5,trial4-ols,FISV/MA,FISV,MA,Transaction & Payment Processing Services,19,0.48773193,9.72690047,0.02547426,,30.0,2.0,0.5,4.0,6,8994.42337602,8345.18717375,Fiserv,Mastercard
+5,trial4-ols,CCL/NCLH,CCL,NCLH,"Hotels, Resorts & Cruise Lines",20,0.93168009,13.58410475,0.0261312,,41.0,2.0,0.5,4.0,4,-3224.9580163,-3706.07526003,Carnival Corporation,Norwegian Cruise Line Holdings
+5,trial4-kalman,FIS/V,FIS,V,Transaction & Payment Processing Services,1,0.58839048,7.56443093,0.00051463,,30.0,2.0,0.5,4.0,4,1673.49601371,1225.45000898,Fidelity National Information Services,Visa Inc.
+5,trial4-kalman,CRM/FICO,CRM,FICO,Application Software,2,1.15697826,9.82707898,0.00142187,,30.0,2.0,0.5,4.0,2,-12180.29872785,-12477.09466918,Salesforce,Fair Isaac
+5,trial4-kalman,FIS/MA,FIS,MA,Transaction & Payment Processing Services,3,0.45044956,9.13455797,0.00250933,,30.0,2.0,0.5,4.0,5,4104.03856796,3552.30567085,Fidelity National Information Services,Mastercard
+5,trial4-kalman,HBAN/RF,HBAN,RF,Regional Banks,4,0.64575412,12.05026275,0.00254028,,36.0,2.0,0.5,4.0,4,2912.73086662,2463.9134062,Huntington Bancshares,Regions Financial Corporation
+5,trial4-kalman,CNP/SRE,CNP,SRE,Multi-Utilities,5,0.8267386,9.4105662,0.00297457,,30.0,2.0,0.5,4.0,3,-3065.02028703,-3439.52835476,CenterPoint Energy,Sempra
+5,trial4-kalman,ISRG/SYK,ISRG,SYK,Health Care Equipment,6,2.32776239,9.19112932,0.00370433,,30.0,2.0,0.5,4.0,3,-4499.57102938,-4888.76906506,Intuitive Surgical,Stryker Corporation
+5,trial4-kalman,ITW/PNR,ITW,PNR,Industrial Machinery & Supplies & Components,7,1.22315849,9.62881919,0.00414572,,30.0,2.0,0.5,4.0,3,2403.19819746,2068.20243241,Illinois Tool Works,Pentair
+5,trial4-kalman,CRM/INTU,CRM,INTU,Application Software,8,0.98068063,9.83746682,0.00490075,,30.0,2.0,0.5,4.0,5,-114.79454497,-681.15188239,Salesforce,Intuit
+5,trial4-kalman,CPRT/CTAS,CPRT,CTAS,Diversified Support Services,9,1.32481303,12.86237469,0.00663569,,39.0,2.0,0.5,4.0,2,3926.39506948,3698.85714281,Copart,Cintas
+5,trial4-kalman,NI/SRE,NI,SRE,Multi-Utilities,10,1.19220135,8.04911328,0.00882284,,30.0,2.0,0.5,4.0,3,1903.11568159,1573.7563461,NiSource,Sempra
+5,trial4-kalman,CRL/IQV,CRL,IQV,Life Sciences Tools & Services,11,0.84390298,11.07252388,0.01499108,,33.0,2.0,0.5,4.0,5,5874.71416129,5324.42455147,Charles River Laboratories,IQVIA
+5,trial4-kalman,PODD/SYK,PODD,SYK,Health Care Equipment,12,2.54504695,12.24927027,0.01527429,,37.0,2.0,0.5,4.0,2,-580.68698276,-810.90247184,Insulet Corporation,Stryker Corporation
+5,trial4-kalman,KEYS/ZBRA,KEYS,ZBRA,Electronic Equipment & Instruments,13,0.81224419,12.04438615,0.01547809,,36.0,2.0,0.5,4.0,3,6024.31652083,5699.48485819,Keysight Technologies,Zebra Technologies
+5,trial4-kalman,BDX/ISRG,BDX,ISRG,Health Care Equipment,14,0.44756029,11.39796878,0.01719314,,34.0,2.0,0.5,4.0,3,4981.09622339,4646.92319075,Becton Dickinson,Intuitive Surgical
+5,trial4-kalman,LULU/NKE,LULU,NKE,"Apparel, Accessories & Luxury Goods",15,2.15312586,11.60797137,0.01759498,,35.0,2.0,0.5,4.0,3,4711.0958333,4351.67750671,Lululemon Athletica,"Nike, Inc."
+5,trial4-kalman,CNC/UNH,CNC,UNH,Managed Health Care,16,1.38075014,9.30641417,0.01789057,,30.0,2.0,0.5,4.0,2,5422.25594047,5205.34736864,Centene Corporation,UnitedHealth Group
+5,trial4-kalman,FISV/V,FISV,V,Transaction & Payment Processing Services,17,0.63631834,8.76742716,0.01827178,,30.0,2.0,0.5,4.0,5,965.54904201,412.41120132,Fiserv,Visa Inc.
+5,trial4-kalman,FISV/JKHY,FISV,JKHY,Transaction & Payment Processing Services,18,0.67719026,12.97064353,0.01832823,,39.0,2.0,0.5,4.0,4,1807.05612514,1340.90192379,Fiserv,Jack Henry & Associates
+5,trial4-kalman,FISV/MA,FISV,MA,Transaction & Payment Processing Services,19,0.48773193,9.72690047,0.02547426,,30.0,2.0,0.5,4.0,5,4352.91017538,3810.50958642,Fiserv,Mastercard
+5,trial4-kalman,CCL/NCLH,CCL,NCLH,"Hotels, Resorts & Cruise Lines",20,0.93168009,13.58410475,0.0261312,,41.0,2.0,0.5,4.0,3,-3456.83597483,-3819.05375733,Carnival Corporation,Norwegian Cruise Line Holdings
+5,trial5-distance,LNT/WEC,LNT,WEC,Electric Utilities,1,,66.07958886,,0.32301257,,2.0,0.0,,1,349.07295236,243.23230511,Alliant Energy,WEC Energy Group
+5,trial5-distance,ETR/WEC,ETR,WEC,Electric Utilities,2,,17.18296746,,0.33457782,,2.0,0.0,,0,0.0,0.0,Entergy,WEC Energy Group
+5,trial5-distance,ETR/LNT,ETR,LNT,Electric Utilities,3,,34.46740388,,0.46589324,,2.0,0.0,,0,0.0,0.0,Entergy,Alliant Energy
+5,trial5-distance,ES/WEC,ES,WEC,Electric Utilities,4,,38.41013674,,0.49049879,,2.0,0.0,,0,0.0,0.0,Eversource Energy,WEC Energy Group
+5,trial5-distance,CMS/XEL,CMS,XEL,Multi-Utilities,5,,35.61922044,,0.51309526,,2.0,0.0,,1,613.94611474,511.00273881,CMS Energy,Xcel Energy
+5,trial5-distance,AEP/ES,AEP,ES,Electric Utilities,6,,15.74787908,,0.51744432,,2.0,0.0,,1,1515.84883676,1348.21294342,American Electric Power,Eversource Energy
+5,trial5-distance,MLM/VMC,MLM,VMC,Construction Materials,7,,10.2419221,,0.57289959,,2.0,0.0,,2,1990.78215765,1737.39109771,Martin Marietta Materials,Vulcan Materials Company
+5,trial5-distance,ES/LNT,ES,LNT,Electric Utilities,8,,53.88596527,,0.58364452,,2.0,0.0,,0,0.0,0.0,Eversource Energy,Alliant Energy
+5,trial5-distance,AEP/WEC,AEP,WEC,Electric Utilities,9,,25.69634078,,0.58483453,,2.0,0.0,,0,0.0,0.0,American Electric Power,WEC Energy Group
+5,trial5-distance,ED/PNW,ED,PNW,Multi-Utilities,10,,61.66062315,,0.63831638,,2.0,0.0,,0,0.0,0.0,Consolidated Edison,Pinnacle West Capital
+5,trial5-distance,MAA/VMRK,MAA,VMRK,Multi-Family Residential REITs,11,,33.07191686,,0.64758782,,2.0,0.0,,1,-924.57484263,-1039.88741088,Mid-America Apartment Communities,Vivmark Residential
+5,trial5-distance,AEE/CMS,AEE,CMS,Multi-Utilities,12,,81.94467594,,0.68127876,,2.0,0.0,,0,0.0,0.0,Ameren,CMS Energy
+5,trial5-distance,AEP/LNT,AEP,LNT,Electric Utilities,13,,40.43624501,,0.69163055,,2.0,0.0,,0,0.0,0.0,American Electric Power,Alliant Energy
+5,trial5-distance,CMS/NI,CMS,NI,Multi-Utilities,14,,18.17631959,,0.69379499,,2.0,0.0,,0,0.0,0.0,CMS Energy,NiSource
+5,trial5-distance,AEP/ETR,AEP,ETR,Electric Utilities,15,,34.62115466,,0.72103263,,2.0,0.0,,0,0.0,0.0,American Electric Power,Entergy
+5,trial5-distance,ESS/UDR,ESS,UDR,Multi-Family Residential REITs,16,,53.80470363,,0.75831749,,2.0,0.0,,0,0.0,0.0,Essex Property Trust,"UDR, Inc."
+5,trial5-distance,NI/XEL,NI,XEL,Multi-Utilities,17,,17.43055869,,0.75959456,,2.0,0.0,,1,-319.79672805,-515.12568198,NiSource,Xcel Energy
+5,trial5-distance,CPT/UDR,CPT,UDR,Multi-Family Residential REITs,18,,50.72079932,,0.76178701,,2.0,0.0,,1,-9.21450374,-109.93207485,Camden Property Trust,"UDR, Inc."
+5,trial5-distance,EXC/PEG,EXC,PEG,Electric Utilities,19,,44.38258814,,0.76532551,,2.0,0.0,,1,371.6506984,271.07210049,Exelon,Public Service Enterprise Group
+5,trial5-distance,CCL/NCLH,CCL,NCLH,"Hotels, Resorts & Cruise Lines",20,,11.54907718,,0.82142144,,2.0,0.0,,1,-9852.15283269,-10049.61862265,Carnival Corporation,Norwegian Cruise Line Holdings
+6,trial4-ols,FISV/MA,FISV,MA,Transaction & Payment Processing Services,1,0.55512199,8.04921409,0.00010895,,30.0,2.0,0.5,4.0,5,-679.44707161,-1249.22657352,Fiserv,Mastercard
+6,trial4-ols,FIS/V,FIS,V,Transaction & Payment Processing Services,2,0.55692156,7.83615273,0.00090746,,30.0,2.0,0.5,4.0,4,-361.34389525,-832.89911601,Fidelity National Information Services,Visa Inc.
+6,trial4-ols,FISV/V,FISV,V,Transaction & Payment Processing Services,3,0.72994448,8.81494985,0.00188161,,30.0,2.0,0.5,4.0,7,928.93149609,156.8396939,Fiserv,Visa Inc.
+6,trial4-ols,CPRT/CTAS,CPRT,CTAS,Diversified Support Services,4,1.378219,11.91008507,0.00315565,,36.0,2.0,0.5,4.0,3,2769.9763944,2397.01022662,Copart,Cintas
+6,trial4-ols,FIS/MA,FIS,MA,Transaction & Payment Processing Services,5,0.4206189,8.91296188,0.00344904,,30.0,2.0,0.5,4.0,4,174.30849921,-291.91801032,Fidelity National Information Services,Mastercard
+6,trial4-ols,MLM/VMC,MLM,VMC,Construction Materials,6,0.88477542,8.38112377,0.00660914,,30.0,2.0,0.5,4.0,5,2976.69086576,2392.1424644,Martin Marietta Materials,Vulcan Materials Company
+6,trial4-ols,EVRG/EXC,EVRG,EXC,Electric Utilities,7,0.5926159,12.80960303,0.01403751,,38.0,2.0,0.5,4.0,2,976.86994095,732.02249379,Evergy,Exelon
+6,trial4-ols,BDX/ISRG,BDX,ISRG,Health Care Equipment,8,0.45313191,11.2129727,0.01500712,,34.0,2.0,0.5,4.0,6,4257.09697178,3596.5999149,Becton Dickinson,Intuitive Surgical
+6,trial4-ols,MCD/SBUX,MCD,SBUX,Restaurants,9,0.59944529,10.52038159,0.01556984,,32.0,2.0,0.5,4.0,3,-2671.90258734,-3009.76658866,McDonald's,Starbucks
+6,trial4-ols,AMGN/VRTX,AMGN,VRTX,Biotechnology,10,0.55864174,12.56344818,0.01586578,,38.0,2.0,0.5,4.0,4,4500.36555146,4079.58604201,Amgen,Vertex Pharmaceuticals
+6,trial4-ols,FIS/FISV,FIS,FISV,Transaction & Payment Processing Services,11,0.72350994,14.51015689,0.02037016,,44.0,2.0,0.5,4.0,4,4272.90441124,3816.10771374,Fidelity National Information Services,Fiserv
+6,trial4-ols,A/WAT,A,WAT,Life Sciences Tools & Services,12,0.81340932,10.05676146,0.02090059,,30.0,2.0,0.5,4.0,3,3597.1187259,3273.91565239,Agilent Technologies,Waters Corporation
+6,trial4-ols,DXCM/MDT,DXCM,MDT,Health Care Equipment,13,4.39479053,13.60163008,0.023356,,41.0,2.0,0.5,4.0,3,37.20651696,-341.72575197,Dexcom,Medtronic
+6,trial4-ols,CFG/FITB,CFG,FITB,Regional Banks,14,1.12418405,13.40236929,0.02590372,,40.0,2.0,0.5,4.0,3,211.96356579,-109.83583798,Citizens Financial Group,Fifth Third Bancorp
+6,trial4-ols,SRE/XEL,SRE,XEL,Multi-Utilities,15,0.67693199,12.09423711,0.0276022,,36.0,2.0,0.5,4.0,4,2645.84214817,2193.87596204,Sempra,Xcel Energy
+6,trial4-ols,AEP/ES,AEP,ES,Electric Utilities,16,1.03277763,13.32776888,0.02809362,,40.0,2.0,0.5,4.0,4,677.13827515,198.09459335,American Electric Power,Eversource Energy
+6,trial4-ols,FIS/PYPL,FIS,PYPL,Transaction & Payment Processing Services,17,0.4676448,13.30480008,0.02825298,,40.0,2.0,0.5,4.0,3,-4497.33492566,-4887.23571113,Fidelity National Information Services,PayPal
+6,trial4-ols,CMS/SRE,CMS,SRE,Multi-Utilities,18,1.14596707,13.7994402,0.03036462,,41.0,2.0,0.5,4.0,5,2378.80609051,1817.78447522,CMS Energy,Sempra
+6,trial4-ols,IEX/XYL,IEX,XYL,Industrial Machinery & Supplies & Components,19,0.92103713,13.04883081,0.03288978,,39.0,2.0,0.5,4.0,4,520.14054744,68.59368749,IDEX Corporation,Xylem Inc.
+6,trial4-ols,FDS/ICE,FDS,ICE,Financial Exchanges & Data,20,1.93693863,11.55212742,0.03304647,,35.0,2.0,0.5,4.0,3,1573.24551919,1221.1687488,FactSet,Intercontinental Exchange
+6,trial4-kalman,FISV/MA,FISV,MA,Transaction & Payment Processing Services,1,0.55512199,8.04921409,0.00010895,,30.0,2.0,0.5,4.0,5,-909.62611424,-1471.13488487,Fiserv,Mastercard
+6,trial4-kalman,FIS/V,FIS,V,Transaction & Payment Processing Services,2,0.55692156,7.83615273,0.00090746,,30.0,2.0,0.5,4.0,7,4104.71382733,3363.61491895,Fidelity National Information Services,Visa Inc.
+6,trial4-kalman,FISV/V,FISV,V,Transaction & Payment Processing Services,3,0.72994448,8.81494985,0.00188161,,30.0,2.0,0.5,4.0,7,-26.25161197,-799.12384627,Fiserv,Visa Inc.
+6,trial4-kalman,CPRT/CTAS,CPRT,CTAS,Diversified Support Services,4,1.378219,11.91008507,0.00315565,,36.0,2.0,0.5,4.0,3,-7892.76346273,-8240.57239143,Copart,Cintas
+6,trial4-kalman,FIS/MA,FIS,MA,Transaction & Payment Processing Services,5,0.4206189,8.91296188,0.00344904,,30.0,2.0,0.5,4.0,4,290.51404361,-166.95000498,Fidelity National Information Services,Mastercard
+6,trial4-kalman,MLM/VMC,MLM,VMC,Construction Materials,6,0.88477542,8.38112377,0.00660914,,30.0,2.0,0.5,4.0,5,6629.59626094,6091.44073652,Martin Marietta Materials,Vulcan Materials Company
+6,trial4-kalman,EVRG/EXC,EVRG,EXC,Electric Utilities,7,0.5926159,12.80960303,0.01403751,,38.0,2.0,0.5,4.0,3,1406.04851909,1060.21521531,Evergy,Exelon
+6,trial4-kalman,BDX/ISRG,BDX,ISRG,Health Care Equipment,8,0.45313191,11.2129727,0.01500712,,34.0,2.0,0.5,4.0,7,6289.3818777,5532.75516692,Becton Dickinson,Intuitive Surgical
+6,trial4-kalman,MCD/SBUX,MCD,SBUX,Restaurants,9,0.59944529,10.52038159,0.01556984,,32.0,2.0,0.5,4.0,3,-3668.78846451,-4004.19308516,McDonald's,Starbucks
+6,trial4-kalman,AMGN/VRTX,AMGN,VRTX,Biotechnology,10,0.55864174,12.56344818,0.01586578,,38.0,2.0,0.5,4.0,4,5041.40632731,4622.57945161,Amgen,Vertex Pharmaceuticals
+6,trial4-kalman,FIS/FISV,FIS,FISV,Transaction & Payment Processing Services,11,0.72350994,14.51015689,0.02037016,,44.0,2.0,0.5,4.0,4,3889.33323565,3443.75415029,Fidelity National Information Services,Fiserv
+6,trial4-kalman,A/WAT,A,WAT,Life Sciences Tools & Services,12,0.81340932,10.05676146,0.02090059,,30.0,2.0,0.5,4.0,3,3604.91082398,3282.14162208,Agilent Technologies,Waters Corporation
+6,trial4-kalman,DXCM/MDT,DXCM,MDT,Health Care Equipment,13,4.39479053,13.60163008,0.023356,,41.0,2.0,0.5,4.0,2,3882.95594988,3648.07988899,Dexcom,Medtronic
+6,trial4-kalman,CFG/FITB,CFG,FITB,Regional Banks,14,1.12418405,13.40236929,0.02590372,,40.0,2.0,0.5,4.0,3,408.80131274,94.81827089,Citizens Financial Group,Fifth Third Bancorp
+6,trial4-kalman,SRE/XEL,SRE,XEL,Multi-Utilities,15,0.67693199,12.09423711,0.0276022,,36.0,2.0,0.5,4.0,4,952.66579445,477.66974994,Sempra,Xcel Energy
+6,trial4-kalman,AEP/ES,AEP,ES,Electric Utilities,16,1.03277763,13.32776888,0.02809362,,40.0,2.0,0.5,4.0,4,46.56192271,-427.17350072,American Electric Power,Eversource Energy
+6,trial4-kalman,FIS/PYPL,FIS,PYPL,Transaction & Payment Processing Services,17,0.4676448,13.30480008,0.02825298,,40.0,2.0,0.5,4.0,2,-8181.9506636,-8454.69546718,Fidelity National Information Services,PayPal
+6,trial4-kalman,CMS/SRE,CMS,SRE,Multi-Utilities,18,1.14596707,13.7994402,0.03036462,,41.0,2.0,0.5,4.0,4,402.14244322,-53.99372148,CMS Energy,Sempra
+6,trial4-kalman,IEX/XYL,IEX,XYL,Industrial Machinery & Supplies & Components,19,0.92103713,13.04883081,0.03288978,,39.0,2.0,0.5,4.0,3,-694.14865217,-1021.78824226,IDEX Corporation,Xylem Inc.
+6,trial4-kalman,FDS/ICE,FDS,ICE,Financial Exchanges & Data,20,1.93693863,11.55212742,0.03304647,,35.0,2.0,0.5,4.0,4,2613.65021265,2156.55956252,FactSet,Intercontinental Exchange
+6,trial5-distance,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,1,,21.70592626,,0.21406748,,2.0,0.0,,1,750.51765501,572.50302408,"UDR, Inc.",Vivmark Residential
+6,trial5-distance,CMS/DTE,CMS,DTE,Multi-Utilities,2,,26.02496006,,0.2398387,,2.0,0.0,,1,-1425.4791864,-1628.73796187,CMS Energy,DTE Energy
+6,trial5-distance,ETR/WEC,ETR,WEC,Electric Utilities,3,,16.13663881,,0.27415281,,2.0,0.0,,1,-795.88030389,-942.97550024,Entergy,WEC Energy Group
+6,trial5-distance,CMS/XEL,CMS,XEL,Multi-Utilities,4,,47.51265867,,0.37659887,,2.0,0.0,,1,1027.42629465,889.02980892,CMS Energy,Xcel Energy
+6,trial5-distance,MLM/VMC,MLM,VMC,Construction Materials,5,,9.70777702,,0.39202419,,2.0,0.0,,1,-4406.19446349,-4622.36872342,Martin Marietta Materials,Vulcan Materials Company
+6,trial5-distance,FRT/REG,FRT,REG,Retail REITs,6,,24.49029049,,0.50817883,,2.0,0.0,,1,-234.96484454,-432.02021459,Federal Realty Investment Trust,Regency Centers
+6,trial5-distance,AEP/ES,AEP,ES,Electric Utilities,7,,15.627392,,0.54258856,,2.0,0.0,,1,-560.46610112,-742.4081285,American Electric Power,Eversource Energy
+6,trial5-distance,DTE/XEL,DTE,XEL,Multi-Utilities,8,,53.17037039,,0.63241501,,2.0,0.0,,1,320.88431645,135.42803027,DTE Energy,Xcel Energy
+6,trial5-distance,ESS/MAA,ESS,MAA,Multi-Family Residential REITs,9,,42.32907471,,0.75752834,,2.0,0.0,,1,-370.59559992,-504.50620857,Essex Property Trust,Mid-America Apartment Communities
+6,trial5-distance,NI/SRE,NI,SRE,Multi-Utilities,10,,12.41537615,,0.78440473,,2.0,0.0,,1,-2487.53702838,-2641.08251421,NiSource,Sempra
+6,trial5-distance,AEP/LNT,AEP,LNT,Electric Utilities,11,,126.18331146,,0.7853998,,2.0,0.0,,0,0.0,0.0,American Electric Power,Alliant Energy
+6,trial5-distance,BAC/JPM,BAC,JPM,Diversified Banks,12,,40.56170719,,0.78757295,,2.0,0.0,,0,0.0,0.0,Bank of America,JPMorgan Chase
+6,trial5-distance,CNP/NI,CNP,NI,Multi-Utilities,13,,18.97714548,,0.81916079,,2.0,0.0,,1,5949.37783213,5847.62654545,CenterPoint Energy,NiSource
+6,trial5-distance,MRSH/WTW,MRSH,WTW,Insurance Brokers,14,,13.74385572,,0.81933972,,2.0,0.0,,1,800.02137998,660.11402156,Marsh McLennan,Willis Towers Watson
+6,trial5-distance,NI/PNW,NI,PNW,Multi-Utilities,15,,23.67468727,,0.98733275,,2.0,0.0,,0,0.0,0.0,NiSource,Pinnacle West Capital
+6,trial5-distance,ED/PNW,ED,PNW,Multi-Utilities,16,,77.70826596,,1.02983217,,2.0,0.0,,1,755.30482093,641.52790354,Consolidated Edison,Pinnacle West Capital
+6,trial5-distance,MET/PRU,MET,PRU,Life & Health Insurance,17,,42.42988993,,1.06582636,,2.0,0.0,,1,778.78910961,569.79248749,MetLife,Prudential Financial
+6,trial5-distance,ED/NI,ED,NI,Multi-Utilities,18,,24.70546405,,1.06762395,,2.0,0.0,,1,693.50181239,549.11275646,Consolidated Edison,NiSource
+6,trial5-distance,DTE/SRE,DTE,SRE,Multi-Utilities,19,,17.33761344,,1.0697894,,2.0,0.0,,1,-1363.7635296,-1513.33479188,DTE Energy,Sempra
+6,trial5-distance,D/ED,D,ED,Multi-Utilities,20,,37.92865625,,1.08232421,,2.0,0.0,,1,2158.38899453,2033.33144708,Dominion Energy,Consolidated Edison
+7,trial4-ols,FE/LNT,FE,LNT,Electric Utilities,1,1.25899534,10.08384449,0.00035682,,30.0,2.0,0.5,4.0,6,12494.90926154,11871.03696277,FirstEnergy,Alliant Energy
+7,trial4-ols,ES/FE,ES,FE,Electric Utilities,2,0.93799943,19.12687912,0.0007696,,57.0,2.0,0.5,4.0,3,-1078.58653554,-1407.48205415,Eversource Energy,FirstEnergy
+7,trial4-ols,NEE/SRE,NEE,SRE,Multi-Utilities,3,1.15202467,8.31442177,0.00095561,,30.0,2.0,0.5,4.0,5,-3099.04928695,-3648.64429545,NextEra Energy,Sempra
+7,trial4-ols,FE/WEC,FE,WEC,Electric Utilities,4,0.89921165,14.71907685,0.00098577,,44.0,2.0,0.5,4.0,3,-2209.71971201,-2551.58702771,FirstEnergy,WEC Energy Group
+7,trial4-ols,APA/EOG,APA,EOG,Oil & Gas Exploration & Production,5,1.34082982,11.79614396,0.00139574,,35.0,2.0,0.5,4.0,3,-2196.17269676,-2515.480033,APA Corporation,EOG Resources
+7,trial4-ols,ETR/FE,ETR,FE,Electric Utilities,6,1.08385489,14.63707006,0.00235088,,44.0,2.0,0.5,4.0,5,7871.26315033,7324.06858892,Entergy,FirstEnergy
+7,trial4-ols,HBAN/KEY,HBAN,KEY,Regional Banks,7,0.71285867,9.95813064,0.00249859,,30.0,2.0,0.5,4.0,5,5777.23455455,5249.15339621,Huntington Bancshares,KeyCorp
+7,trial4-ols,AJG/AON,AJG,AON,Insurance Brokers,8,0.89455135,7.80293107,0.00276604,,30.0,2.0,0.5,4.0,3,-5746.36954857,-6077.47778441,Arthur J. Gallagher & Co.,Aon plc
+7,trial4-ols,AEP/FE,AEP,FE,Electric Utilities,9,0.9083351,16.59880331,0.00447668,,50.0,2.0,0.5,4.0,4,2310.0879155,1865.09512706,American Electric Power,FirstEnergy
+7,trial4-ols,ED/SRE,ED,SRE,Multi-Utilities,10,0.62970561,9.153344,0.005635,,30.0,2.0,0.5,4.0,3,7742.63084759,7434.68147159,Consolidated Edison,Sempra
+7,trial4-ols,CPAY/GPN,CPAY,GPN,Transaction & Payment Processing Services,11,0.89171555,9.61539233,0.00592447,,30.0,2.0,0.5,4.0,4,4942.11583205,4514.76712251,Corpay,Global Payments
+7,trial4-ols,CPRT/CTAS,CPRT,CTAS,Diversified Support Services,12,1.21185688,13.94627055,0.00826569,,42.0,2.0,0.5,4.0,4,3438.82453971,3004.66184893,Copart,Cintas
+7,trial4-ols,DG/WMT,DG,WMT,Consumer Staples Merchandise Retail,13,1.44295441,13.67097195,0.01107279,,41.0,2.0,0.5,4.0,4,-3774.24032595,-4223.37783391,Dollar General,Walmart
+7,trial4-ols,BAX/SYK,BAX,SYK,Health Care Equipment,14,0.80942004,11.20604438,0.0110856,,34.0,2.0,0.5,4.0,4,-8633.92470249,-9062.47759941,Baxter International,Stryker Corporation
+7,trial4-ols,BSX/DXCM,BSX,DXCM,Health Care Equipment,15,0.40294074,10.83914398,0.0115576,,33.0,2.0,0.5,4.0,2,-11119.98711034,-11351.45057768,Boston Scientific,Dexcom
+7,trial4-ols,EVRG/FE,EVRG,FE,Electric Utilities,16,0.59264378,12.94726964,0.01253234,,39.0,2.0,0.5,4.0,5,8956.54332744,8403.49381042,Evergy,FirstEnergy
+7,trial4-ols,FRT/O,FRT,O,Retail REITs,17,0.3848331,12.01111481,0.01377599,,36.0,2.0,0.5,4.0,3,-7575.46586288,-7903.76009561,Federal Realty Investment Trust,Realty Income
+7,trial4-ols,AMT/CCI,AMT,CCI,Telecom Tower REITs,18,1.4927615,13.6913667,0.01451655,,41.0,2.0,0.5,4.0,3,4422.34891036,4077.66661697,American Tower,Crown Castle
+7,trial4-ols,MA/V,MA,V,Transaction & Payment Processing Services,19,1.22985005,9.20936111,0.01692781,,30.0,2.0,0.5,4.0,6,929.54777191,302.11284669,Mastercard,Visa Inc.
+7,trial4-ols,ARES/BX,ARES,BX,Asset Management & Custody Banks,20,0.79617995,15.59156449,0.0170376,,47.0,2.0,0.5,4.0,5,12951.15156425,12434.13963725,Ares Management,Blackstone Inc.
+7,trial4-kalman,FE/LNT,FE,LNT,Electric Utilities,1,1.25899534,10.08384449,0.00035682,,30.0,2.0,0.5,4.0,4,6431.41908724,6015.33016789,FirstEnergy,Alliant Energy
+7,trial4-kalman,ES/FE,ES,FE,Electric Utilities,2,0.93799943,19.12687912,0.0007696,,57.0,2.0,0.5,4.0,3,-725.74759454,-1051.87011323,Eversource Energy,FirstEnergy
+7,trial4-kalman,NEE/SRE,NEE,SRE,Multi-Utilities,3,1.15202467,8.31442177,0.00095561,,30.0,2.0,0.5,4.0,5,-5311.2683644,-5836.57607449,NextEra Energy,Sempra
+7,trial4-kalman,FE/WEC,FE,WEC,Electric Utilities,4,0.89921165,14.71907685,0.00098577,,44.0,2.0,0.5,4.0,3,-3417.31568509,-3763.37829533,FirstEnergy,WEC Energy Group
+7,trial4-kalman,APA/EOG,APA,EOG,Oil & Gas Exploration & Production,5,1.34082982,11.79614396,0.00139574,,35.0,2.0,0.5,4.0,3,-10270.21175504,-10603.04343437,APA Corporation,EOG Resources
+7,trial4-kalman,ETR/FE,ETR,FE,Electric Utilities,6,1.08385489,14.63707006,0.00235088,,44.0,2.0,0.5,4.0,5,7883.0551663,7341.37400346,Entergy,FirstEnergy
+7,trial4-kalman,HBAN/KEY,HBAN,KEY,Regional Banks,7,0.71285867,9.95813064,0.00249859,,30.0,2.0,0.5,4.0,6,1296.6308332,691.76001344,Huntington Bancshares,KeyCorp
+7,trial4-kalman,AJG/AON,AJG,AON,Insurance Brokers,8,0.89455135,7.80293107,0.00276604,,30.0,2.0,0.5,4.0,5,580.78640117,62.28408291,Arthur J. Gallagher & Co.,Aon plc
+7,trial4-kalman,AEP/FE,AEP,FE,Electric Utilities,9,0.9083351,16.59880331,0.00447668,,50.0,2.0,0.5,4.0,4,1773.78480647,1320.86624011,American Electric Power,FirstEnergy
+7,trial4-kalman,ED/SRE,ED,SRE,Multi-Utilities,10,0.62970561,9.153344,0.005635,,30.0,2.0,0.5,4.0,4,9337.67637751,8925.16370365,Consolidated Edison,Sempra
+7,trial4-kalman,CPAY/GPN,CPAY,GPN,Transaction & Payment Processing Services,11,0.89171555,9.61539233,0.00592447,,30.0,2.0,0.5,4.0,3,2403.57039751,2091.75083934,Corpay,Global Payments
+7,trial4-kalman,CPRT/CTAS,CPRT,CTAS,Diversified Support Services,12,1.21185688,13.94627055,0.00826569,,42.0,2.0,0.5,4.0,3,870.16184632,543.8984974,Copart,Cintas
+7,trial4-kalman,DG/WMT,DG,WMT,Consumer Staples Merchandise Retail,13,1.44295441,13.67097195,0.01107279,,41.0,2.0,0.5,4.0,4,-4134.56324362,-4579.9410438,Dollar General,Walmart
+7,trial4-kalman,BAX/SYK,BAX,SYK,Health Care Equipment,14,0.80942004,11.20604438,0.0110856,,34.0,2.0,0.5,4.0,3,-10298.56874649,-10612.30635383,Baxter International,Stryker Corporation
+7,trial4-kalman,BSX/DXCM,BSX,DXCM,Health Care Equipment,15,0.40294074,10.83914398,0.0115576,,33.0,2.0,0.5,4.0,2,-17379.37239291,-17608.8130284,Boston Scientific,Dexcom
+7,trial4-kalman,EVRG/FE,EVRG,FE,Electric Utilities,16,0.59264378,12.94726964,0.01253234,,39.0,2.0,0.5,4.0,6,17910.03973293,17251.91950511,Evergy,FirstEnergy
+7,trial4-kalman,FRT/O,FRT,O,Retail REITs,17,0.3848331,12.01111481,0.01377599,,36.0,2.0,0.5,4.0,5,1707.3745426,1189.92693962,Federal Realty Investment Trust,Realty Income
+7,trial4-kalman,AMT/CCI,AMT,CCI,Telecom Tower REITs,18,1.4927615,13.6913667,0.01451655,,41.0,2.0,0.5,4.0,3,1833.44879593,1484.26488837,American Tower,Crown Castle
+7,trial4-kalman,MA/V,MA,V,Transaction & Payment Processing Services,19,1.22985005,9.20936111,0.01692781,,30.0,2.0,0.5,4.0,6,631.05469138,4.5991109,Mastercard,Visa Inc.
+7,trial4-kalman,ARES/BX,ARES,BX,Asset Management & Custody Banks,20,0.79617995,15.59156449,0.0170376,,47.0,2.0,0.5,4.0,6,12280.97386434,11658.76923875,Ares Management,Blackstone Inc.
+7,trial5-distance,AEP/ES,AEP,ES,Electric Utilities,1,,27.00992752,,0.39734771,,2.0,0.0,,2,-5311.03966948,-5604.07788278,American Electric Power,Eversource Energy
+7,trial5-distance,ESS/VMRK,ESS,VMRK,Multi-Family Residential REITs,2,,23.74631173,,0.40012086,,2.0,0.0,,2,7602.11706991,7343.43215187,Essex Property Trust,Vivmark Residential
+7,trial5-distance,CMS/XEL,CMS,XEL,Multi-Utilities,3,,28.06751608,,0.40154698,,2.0,0.0,,2,229.51966671,-44.33835449,CMS Energy,Xcel Energy
+7,trial5-distance,AJG/AON,AJG,AON,Insurance Brokers,4,,10.93209139,,0.52605853,,2.0,0.0,,3,8707.82798051,8371.95511405,Arthur J. Gallagher & Co.,Aon plc
+7,trial5-distance,DOC/WELL,DOC,WELL,Health Care REITs,5,,22.18734922,,0.57281378,,2.0,0.0,,1,-6022.47571916,-6171.99909461,Healthpeak Properties,Welltower
+7,trial5-distance,MCO/SPGI,MCO,SPGI,Financial Exchanges & Data,6,,9.31191749,,0.59445836,,2.0,0.0,,2,2094.65136066,1849.82433953,Moody's Corporation,S&P Global
+7,trial5-distance,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,7,,47.78600656,,0.64136351,,2.0,0.0,,2,2759.58835618,2537.33887838,"UDR, Inc.",Vivmark Residential
+7,trial5-distance,ETR/WEC,ETR,WEC,Electric Utilities,8,,46.32705412,,0.66754633,,2.0,0.0,,1,-2107.98681866,-2270.76400469,Entergy,WEC Energy Group
+7,trial5-distance,FRT/REG,FRT,REG,Retail REITs,9,,19.20677333,,0.68851326,,2.0,0.0,,2,-2637.78798002,-2908.01432152,Federal Realty Investment Trust,Regency Centers
+7,trial5-distance,ESS/UDR,ESS,UDR,Multi-Family Residential REITs,10,,41.51596628,,0.71222071,,2.0,0.0,,1,4473.10177823,4349.13037607,Essex Property Trust,"UDR, Inc."
+7,trial5-distance,DGX/LH,DGX,LH,Health Care Services,11,,15.05462295,,0.8005723,,2.0,0.0,,3,8560.18295289,8191.07503147,Quest Diagnostics,Labcorp
+7,trial5-distance,ITW/NDSN,ITW,NDSN,Industrial Machinery & Supplies & Components,12,,15.82543093,,0.84680631,,2.0,0.0,,3,5828.32016777,5436.69690204,Illinois Tool Works,Nordson Corporation
+7,trial5-distance,AEP/LNT,AEP,LNT,Electric Utilities,13,,77.91767751,,0.86415561,,2.0,0.0,,0,0.0,0.0,American Electric Power,Alliant Energy
+7,trial5-distance,RSG/WM,RSG,WM,Environmental & Facilities Services,14,,41.43200282,,0.88805035,,2.0,0.0,,0,0.0,0.0,Republic Services,Waste Management
+7,trial5-distance,NI/PNW,NI,PNW,Multi-Utilities,15,,20.51058002,,0.94718292,,2.0,0.0,,1,4983.73686286,4830.97023481,NiSource,Pinnacle West Capital
+7,trial5-distance,EVRG/LNT,EVRG,LNT,Electric Utilities,16,,41.89736354,,0.94996596,,2.0,0.0,,1,2084.35816635,1993.44543375,Evergy,Alliant Energy
+7,trial5-distance,BAC/PNC,BAC,PNC,Diversified Banks,17,,29.51747995,,0.9576911,,2.0,0.0,,0,0.0,0.0,Bank of America,PNC Financial Services
+7,trial5-distance,ES/SO,ES,SO,Electric Utilities,18,,37.33282597,,0.99182628,,2.0,0.0,,1,-4351.60475711,-4519.69892166,Eversource Energy,Southern Company
+7,trial5-distance,ALL/HIG,ALL,HIG,Property & Casualty Insurance,19,,29.30446149,,0.99706079,,2.0,0.0,,1,-6392.89336165,-6560.47693254,Allstate,Hartford (The)
+7,trial5-distance,GL/MET,GL,MET,Life & Health Insurance,20,,29.09000788,,0.9991309,,2.0,0.0,,1,10950.87922999,10772.88735599,Globe Life,MetLife
+8,trial4-ols,GPN/MA,GPN,MA,Transaction & Payment Processing Services,1,1.17959908,5.73133539,2.596e-05,,30.0,2.0,0.5,4.0,3,-5064.2645091,-5448.50996931,Global Payments,Mastercard
+8,trial4-ols,APA/EOG,APA,EOG,Oil & Gas Exploration & Production,2,1.52437072,17.10031975,0.00059739,,51.0,2.0,0.5,4.0,2,-1671.36729962,-1947.17009993,APA Corporation,EOG Resources
+8,trial4-ols,ETR/FE,ETR,FE,Electric Utilities,3,1.30588474,8.0868226,0.00066097,,30.0,2.0,0.5,4.0,4,5113.04835383,4662.44339188,Entergy,FirstEnergy
+8,trial4-ols,BDX/ISRG,BDX,ISRG,Health Care Equipment,4,0.5075186,10.44343322,0.00315521,,31.0,2.0,0.5,4.0,3,3577.20123182,3230.11783706,Becton Dickinson,Intuitive Surgical
+8,trial4-ols,GPN/V,GPN,V,Transaction & Payment Processing Services,5,1.44602532,7.28391949,0.00530334,,30.0,2.0,0.5,4.0,5,3950.92018685,3398.70162551,Global Payments,Visa Inc.
+8,trial4-ols,KLAC/TER,KLAC,TER,Semiconductor Materials & Equipment,6,0.90377873,9.54168004,0.00584635,,30.0,2.0,0.5,4.0,3,5408.85245992,5085.42005426,KLA Corporation,Teradyne
+8,trial4-ols,RSG/WM,RSG,WM,Environmental & Facilities Services,7,0.8052473,13.16714038,0.00591972,,40.0,2.0,0.5,4.0,3,743.87423335,385.00440644,Republic Services,Waste Management
+8,trial4-ols,LHX/NOC,LHX,NOC,Aerospace & Defense,8,1.10907301,12.84429382,0.00611295,,39.0,2.0,0.5,4.0,3,-1174.94273665,-1553.03122072,L3Harris,Northrop Grumman
+8,trial4-ols,NXPI/TXN,NXPI,TXN,Semiconductors,9,1.31845901,11.84885794,0.00642675,,36.0,2.0,0.5,4.0,3,403.43549935,67.0812365,NXP Semiconductors,Texas Instruments
+8,trial4-ols,ADSK/CRM,ADSK,CRM,Application Software,10,1.46744581,10.48714932,0.00795904,,31.0,2.0,0.5,4.0,4,-4707.17399673,-5158.36010707,Autodesk,Salesforce
+8,trial4-ols,KKR/TROW,KKR,TROW,Asset Management & Custody Banks,11,1.04008027,5.62574188,0.00941954,,30.0,2.0,0.5,4.0,5,9094.55598222,8540.69251731,KKR & Co.,T. Rowe Price
+8,trial4-ols,APD/LIN,APD,LIN,Industrial Gases,12,1.4174785,14.96005331,0.01010466,,45.0,2.0,0.5,4.0,3,-2411.17970434,-2794.13940406,Air Products,Linde plc
+8,trial4-ols,DG/WMT,DG,WMT,Consumer Staples Merchandise Retail,13,1.59883176,7.82530912,0.01125786,,30.0,2.0,0.5,4.0,5,1086.31555673,519.81891708,Dollar General,Walmart
+8,trial4-ols,APA/COP,APA,COP,Oil & Gas Exploration & Production,14,2.20613211,9.03871027,0.01217398,,30.0,2.0,0.5,4.0,2,988.43267358,764.23264454,APA Corporation,ConocoPhillips
+8,trial4-ols,GE/HII,GE,HII,Aerospace & Defense,15,1.52049299,13.92213529,0.0128213,,42.0,2.0,0.5,4.0,3,-5263.12328507,-5643.55071999,GE Aerospace,Huntington Ingalls Industries
+8,trial4-ols,BDX/ZBH,BDX,ZBH,Health Care Equipment,16,0.33109392,7.23997209,0.01460511,,30.0,2.0,0.5,4.0,4,4534.02998602,4070.93852756,Becton Dickinson,Zimmer Biomet
+8,trial4-ols,MA/V,MA,V,Transaction & Payment Processing Services,17,1.22422516,4.65323056,0.0150758,,30.0,2.0,0.5,4.0,3,-380.58124764,-759.04342201,Mastercard,Visa Inc.
+8,trial4-ols,AEP/FE,AEP,FE,Electric Utilities,18,0.96622607,9.07780888,0.01599705,,30.0,2.0,0.5,4.0,3,6642.80013161,6299.33767539,American Electric Power,FirstEnergy
+8,trial4-ols,DHR/TMO,DHR,TMO,Life Sciences Tools & Services,19,1.21449441,9.5097272,0.02129716,,30.0,2.0,0.5,4.0,5,5678.70791286,5138.19984785,Danaher Corporation,Thermo Fisher Scientific
+8,trial4-ols,LNT/SO,LNT,SO,Electric Utilities,20,0.69812709,9.11150703,0.02345387,,30.0,2.0,0.5,4.0,4,-5392.67804168,-5901.82209742,Alliant Energy,Southern Company
+8,trial4-kalman,GPN/MA,GPN,MA,Transaction & Payment Processing Services,1,1.17959908,5.73133539,2.596e-05,,30.0,2.0,0.5,4.0,5,-7193.64305862,-7781.66378873,Global Payments,Mastercard
+8,trial4-kalman,APA/EOG,APA,EOG,Oil & Gas Exploration & Production,2,1.52437072,17.10031975,0.00059739,,51.0,2.0,0.5,4.0,2,-9146.85508594,-9422.60033914,APA Corporation,EOG Resources
+8,trial4-kalman,ETR/FE,ETR,FE,Electric Utilities,3,1.30588474,8.0868226,0.00066097,,30.0,2.0,0.5,4.0,4,7398.69851876,6968.6602236,Entergy,FirstEnergy
+8,trial4-kalman,BDX/ISRG,BDX,ISRG,Health Care Equipment,4,0.5075186,10.44343322,0.00315521,,31.0,2.0,0.5,4.0,4,395.82794403,-66.84564374,Becton Dickinson,Intuitive Surgical
+8,trial4-kalman,GPN/V,GPN,V,Transaction & Payment Processing Services,5,1.44602532,7.28391949,0.00530334,,30.0,2.0,0.5,4.0,6,4415.85492917,3771.18603858,Global Payments,Visa Inc.
+8,trial4-kalman,KLAC/TER,KLAC,TER,Semiconductor Materials & Equipment,6,0.90377873,9.54168004,0.00584635,,30.0,2.0,0.5,4.0,3,5013.05748709,4688.36542013,KLA Corporation,Teradyne
+8,trial4-kalman,RSG/WM,RSG,WM,Environmental & Facilities Services,7,0.8052473,13.16714038,0.00591972,,40.0,2.0,0.5,4.0,3,3067.85682508,2714.40418776,Republic Services,Waste Management
+8,trial4-kalman,LHX/NOC,LHX,NOC,Aerospace & Defense,8,1.10907301,12.84429382,0.00611295,,39.0,2.0,0.5,4.0,3,-3084.5995945,-3444.53297978,L3Harris,Northrop Grumman
+8,trial4-kalman,NXPI/TXN,NXPI,TXN,Semiconductors,9,1.31845901,11.84885794,0.00642675,,36.0,2.0,0.5,4.0,4,-594.65372358,-1028.4955109,NXP Semiconductors,Texas Instruments
+8,trial4-kalman,ADSK/CRM,ADSK,CRM,Application Software,10,1.46744581,10.48714932,0.00795904,,31.0,2.0,0.5,4.0,4,-6967.63398574,-7418.77807885,Autodesk,Salesforce
+8,trial4-kalman,KKR/TROW,KKR,TROW,Asset Management & Custody Banks,11,1.04008027,5.62574188,0.00941954,,30.0,2.0,0.5,4.0,5,10541.2359242,9998.38295884,KKR & Co.,T. Rowe Price
+8,trial4-kalman,APD/LIN,APD,LIN,Industrial Gases,12,1.4174785,14.96005331,0.01010466,,45.0,2.0,0.5,4.0,2,-1917.86700012,-2141.52573703,Air Products,Linde plc
+8,trial4-kalman,DG/WMT,DG,WMT,Consumer Staples Merchandise Retail,13,1.59883176,7.82530912,0.01125786,,30.0,2.0,0.5,4.0,5,509.65165973,-49.01957366,Dollar General,Walmart
+8,trial4-kalman,APA/COP,APA,COP,Oil & Gas Exploration & Production,14,2.20613211,9.03871027,0.01217398,,30.0,2.0,0.5,4.0,2,-6386.4551856,-6605.33898477,APA Corporation,ConocoPhillips
+8,trial4-kalman,GE/HII,GE,HII,Aerospace & Defense,15,1.52049299,13.92213529,0.0128213,,42.0,2.0,0.5,4.0,3,-7238.83635246,-7604.92544689,GE Aerospace,Huntington Ingalls Industries
+8,trial4-kalman,BDX/ZBH,BDX,ZBH,Health Care Equipment,16,0.33109392,7.23997209,0.01460511,,30.0,2.0,0.5,4.0,4,4648.47467801,4184.50727708,Becton Dickinson,Zimmer Biomet
+8,trial4-kalman,MA/V,MA,V,Transaction & Payment Processing Services,17,1.22422516,4.65323056,0.0150758,,30.0,2.0,0.5,4.0,3,-1028.04836001,-1391.53574779,Mastercard,Visa Inc.
+8,trial4-kalman,AEP/FE,AEP,FE,Electric Utilities,18,0.96622607,9.07780888,0.01599705,,30.0,2.0,0.5,4.0,4,4211.72957736,3773.29212384,American Electric Power,FirstEnergy
+8,trial4-kalman,DHR/TMO,DHR,TMO,Life Sciences Tools & Services,19,1.21449441,9.5097272,0.02129716,,30.0,2.0,0.5,4.0,3,3531.73206652,3224.02541951,Danaher Corporation,Thermo Fisher Scientific
+8,trial4-kalman,LNT/SO,LNT,SO,Electric Utilities,20,0.69812709,9.11150703,0.02345387,,30.0,2.0,0.5,4.0,4,-9117.64895406,-9628.08951097,Alliant Energy,Southern Company
+8,trial5-distance,CFG/KEY,CFG,KEY,Regional Banks,1,,17.11341306,,0.43204893,,2.0,0.0,,3,4848.94467407,4475.94272845,Citizens Financial Group,KeyCorp
+8,trial5-distance,ESS/VMRK,ESS,VMRK,Multi-Family Residential REITs,2,,16.54617212,,0.48011501,,2.0,0.0,,1,5196.02262173,5035.72952638,Essex Property Trust,Vivmark Residential
+8,trial5-distance,ES/WEC,ES,WEC,Electric Utilities,3,,10.23120131,,0.54501689,,2.0,0.0,,1,3198.47663195,3015.8616604,Eversource Energy,WEC Energy Group
+8,trial5-distance,FRT/REG,FRT,REG,Retail REITs,4,,13.87933993,,0.59150881,,2.0,0.0,,1,2562.61609814,2406.33550018,Federal Realty Investment Trust,Regency Centers
+8,trial5-distance,ESS/UDR,ESS,UDR,Multi-Family Residential REITs,5,,20.25255082,,0.62029509,,2.0,0.0,,1,3515.15926734,3394.74748746,Essex Property Trust,"UDR, Inc."
+8,trial5-distance,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,6,,27.27536193,,0.67759732,,2.0,0.0,,0,0.0,0.0,"UDR, Inc.",Vivmark Residential
+8,trial5-distance,KEY/RF,KEY,RF,Regional Banks,7,,22.59466456,,0.69921844,,2.0,0.0,,1,297.16115374,112.53390417,KeyCorp,Regions Financial Corporation
+8,trial5-distance,ADP/PAYX,ADP,PAYX,Human Resource & Employment Services,8,,12.30638388,,0.80681931,,2.0,0.0,,1,2421.19366377,2217.32067172,Automatic Data Processing,Paychex
+8,trial5-distance,FITB/HBAN,FITB,HBAN,Regional Banks,9,,19.95181704,,0.81763814,,2.0,0.0,,1,5675.97656078,5511.51053746,Fifth Third Bancorp,Huntington Bancshares
+8,trial5-distance,MCO/SPGI,MCO,SPGI,Financial Exchanges & Data,10,,8.94696219,,0.89444238,,2.0,0.0,,0,0.0,0.0,Moody's Corporation,S&P Global
+8,trial5-distance,CFG/HBAN,CFG,HBAN,Regional Banks,11,,12.1073184,,0.89638308,,2.0,0.0,,2,7057.98345139,6803.56567945,Citizens Financial Group,Huntington Bancshares
+8,trial5-distance,AEE/CMS,AEE,CMS,Multi-Utilities,12,,29.98974908,,0.97229915,,2.0,0.0,,1,1603.61734804,1407.06375251,Ameren,CMS Energy
+8,trial5-distance,MRSH/WTW,MRSH,WTW,Insurance Brokers,13,,14.39363142,,1.01416882,,2.0,0.0,,0,0.0,0.0,Marsh McLennan,Willis Towers Watson
+8,trial5-distance,C/PNC,C,PNC,Diversified Banks,14,,19.83812523,,1.07734626,,2.0,0.0,,1,2007.61224235,1804.79280186,Citigroup,PNC Financial Services
+8,trial5-distance,AJG/AON,AJG,AON,Insurance Brokers,15,,9.01228463,,1.0828909,,2.0,0.0,,1,189.2724428,36.10390829,Arthur J. Gallagher & Co.,Aon plc
+8,trial5-distance,CFG/FITB,CFG,FITB,Regional Banks,16,,16.03221168,,1.08393719,,2.0,0.0,,1,2311.5289781,2145.47101941,Citizens Financial Group,Fifth Third Bancorp
+8,trial5-distance,CFG/RF,CFG,RF,Regional Banks,17,,29.82918266,,1.0928583,,2.0,0.0,,1,4606.78442049,4461.71702779,Citizens Financial Group,Regions Financial Corporation
+8,trial5-distance,MLM/VMC,MLM,VMC,Construction Materials,18,,18.64217327,,1.13364126,,2.0,0.0,,1,813.76145144,691.20750788,Martin Marietta Materials,Vulcan Materials Company
+8,trial5-distance,HBAN/MTB,HBAN,MTB,Regional Banks,19,,27.22323157,,1.17279882,,2.0,0.0,,1,-2799.87122005,-3004.98449246,Huntington Bancshares,M&T Bank
+8,trial5-distance,HBAN/KEY,HBAN,KEY,Regional Banks,20,,14.20618352,,1.17938022,,2.0,0.0,,1,1105.25281587,880.33419947,Huntington Bancshares,KeyCorp
+9,trial4-ols,DHR/TMO,DHR,TMO,Life Sciences Tools & Services,1,1.0387454,7.63051203,0.00094322,,30.0,2.0,0.5,4.0,5,1792.9068547,1224.12847634,Danaher Corporation,Thermo Fisher Scientific
+9,trial4-ols,CFG/FITB,CFG,FITB,Regional Banks,2,1.05749581,8.61478732,0.00123543,,30.0,2.0,0.5,4.0,5,667.01757745,82.49178265,Citizens Financial Group,Fifth Third Bancorp
+9,trial4-ols,PODD/RMD,PODD,RMD,Health Care Equipment,3,1.42122004,9.38690899,0.00463432,,30.0,2.0,0.5,4.0,4,6590.18820692,6140.46126927,Insulet Corporation,ResMed
+9,trial4-ols,ISRG/RVTY,ISRG,RVTY,Health Care Equipment,4,0.81611646,9.75002863,0.00628906,,30.0,2.0,0.5,4.0,3,3117.91579863,2785.28847259,Intuitive Surgical,Revvity
+9,trial4-ols,ADI/MCHP,ADI,MCHP,Semiconductors,5,0.6524067,7.28428738,0.00656392,,30.0,2.0,0.5,4.0,5,1435.3784516,864.52064789,Analog Devices,Microchip Technology
+9,trial4-ols,AVGO/MCHP,AVGO,MCHP,Semiconductors,6,0.90916417,11.916504,0.00709657,,36.0,2.0,0.5,4.0,2,1387.4743852,1159.29287611,Broadcom,Microchip Technology
+9,trial4-ols,KLAC/TER,KLAC,TER,Semiconductor Materials & Equipment,7,0.82569936,10.33062111,0.00778077,,31.0,2.0,0.5,4.0,3,-7747.00758373,-8140.30839743,KLA Corporation,Teradyne
+9,trial4-ols,EOG/OXY,EOG,OXY,Oil & Gas Exploration & Production,8,0.51828566,11.05662037,0.01024019,,33.0,2.0,0.5,4.0,5,17476.73957755,16923.43818615,EOG Resources,Occidental Petroleum
+9,trial4-ols,MA/V,MA,V,Transaction & Payment Processing Services,9,1.22410888,7.03522557,0.01044548,,30.0,2.0,0.5,4.0,5,-861.33411006,-1423.67503718,Mastercard,Visa Inc.
+9,trial4-ols,COST/WMT,COST,WMT,Consumer Staples Merchandise Retail,10,1.18949003,12.02656987,0.01051096,,36.0,2.0,0.5,4.0,4,1831.44172179,1399.74962082,Costco,Walmart
+9,trial4-ols,APA/COP,APA,COP,Oil & Gas Exploration & Production,11,1.8622456,13.41783469,0.01053162,,40.0,2.0,0.5,4.0,2,-5797.7399709,-6074.27939669,APA Corporation,ConocoPhillips
+9,trial4-ols,KKR/TROW,KKR,TROW,Asset Management & Custody Banks,12,1.24192078,5.46818183,0.01238407,,30.0,2.0,0.5,4.0,4,3495.69423939,3040.71514231,KKR & Co.,T. Rowe Price
+9,trial4-ols,ESS/UDR,ESS,UDR,Multi-Family Residential REITs,13,1.14747414,7.4362691,0.01288635,,30.0,2.0,0.5,4.0,4,1225.1359759,789.90967147,Essex Property Trust,"UDR, Inc."
+9,trial4-ols,TGT/WMT,TGT,WMT,Consumer Staples Merchandise Retail,14,1.97197301,11.82535871,0.01336782,,35.0,2.0,0.5,4.0,4,-2683.96195567,-3128.45172468,Target Corporation,Walmart
+9,trial4-ols,CVX/XOM,CVX,XOM,Integrated Oil & Gas,15,0.60566764,8.42359084,0.01594216,,30.0,2.0,0.5,4.0,3,-62.45865053,-394.8542828,Chevron Corporation,ExxonMobil
+9,trial4-ols,ORCL/TRMB,ORCL,TRMB,Application Software,16,0.33160034,6.18403305,0.01629121,,30.0,2.0,0.5,4.0,4,5378.49339593,4916.6216721,Oracle Corporation,Trimble Inc.
+9,trial4-ols,DG/WMT,DG,WMT,Consumer Staples Merchandise Retail,17,1.4785234,9.01148685,0.01913273,,30.0,2.0,0.5,4.0,4,8196.33045387,7737.03459423,Dollar General,Walmart
+9,trial4-ols,AXP/COF,AXP,COF,Consumer Finance,18,0.64265623,10.54399336,0.02163072,,32.0,2.0,0.5,4.0,5,286.14636339,-283.73863104,American Express,Capital One
+9,trial4-ols,EXPD/UPS,EXPD,UPS,Air Freight & Logistics,19,0.45135145,12.00877217,0.02241279,,36.0,2.0,0.5,4.0,2,4678.57623885,4405.97185254,Expeditors International,United Parcel Service
+9,trial4-ols,QCOM/TXN,QCOM,TXN,Semiconductors,20,1.90761797,14.69311685,0.02356843,,44.0,2.0,0.5,4.0,2,-4205.64777969,-4503.94020515,Qualcomm,Texas Instruments
+9,trial4-kalman,DHR/TMO,DHR,TMO,Life Sciences Tools & Services,1,1.0387454,7.63051203,0.00094322,,30.0,2.0,0.5,4.0,6,372.33675234,-298.45317204,Danaher Corporation,Thermo Fisher Scientific
+9,trial4-kalman,CFG/FITB,CFG,FITB,Regional Banks,2,1.05749581,8.61478732,0.00123543,,30.0,2.0,0.5,4.0,5,-1773.72665992,-2347.12690546,Citizens Financial Group,Fifth Third Bancorp
+9,trial4-kalman,PODD/RMD,PODD,RMD,Health Care Equipment,3,1.42122004,9.38690899,0.00463432,,30.0,2.0,0.5,4.0,5,4491.14973108,3937.95014776,Insulet Corporation,ResMed
+9,trial4-kalman,ISRG/RVTY,ISRG,RVTY,Health Care Equipment,4,0.81611646,9.75002863,0.00628906,,30.0,2.0,0.5,4.0,3,5042.92644696,4711.93261668,Intuitive Surgical,Revvity
+9,trial4-kalman,ADI/MCHP,ADI,MCHP,Semiconductors,5,0.6524067,7.28428738,0.00656392,,30.0,2.0,0.5,4.0,5,1259.41618858,689.0502755,Analog Devices,Microchip Technology
+9,trial4-kalman,AVGO/MCHP,AVGO,MCHP,Semiconductors,6,0.90916417,11.916504,0.00709657,,36.0,2.0,0.5,4.0,3,3288.99274561,2952.20670171,Broadcom,Microchip Technology
+9,trial4-kalman,KLAC/TER,KLAC,TER,Semiconductor Materials & Equipment,7,0.82569936,10.33062111,0.00778077,,31.0,2.0,0.5,4.0,4,-115.40696843,-578.83126536,KLA Corporation,Teradyne
+9,trial4-kalman,EOG/OXY,EOG,OXY,Oil & Gas Exploration & Production,8,0.51828566,11.05662037,0.01024019,,33.0,2.0,0.5,4.0,5,13906.42327194,13356.07171288,EOG Resources,Occidental Petroleum
+9,trial4-kalman,MA/V,MA,V,Transaction & Payment Processing Services,9,1.22410888,7.03522557,0.01044548,,30.0,2.0,0.5,4.0,5,-1013.70575833,-1574.79681853,Mastercard,Visa Inc.
+9,trial4-kalman,COST/WMT,COST,WMT,Consumer Staples Merchandise Retail,10,1.18949003,12.02656987,0.01051096,,36.0,2.0,0.5,4.0,3,2872.91355097,2544.08865581,Costco,Walmart
+9,trial4-kalman,APA/COP,APA,COP,Oil & Gas Exploration & Production,11,1.8622456,13.41783469,0.01053162,,40.0,2.0,0.5,4.0,2,-2724.33966521,-2990.07359059,APA Corporation,ConocoPhillips
+9,trial4-kalman,KKR/TROW,KKR,TROW,Asset Management & Custody Banks,12,1.24192078,5.46818183,0.01238407,,30.0,2.0,0.5,4.0,4,4168.96456389,3722.84111905,KKR & Co.,T. Rowe Price
+9,trial4-kalman,ESS/UDR,ESS,UDR,Multi-Family Residential REITs,13,1.14747414,7.4362691,0.01288635,,30.0,2.0,0.5,4.0,4,1484.13635158,1058.92098494,Essex Property Trust,"UDR, Inc."
+9,trial4-kalman,TGT/WMT,TGT,WMT,Consumer Staples Merchandise Retail,14,1.97197301,11.82535871,0.01336782,,35.0,2.0,0.5,4.0,4,-188.34305967,-624.18609856,Target Corporation,Walmart
+9,trial4-kalman,CVX/XOM,CVX,XOM,Integrated Oil & Gas,15,0.60566764,8.42359084,0.01594216,,30.0,2.0,0.5,4.0,3,488.13355301,149.60468597,Chevron Corporation,ExxonMobil
+9,trial4-kalman,ORCL/TRMB,ORCL,TRMB,Application Software,16,0.33160034,6.18403305,0.01629121,,30.0,2.0,0.5,4.0,3,-4169.67761111,-4522.28836616,Oracle Corporation,Trimble Inc.
+9,trial4-kalman,DG/WMT,DG,WMT,Consumer Staples Merchandise Retail,17,1.4785234,9.01148685,0.01913273,,30.0,2.0,0.5,4.0,4,1742.17288898,1298.11657654,Dollar General,Walmart
+9,trial4-kalman,AXP/COF,AXP,COF,Consumer Finance,18,0.64265623,10.54399336,0.02163072,,32.0,2.0,0.5,4.0,5,760.5571721,187.39309467,American Express,Capital One
+9,trial4-kalman,EXPD/UPS,EXPD,UPS,Air Freight & Logistics,19,0.45135145,12.00877217,0.02241279,,36.0,2.0,0.5,4.0,3,3664.43731399,3299.33249406,Expeditors International,United Parcel Service
+9,trial4-kalman,QCOM/TXN,QCOM,TXN,Semiconductors,20,1.90761797,14.69311685,0.02356843,,44.0,2.0,0.5,4.0,2,-6569.63175771,-6854.31369821,Qualcomm,Texas Instruments
+9,trial5-distance,FITB/RF,FITB,RF,Regional Banks,1,,17.62381402,,0.69768125,,2.0,0.0,,1,-2368.28112213,-2539.66092588,Fifth Third Bancorp,Regions Financial Corporation
+9,trial5-distance,CFG/FITB,CFG,FITB,Regional Banks,2,,12.8788306,,0.77386111,,2.0,0.0,,1,-955.80473505,-1141.12446233,Citizens Financial Group,Fifth Third Bancorp
+9,trial5-distance,CFG/KEY,CFG,KEY,Regional Banks,3,,24.75940888,,0.9008663,,2.0,0.0,,0,0.0,0.0,Citizens Financial Group,KeyCorp
+9,trial5-distance,NI/PNW,NI,PNW,Multi-Utilities,4,,14.69255028,,0.96095235,,2.0,0.0,,1,2442.75892532,2300.62874868,NiSource,Pinnacle West Capital
+9,trial5-distance,FRT/REG,FRT,REG,Retail REITs,5,,12.57830385,,1.05484859,,2.0,0.0,,1,1730.71242339,1576.71416524,Federal Realty Investment Trust,Regency Centers
+9,trial5-distance,ESS/VMRK,ESS,VMRK,Multi-Family Residential REITs,6,,22.25519879,,1.23858137,,2.0,0.0,,0,0.0,0.0,Essex Property Trust,Vivmark Residential
+9,trial5-distance,ESS/UDR,ESS,UDR,Multi-Family Residential REITs,7,,20.70234185,,1.28461718,,2.0,0.0,,0,0.0,0.0,Essex Property Trust,"UDR, Inc."
+9,trial5-distance,CFG/RF,CFG,RF,Regional Banks,8,,21.06138295,,1.30174713,,2.0,0.0,,0,0.0,0.0,Citizens Financial Group,Regions Financial Corporation
+9,trial5-distance,PSX/VLO,PSX,VLO,Oil & Gas Refining & Marketing,9,,16.52694332,,1.32582669,,2.0,0.0,,1,-1593.8640242,-1789.92971022,Phillips 66,Valero Energy
+9,trial5-distance,RSG/WM,RSG,WM,Environmental & Facilities Services,10,,28.90922553,,1.3460239,,2.0,0.0,,0,0.0,0.0,Republic Services,Waste Management
+9,trial5-distance,FITB/KEY,FITB,KEY,Regional Banks,11,,31.11288776,,1.41134413,,2.0,0.0,,1,-599.85388454,-777.35300197,Fifth Third Bancorp,KeyCorp
+9,trial5-distance,BAC/JPM,BAC,JPM,Diversified Banks,12,,43.80720374,,1.43913939,,2.0,0.0,,1,-2331.88268354,-2490.24927539,Bank of America,JPMorgan Chase
+9,trial5-distance,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,13,,61.48214932,,1.44021564,,2.0,0.0,,0,0.0,0.0,"UDR, Inc.",Vivmark Residential
+9,trial5-distance,HBAN/RF,HBAN,RF,Regional Banks,14,,26.7576086,,1.50942313,,2.0,0.0,,1,-1647.34403658,-1832.42185478,Huntington Bancshares,Regions Financial Corporation
+9,trial5-distance,FITB/HBAN,FITB,HBAN,Regional Banks,15,,21.27295481,,1.60282158,,2.0,0.0,,1,-6365.23865287,-6539.85507791,Fifth Third Bancorp,Huntington Bancshares
+9,trial5-distance,HBAN/KEY,HBAN,KEY,Regional Banks,16,,11.5859991,,1.64756627,,2.0,0.0,,1,-1485.15166593,-1629.75638943,Huntington Bancshares,KeyCorp
+9,trial5-distance,NSC/UNP,NSC,UNP,Rail Transportation,17,,18.47425564,,1.68662232,,2.0,0.0,,1,2191.06790791,2047.82603365,Norfolk Southern,Union Pacific Corporation
+9,trial5-distance,BAC/PNC,BAC,PNC,Diversified Banks,18,,24.83725833,,1.71879538,,2.0,0.0,,1,1095.89662606,915.27122705,Bank of America,PNC Financial Services
+9,trial5-distance,ES/WEC,ES,WEC,Electric Utilities,19,,14.08856685,,1.79217082,,2.0,0.0,,2,6325.84231206,6059.99279351,Eversource Energy,WEC Energy Group
+9,trial5-distance,CB/TRV,CB,TRV,Property & Casualty Insurance,20,,35.81244721,,1.82960527,,2.0,0.0,,0,0.0,0.0,Chubb Limited,Travelers Companies (The)
+10,trial4-ols,A/MTD,A,MTD,Life Sciences Tools & Services,1,0.96448861,16.92985117,0.00017421,,51.0,2.0,0.5,4.0,2,-5754.56719244,-6026.88984386,Agilent Technologies,Mettler Toledo
+10,trial4-ols,ISRG/RVTY,ISRG,RVTY,Health Care Equipment,2,0.82136847,7.88533102,0.00061765,,30.0,2.0,0.5,4.0,5,8027.82338491,7476.89133433,Intuitive Surgical,Revvity
+10,trial4-ols,IDXX/STE,IDXX,STE,Health Care Equipment,3,2.0442262,15.13465035,0.00124407,,45.0,2.0,0.5,4.0,5,3914.95825529,3369.46591736,Idexx Laboratories,Steris
+10,trial4-ols,AXP/COF,AXP,COF,Consumer Finance,4,0.59735784,8.80002748,0.00191,,30.0,2.0,0.5,4.0,5,5912.18035207,5350.60437688,American Express,Capital One
+10,trial4-ols,KKR/TROW,KKR,TROW,Asset Management & Custody Banks,5,1.33904953,4.67725575,0.0021184,,30.0,2.0,0.5,4.0,4,-3770.2436324,-4221.21680978,KKR & Co.,T. Rowe Price
+10,trial4-ols,AEP/ETR,AEP,ETR,Electric Utilities,6,0.64996313,6.49060516,0.00322902,,30.0,2.0,0.5,4.0,3,2799.46384078,2485.81456791,American Electric Power,Entergy
+10,trial4-ols,DOV/PNR,DOV,PNR,Industrial Machinery & Supplies & Components,7,0.71978824,8.58929468,0.00379208,,30.0,2.0,0.5,4.0,3,-4559.72334872,-4884.78337657,Dover Corporation,Pentair
+10,trial4-ols,PTC/TRMB,PTC,TRMB,Application Software,8,0.92573496,6.95242442,0.00541196,,30.0,2.0,0.5,4.0,5,-5869.79241523,-6429.38675521,PTC Inc.,Trimble Inc.
+10,trial4-ols,CVX/XOM,CVX,XOM,Integrated Oil & Gas,9,0.6616937,6.7161191,0.00569372,,30.0,2.0,0.5,4.0,2,-5748.35525998,-6040.36989296,Chevron Corporation,ExxonMobil
+10,trial4-ols,DHI/LEN,DHI,LEN,Homebuilding,10,0.99893584,7.8726566,0.00608823,,30.0,2.0,0.5,4.0,5,3571.09475386,3045.98794638,D. R. Horton,Lennar
+10,trial4-ols,DLR/EQIX,DLR,EQIX,Data Center REITs,11,0.70732756,9.32051051,0.00634566,,30.0,2.0,0.5,4.0,3,-7649.81729583,-8044.02368205,Digital Realty,Equinix
+10,trial4-ols,ADSK/TYL,ADSK,TYL,Application Software,12,1.15375796,17.44092353,0.00793484,,52.0,2.0,0.5,4.0,2,7626.64804349,7412.26961574,Autodesk,Tyler Technologies
+10,trial4-ols,CRL/MTD,CRL,MTD,Life Sciences Tools & Services,13,1.37934286,15.72821747,0.00796796,,47.0,2.0,0.5,4.0,3,-8740.29718733,-9102.77331892,Charles River Laboratories,Mettler Toledo
+10,trial4-ols,ABT/PODD,ABT,PODD,Health Care Equipment,14,0.57872279,14.3832937,0.00810789,,43.0,2.0,0.5,4.0,3,-2312.43512989,-2659.0698107,Abbott Laboratories,Insulet Corporation
+10,trial4-ols,AVGO/MCHP,AVGO,MCHP,Semiconductors,15,0.98159128,10.97668662,0.00825479,,33.0,2.0,0.5,4.0,4,-2493.91721271,-2977.29957084,Broadcom,Microchip Technology
+10,trial4-ols,ARES/BLK,ARES,BLK,Asset Management & Custody Banks,16,1.03673894,10.93117111,0.00977308,,33.0,2.0,0.5,4.0,4,5035.17031576,4599.46539176,Ares Management,BlackRock
+10,trial4-ols,CSX/NSC,CSX,NSC,Rail Transportation,17,0.84293603,9.17070765,0.01053955,,30.0,2.0,0.5,4.0,4,-1911.44024631,-2394.33418539,CSX Corporation,Norfolk Southern
+10,trial4-ols,AVGO/TXN,AVGO,TXN,Semiconductors,18,1.19891437,13.4026514,0.01090169,,40.0,2.0,0.5,4.0,5,-3675.40668114,-4206.82983858,Broadcom,Texas Instruments
+10,trial4-ols,BAX/BDX,BAX,BDX,Health Care Equipment,19,0.44702836,9.55900067,0.01114124,,30.0,2.0,0.5,4.0,6,2947.18976368,2275.11062043,Baxter International,Becton Dickinson
+10,trial4-ols,INTU/TRMB,INTU,TRMB,Application Software,20,0.61052985,8.92846413,0.01250538,,30.0,2.0,0.5,4.0,3,-8156.76008772,-8555.97884788,Intuit,Trimble Inc.
+10,trial4-kalman,A/MTD,A,MTD,Life Sciences Tools & Services,1,0.96448861,16.92985117,0.00017421,,51.0,2.0,0.5,4.0,2,-5859.61806715,-6132.31433528,Agilent Technologies,Mettler Toledo
+10,trial4-kalman,ISRG/RVTY,ISRG,RVTY,Health Care Equipment,2,0.82136847,7.88533102,0.00061765,,30.0,2.0,0.5,4.0,5,4372.14912625,3812.10429555,Intuitive Surgical,Revvity
+10,trial4-kalman,IDXX/STE,IDXX,STE,Health Care Equipment,3,2.0442262,15.13465035,0.00124407,,45.0,2.0,0.5,4.0,4,1652.83931857,1205.3844698,Idexx Laboratories,Steris
+10,trial4-kalman,AXP/COF,AXP,COF,Consumer Finance,4,0.59735784,8.80002748,0.00191,,30.0,2.0,0.5,4.0,5,4508.08845742,3944.63982839,American Express,Capital One
+10,trial4-kalman,KKR/TROW,KKR,TROW,Asset Management & Custody Banks,5,1.33904953,4.67725575,0.0021184,,30.0,2.0,0.5,4.0,3,-3857.34847529,-4200.89131191,KKR & Co.,T. Rowe Price
+10,trial4-kalman,AEP/ETR,AEP,ETR,Electric Utilities,6,0.64996313,6.49060516,0.00322902,,30.0,2.0,0.5,4.0,3,2875.68206655,2559.89963613,American Electric Power,Entergy
+10,trial4-kalman,DOV/PNR,DOV,PNR,Industrial Machinery & Supplies & Components,7,0.71978824,8.58929468,0.00379208,,30.0,2.0,0.5,4.0,4,4240.72463252,3805.98060612,Dover Corporation,Pentair
+10,trial4-kalman,PTC/TRMB,PTC,TRMB,Application Software,8,0.92573496,6.95242442,0.00541196,,30.0,2.0,0.5,4.0,5,-5840.19784258,-6427.16515419,PTC Inc.,Trimble Inc.
+10,trial4-kalman,CVX/XOM,CVX,XOM,Integrated Oil & Gas,9,0.6616937,6.7161191,0.00569372,,30.0,2.0,0.5,4.0,3,-3205.05396901,-3576.89481453,Chevron Corporation,ExxonMobil
+10,trial4-kalman,DHI/LEN,DHI,LEN,Homebuilding,10,0.99893584,7.8726566,0.00608823,,30.0,2.0,0.5,4.0,4,1745.16447024,1313.61012922,D. R. Horton,Lennar
+10,trial4-kalman,DLR/EQIX,DLR,EQIX,Data Center REITs,11,0.70732756,9.32051051,0.00634566,,30.0,2.0,0.5,4.0,3,-5086.52808747,-5452.86507628,Digital Realty,Equinix
+10,trial4-kalman,ADSK/TYL,ADSK,TYL,Application Software,12,1.15375796,17.44092353,0.00793484,,52.0,2.0,0.5,4.0,2,8114.73831657,7900.3595184,Autodesk,Tyler Technologies
+10,trial4-kalman,CRL/MTD,CRL,MTD,Life Sciences Tools & Services,13,1.37934286,15.72821747,0.00796796,,47.0,2.0,0.5,4.0,2,-8915.82015154,-9177.21605173,Charles River Laboratories,Mettler Toledo
+10,trial4-kalman,ABT/PODD,ABT,PODD,Health Care Equipment,14,0.57872279,14.3832937,0.00810789,,43.0,2.0,0.5,4.0,3,-1858.72321366,-2202.64790114,Abbott Laboratories,Insulet Corporation
+10,trial4-kalman,AVGO/MCHP,AVGO,MCHP,Semiconductors,15,0.98159128,10.97668662,0.00825479,,33.0,2.0,0.5,4.0,4,-2225.49964863,-2702.376713,Broadcom,Microchip Technology
+10,trial4-kalman,ARES/BLK,ARES,BLK,Asset Management & Custody Banks,16,1.03673894,10.93117111,0.00977308,,33.0,2.0,0.5,4.0,4,5339.99280545,4899.38508119,Ares Management,BlackRock
+10,trial4-kalman,CSX/NSC,CSX,NSC,Rail Transportation,17,0.84293603,9.17070765,0.01053955,,30.0,2.0,0.5,4.0,4,-1865.03771505,-2348.24687044,CSX Corporation,Norfolk Southern
+10,trial4-kalman,AVGO/TXN,AVGO,TXN,Semiconductors,18,1.19891437,13.4026514,0.01090169,,40.0,2.0,0.5,4.0,4,-2325.28441169,-2757.06602674,Broadcom,Texas Instruments
+10,trial4-kalman,BAX/BDX,BAX,BDX,Health Care Equipment,19,0.44702836,9.55900067,0.01114124,,30.0,2.0,0.5,4.0,6,2607.57753582,1929.34613497,Baxter International,Becton Dickinson
+10,trial4-kalman,INTU/TRMB,INTU,TRMB,Application Software,20,0.61052985,8.92846413,0.01250538,,30.0,2.0,0.5,4.0,3,-4684.10194139,-5042.61177061,Intuit,Trimble Inc.
+10,trial5-distance,ESS/VMRK,ESS,VMRK,Multi-Family Residential REITs,1,,22.94025895,,0.55528847,,2.0,0.0,,0,0.0,0.0,Essex Property Trust,Vivmark Residential
+10,trial5-distance,AON/WTW,AON,WTW,Insurance Brokers,2,,16.50637269,,0.66194241,,2.0,0.0,,1,-57.04278725,-288.07130399,Aon plc,Willis Towers Watson
+10,trial5-distance,NI/PNW,NI,PNW,Multi-Utilities,3,,13.9184411,,0.82419923,,2.0,0.0,,1,-9668.94898608,-9858.5313852,NiSource,Pinnacle West Capital
+10,trial5-distance,ESS/UDR,ESS,UDR,Multi-Family Residential REITs,4,,17.08320606,,0.82798287,,2.0,0.0,,1,60.15079953,-56.22343612,Essex Property Trust,"UDR, Inc."
+10,trial5-distance,FRT/REG,FRT,REG,Retail REITs,5,,37.4690685,,0.84027936,,2.0,0.0,,0,0.0,0.0,Federal Realty Investment Trust,Regency Centers
+10,trial5-distance,CFG/FITB,CFG,FITB,Regional Banks,6,,26.07729959,,0.8912359,,2.0,0.0,,1,-162.42986433,-346.43457301,Citizens Financial Group,Fifth Third Bancorp
+10,trial5-distance,BAC/PNC,BAC,PNC,Diversified Banks,7,,19.62328666,,0.95231487,,2.0,0.0,,0,0.0,0.0,Bank of America,PNC Financial Services
+10,trial5-distance,ES/WEC,ES,WEC,Electric Utilities,8,,20.13333467,,1.04597533,,2.0,0.0,,1,1856.77770545,1698.52019927,Eversource Energy,WEC Energy Group
+10,trial5-distance,MCO/SPGI,MCO,SPGI,Financial Exchanges & Data,9,,18.52363404,,1.15655877,,2.0,0.0,,0,0.0,0.0,Moody's Corporation,S&P Global
+10,trial5-distance,CMS/D,CMS,D,Multi-Utilities,10,,13.22951931,,1.18687085,,2.0,0.0,,0,0.0,0.0,CMS Energy,Dominion Energy
+10,trial5-distance,AEE/CMS,AEE,CMS,Multi-Utilities,11,,25.26149871,,1.19544161,,2.0,0.0,,0,0.0,0.0,Ameren,CMS Energy
+10,trial5-distance,CCL/NCLH,CCL,NCLH,"Hotels, Resorts & Cruise Lines",12,,12.90015399,,1.22461381,,2.0,0.0,,0,0.0,0.0,Carnival Corporation,Norwegian Cruise Line Holdings
+10,trial5-distance,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,13,,56.60702897,,1.40163858,,2.0,0.0,,0,0.0,0.0,"UDR, Inc.",Vivmark Residential
+10,trial5-distance,AME/EMR,AME,EMR,Electrical Components & Equipment,14,,18.79059285,,1.42203943,,2.0,0.0,,1,-1584.61081119,-1707.18581979,Ametek,Emerson Electric
+10,trial5-distance,DOV/HUBB,DOV,HUBB,Industrial Machinery & Supplies & Components,15,,11.95548681,,1.4717393,,2.0,0.0,,1,1695.31477956,1517.16951397,Dover Corporation,Hubbell Incorporated
+10,trial5-distance,AFL/PRU,AFL,PRU,Life & Health Insurance,16,,30.40022693,,1.56757445,,2.0,0.0,,0,0.0,0.0,Aflac,Prudential Financial
+10,trial5-distance,AEP/EVRG,AEP,EVRG,Electric Utilities,17,,21.52622633,,1.58751192,,2.0,0.0,,0,0.0,0.0,American Electric Power,Evergy
+10,trial5-distance,ED/NI,ED,NI,Multi-Utilities,18,,13.19264301,,1.59744641,,2.0,0.0,,1,1377.94029039,1249.10437545,Consolidated Edison,NiSource
+10,trial5-distance,LMT/NOC,LMT,NOC,Aerospace & Defense,19,,39.58395438,,1.60737507,,2.0,0.0,,1,772.93146038,617.7211689,Lockheed Martin,Northrop Grumman
+10,trial5-distance,HBAN/KEY,HBAN,KEY,Regional Banks,20,,34.87242801,,1.62237543,,2.0,0.0,,0,0.0,0.0,Huntington Bancshares,KeyCorp
+11,trial4-ols,BEN/NTRS,BEN,NTRS,Asset Management & Custody Banks,1,1.25509954,10.36888502,5.67e-06,,31.0,2.0,0.5,4.0,4,6149.85249255,5716.06024853,Franklin Resources,Northern Trust
+11,trial4-ols,DOC/WELL,DOC,WELL,Health Care REITs,2,0.62564062,4.30385188,6.42e-06,,30.0,2.0,0.5,4.0,3,-13351.82243386,-13717.41063542,Healthpeak Properties,Welltower
+11,trial4-ols,BEN/STT,BEN,STT,Asset Management & Custody Banks,3,1.22750445,9.82223757,0.00030937,,30.0,2.0,0.5,4.0,4,284.10417313,-164.45539476,Franklin Resources,State Street Corporation
+11,trial4-ols,PODD/SYK,PODD,SYK,Health Care Equipment,4,1.06159579,7.73912786,0.00031136,,30.0,2.0,0.5,4.0,4,31856.72278664,31412.47056437,Insulet Corporation,Stryker Corporation
+11,trial4-ols,ISRG/RVTY,ISRG,RVTY,Health Care Equipment,5,0.88755766,8.12104274,0.00100057,,30.0,2.0,0.5,4.0,7,14262.28937201,13500.77056716,Intuitive Surgical,Revvity
+11,trial4-ols,A/CRL,A,CRL,Life Sciences Tools & Services,6,0.70442379,9.21723337,0.00104562,,30.0,2.0,0.5,4.0,3,-523.80599971,-863.35417411,Agilent Technologies,Charles River Laboratories
+11,trial4-ols,KKR/STT,KKR,STT,Asset Management & Custody Banks,7,1.78635004,12.87986164,0.00148684,,39.0,2.0,0.5,4.0,4,2789.58040446,2346.14169815,KKR & Co.,State Street Corporation
+11,trial4-ols,EOG/FANG,EOG,FANG,Oil & Gas Exploration & Production,8,0.67503655,7.14003314,0.00181492,,30.0,2.0,0.5,4.0,5,-3094.63291445,-3719.82303959,EOG Resources,Diamondback Energy
+11,trial4-ols,AEP/ETR,AEP,ETR,Electric Utilities,9,0.67100016,6.39060289,0.00237126,,30.0,2.0,0.5,4.0,6,1669.27837016,978.4800432,American Electric Power,Entergy
+11,trial4-ols,GWW/ITW,GWW,ITW,Industrial Machinery & Supplies & Components,10,1.27187204,7.75413073,0.00263704,,30.0,2.0,0.5,4.0,5,-4353.00782181,-4940.88859942,W. W. Grainger,Illinois Tool Works
+11,trial4-ols,CFG/RF,CFG,RF,Regional Banks,11,0.99139073,16.42394665,0.00441838,,49.0,2.0,0.5,4.0,2,-539.36277852,-804.84483134,Citizens Financial Group,Regions Financial Corporation
+11,trial4-ols,BNY/KKR,BNY,KKR,Asset Management & Custody Banks,12,0.48090224,16.30549749,0.0049096,,49.0,2.0,0.5,4.0,2,3568.90693246,3330.49337574,BNY Mellon,KKR & Co.
+11,trial4-ols,AMP/STT,AMP,STT,Asset Management & Custody Banks,13,1.64392316,12.38084969,0.0067179,,37.0,2.0,0.5,4.0,4,3351.72991461,2902.96045791,Ameriprise Financial,State Street Corporation
+11,trial4-ols,IDXX/PODD,IDXX,PODD,Health Care Equipment,14,1.68586915,12.08530201,0.00707994,,36.0,2.0,0.5,4.0,2,17056.45991758,16836.50764589,Idexx Laboratories,Insulet Corporation
+11,trial4-ols,KIM/SPG,KIM,SPG,Retail REITs,15,0.81092815,10.60759988,0.00730567,,32.0,2.0,0.5,4.0,3,-4297.05829433,-4687.47668853,Kimco Realty,Simon Property Group
+11,trial4-ols,DHI/LEN,DHI,LEN,Homebuilding,16,0.99350279,7.50946229,0.00799826,,30.0,2.0,0.5,4.0,3,2104.12830387,1768.86918545,D. R. Horton,Lennar
+11,trial4-ols,EME/J,EME,J,Construction & Engineering,17,1.26338367,8.06748888,0.00915811,,30.0,2.0,0.5,4.0,5,1123.41226861,557.33822512,Emcor,Jacobs Solutions
+11,trial4-ols,BLK/STT,BLK,STT,Asset Management & Custody Banks,18,1.24412934,15.19918973,0.00992456,,46.0,2.0,0.5,4.0,3,-3717.03424898,-4070.16976757,BlackRock,State Street Corporation
+11,trial4-ols,PODD/STE,PODD,STE,Health Care Equipment,19,1.04580476,9.98531562,0.01038634,,30.0,2.0,0.5,4.0,4,17220.93940847,16776.18067802,Insulet Corporation,Steris
+11,trial4-ols,GWW/IEX,GWW,IEX,Industrial Machinery & Supplies & Components,20,1.13943993,11.03904673,0.01043482,,33.0,2.0,0.5,4.0,3,-1318.83207541,-1664.2103652,W. W. Grainger,IDEX Corporation
+11,trial4-kalman,BEN/NTRS,BEN,NTRS,Asset Management & Custody Banks,1,1.25509954,10.36888502,5.67e-06,,31.0,2.0,0.5,4.0,4,8013.37235546,7573.73232802,Franklin Resources,Northern Trust
+11,trial4-kalman,DOC/WELL,DOC,WELL,Health Care REITs,2,0.62564062,4.30385188,6.42e-06,,30.0,2.0,0.5,4.0,3,-12821.62732389,-13196.88765118,Healthpeak Properties,Welltower
+11,trial4-kalman,BEN/STT,BEN,STT,Asset Management & Custody Banks,3,1.22750445,9.82223757,0.00030937,,30.0,2.0,0.5,4.0,3,1510.70990885,1170.60740945,Franklin Resources,State Street Corporation
+11,trial4-kalman,PODD/SYK,PODD,SYK,Health Care Equipment,4,1.06159579,7.73912786,0.00031136,,30.0,2.0,0.5,4.0,4,35238.67316271,34791.68265592,Insulet Corporation,Stryker Corporation
+11,trial4-kalman,ISRG/RVTY,ISRG,RVTY,Health Care Equipment,5,0.88755766,8.12104274,0.00100057,,30.0,2.0,0.5,4.0,6,8023.15939503,7363.06874208,Intuitive Surgical,Revvity
+11,trial4-kalman,A/CRL,A,CRL,Life Sciences Tools & Services,6,0.70442379,9.21723337,0.00104562,,30.0,2.0,0.5,4.0,3,-1606.29529133,-1941.93302506,Agilent Technologies,Charles River Laboratories
+11,trial4-kalman,KKR/STT,KKR,STT,Asset Management & Custody Banks,7,1.78635004,12.87986164,0.00148684,,39.0,2.0,0.5,4.0,3,2077.88961011,1742.02347973,KKR & Co.,State Street Corporation
+11,trial4-kalman,EOG/FANG,EOG,FANG,Oil & Gas Exploration & Production,8,0.67503655,7.14003314,0.00181492,,30.0,2.0,0.5,4.0,5,-4521.60488954,-5082.44277569,EOG Resources,Diamondback Energy
+11,trial4-kalman,AEP/ETR,AEP,ETR,Electric Utilities,9,0.67100016,6.39060289,0.00237126,,30.0,2.0,0.5,4.0,6,1537.95356865,850.51208015,American Electric Power,Entergy
+11,trial4-kalman,GWW/ITW,GWW,ITW,Industrial Machinery & Supplies & Components,10,1.27187204,7.75413073,0.00263704,,30.0,2.0,0.5,4.0,6,-2959.8742294,-3654.6645531,W. W. Grainger,Illinois Tool Works
+11,trial4-kalman,CFG/RF,CFG,RF,Regional Banks,11,0.99139073,16.42394665,0.00441838,,49.0,2.0,0.5,4.0,2,-566.71366765,-833.57832064,Citizens Financial Group,Regions Financial Corporation
+11,trial4-kalman,BNY/KKR,BNY,KKR,Asset Management & Custody Banks,12,0.48090224,16.30549749,0.0049096,,49.0,2.0,0.5,4.0,1,-256.59084885,-371.45823964,BNY Mellon,KKR & Co.
+11,trial4-kalman,AMP/STT,AMP,STT,Asset Management & Custody Banks,13,1.64392316,12.38084969,0.0067179,,37.0,2.0,0.5,4.0,3,3977.07787395,3638.78377801,Ameriprise Financial,State Street Corporation
+11,trial4-kalman,IDXX/PODD,IDXX,PODD,Health Care Equipment,14,1.68586915,12.08530201,0.00707994,,36.0,2.0,0.5,4.0,2,15632.65583309,15414.57614756,Idexx Laboratories,Insulet Corporation
+11,trial4-kalman,KIM/SPG,KIM,SPG,Retail REITs,15,0.81092815,10.60759988,0.00730567,,32.0,2.0,0.5,4.0,5,646.29723332,62.07712297,Kimco Realty,Simon Property Group
+11,trial4-kalman,DHI/LEN,DHI,LEN,Homebuilding,16,0.99350279,7.50946229,0.00799826,,30.0,2.0,0.5,4.0,4,2974.16803572,2535.01554085,D. R. Horton,Lennar
+11,trial4-kalman,EME/J,EME,J,Construction & Engineering,17,1.26338367,8.06748888,0.00915811,,30.0,2.0,0.5,4.0,6,1.30348033,-673.12165072,Emcor,Jacobs Solutions
+11,trial4-kalman,BLK/STT,BLK,STT,Asset Management & Custody Banks,18,1.24412934,15.19918973,0.00992456,,46.0,2.0,0.5,4.0,3,-3409.21182873,-3765.43342133,BlackRock,State Street Corporation
+11,trial4-kalman,PODD/STE,PODD,STE,Health Care Equipment,19,1.04580476,9.98531562,0.01038634,,30.0,2.0,0.5,4.0,3,13025.99796156,12689.09843224,Insulet Corporation,Steris
+11,trial4-kalman,GWW/IEX,GWW,IEX,Industrial Machinery & Supplies & Components,20,1.13943993,11.03904673,0.01043482,,33.0,2.0,0.5,4.0,5,-4291.64073758,-4848.10707059,W. W. Grainger,IDEX Corporation
+11,trial5-distance,RSG/WM,RSG,WM,Environmental & Facilities Services,1,,28.34057356,,0.71056537,,2.0,0.0,,0,0.0,0.0,Republic Services,Waste Management
+11,trial5-distance,CCL/NCLH,CCL,NCLH,"Hotels, Resorts & Cruise Lines",2,,12.18600818,,0.74714632,,2.0,0.0,,2,-542.57216408,-778.91193907,Carnival Corporation,Norwegian Cruise Line Holdings
+11,trial5-distance,ES/WEC,ES,WEC,Electric Utilities,3,,17.88735873,,0.77113456,,2.0,0.0,,1,-1747.27632025,-1867.9327616,Eversource Energy,WEC Energy Group
+11,trial5-distance,IEX/ITW,IEX,ITW,Industrial Machinery & Supplies & Components,4,,9.54891476,,0.79740565,,2.0,0.0,,1,5107.67203878,4969.65813887,IDEX Corporation,Illinois Tool Works
+11,trial5-distance,MA/V,MA,V,Transaction & Payment Processing Services,5,,19.91069956,,0.80172209,,2.0,0.0,,0,0.0,0.0,Mastercard,Visa Inc.
+11,trial5-distance,CSX/NSC,CSX,NSC,Rail Transportation,6,,26.29352684,,0.90464212,,2.0,0.0,,0,0.0,0.0,CSX Corporation,Norfolk Southern
+11,trial5-distance,NTRS/STT,NTRS,STT,Asset Management & Custody Banks,7,,15.75055523,,1.08346683,,2.0,0.0,,1,-2190.3993835,-2332.9297108,Northern Trust,State Street Corporation
+11,trial5-distance,AEP/ETR,AEP,ETR,Electric Utilities,8,,11.06727617,,1.11217783,,2.0,0.0,,1,1102.48106829,907.12875161,American Electric Power,Entergy
+11,trial5-distance,ESS/VMRK,ESS,VMRK,Multi-Family Residential REITs,9,,17.39243427,,1.1166798,,2.0,0.0,,2,4232.40731803,4004.22125256,Essex Property Trust,Vivmark Residential
+11,trial5-distance,CPT/MAA,CPT,MAA,Multi-Family Residential REITs,10,,7.59883848,,1.162544,,2.0,0.0,,0,0.0,0.0,Camden Property Trust,Mid-America Apartment Communities
+11,trial5-distance,CB/TRV,CB,TRV,Property & Casualty Insurance,11,,34.69417365,,1.2652189,,2.0,0.0,,0,0.0,0.0,Chubb Limited,Travelers Companies (The)
+11,trial5-distance,AZO/ORLY,AZO,ORLY,Automotive Retail,12,,41.19674551,,1.29266722,,2.0,0.0,,1,-2048.28867748,-2193.41423744,AutoZone,O'Reilly Automotive
+11,trial5-distance,BAC/JPM,BAC,JPM,Diversified Banks,13,,94.31132439,,1.34202013,,2.0,0.0,,0,0.0,0.0,Bank of America,JPMorgan Chase
+11,trial5-distance,BNY/NTRS,BNY,NTRS,Asset Management & Custody Banks,14,,18.17628233,,1.37166578,,2.0,0.0,,1,-873.98890312,-1024.7207836,BNY Mellon,Northern Trust
+11,trial5-distance,PEG/SO,PEG,SO,Electric Utilities,15,,17.56415987,,1.39102713,,2.0,0.0,,1,-448.75021581,-554.75218821,Public Service Enterprise Group,Southern Company
+11,trial5-distance,COP/EOG,COP,EOG,Oil & Gas Exploration & Production,16,,20.98439911,,1.41009484,,2.0,0.0,,0,0.0,0.0,ConocoPhillips,EOG Resources
+11,trial5-distance,CMS/D,CMS,D,Multi-Utilities,17,,15.30253521,,1.44475458,,2.0,0.0,,0,0.0,0.0,CMS Energy,Dominion Energy
+11,trial5-distance,BAC/PNC,BAC,PNC,Diversified Banks,18,,22.96108561,,1.44596924,,2.0,0.0,,1,-754.82130721,-857.45592588,Bank of America,PNC Financial Services
+11,trial5-distance,EIX/PPL,EIX,PPL,Electric Utilities,19,,27.75395294,,1.46266136,,2.0,0.0,,1,3461.50266222,3277.69454837,Edison International,PPL Corporation
+11,trial5-distance,MCO/SPGI,MCO,SPGI,Financial Exchanges & Data,20,,20.64638453,,1.49413228,,2.0,0.0,,0,0.0,0.0,Moody's Corporation,S&P Global
+12,trial4-ols,CMS/D,CMS,D,Multi-Utilities,1,1.14167121,5.57549319,1.58e-06,,30.0,2.0,0.5,4.0,4,-6266.52594649,-6713.75071094,CMS Energy,Dominion Energy
+12,trial4-ols,D/XEL,D,XEL,Multi-Utilities,2,0.87664715,7.83994067,6.817e-05,,30.0,2.0,0.5,4.0,4,-1640.21033834,-2068.96384672,Dominion Energy,Xcel Energy
+12,trial4-ols,FE/PEG,FE,PEG,Electric Utilities,3,1.43038739,12.4544852,0.00024206,,37.0,2.0,0.5,4.0,2,-907.11631379,-1136.59842309,FirstEnergy,Public Service Enterprise Group
+12,trial4-ols,MDLZ/SJM,MDLZ,SJM,Packaged Foods & Meats,4,0.74241986,8.05165954,0.00069989,,30.0,2.0,0.5,4.0,4,-6180.61737981,-6649.12272273,Mondelez International,J.M. Smucker Company (The)
+12,trial4-ols,EW/RVTY,EW,RVTY,Health Care Equipment,5,0.90779849,12.05625333,0.00091096,,36.0,2.0,0.5,4.0,3,1097.87733228,781.30753438,Edwards Lifesciences,Revvity
+12,trial4-ols,BNY/KKR,BNY,KKR,Asset Management & Custody Banks,6,0.66462437,9.4248662,0.00173632,,30.0,2.0,0.5,4.0,5,-1605.53320155,-2133.74701905,BNY Mellon,KKR & Co.
+12,trial4-ols,AEE/D,AEE,D,Multi-Utilities,7,1.20349329,14.0980316,0.00177029,,42.0,2.0,0.5,4.0,3,-5811.78990629,-6163.09120603,Ameren,Dominion Energy
+12,trial4-ols,CPT/MAA,CPT,MAA,Multi-Family Residential REITs,8,1.03182105,7.6969713,0.00381028,,30.0,2.0,0.5,4.0,4,-1011.25201141,-1455.00639819,Camden Property Trust,Mid-America Apartment Communities
+12,trial4-ols,DUK/FE,DUK,FE,Electric Utilities,9,0.57517563,14.9072105,0.00609582,,45.0,2.0,0.5,4.0,2,-2240.99177582,-2472.46351549,Duke Energy,FirstEnergy
+12,trial4-ols,EVRG/LNT,EVRG,LNT,Electric Utilities,10,1.11033694,24.91456613,0.00669862,,75.0,2.0,0.5,4.0,4,6223.49673965,5787.63729759,Evergy,Alliant Energy
+12,trial4-ols,HPQ/SMCI,HPQ,SMCI,"Technology Hardware, Storage & Peripherals",11,1.30279269,11.67193545,0.00699534,,35.0,2.0,0.5,4.0,2,-23844.30824868,-24135.11877841,HP Inc.,Supermicro
+12,trial4-ols,KKR/NTRS,KKR,NTRS,Asset Management & Custody Banks,12,1.54695421,11.0841895,0.00818195,,33.0,2.0,0.5,4.0,3,-1226.65339767,-1560.40553983,KKR & Co.,Northern Trust
+12,trial4-ols,RMD/RVTY,RMD,RVTY,Health Care Equipment,13,0.80333913,13.5271754,0.00833488,,41.0,2.0,0.5,4.0,4,1173.03015894,713.64276656,ResMed,Revvity
+12,trial4-ols,FRT/SPG,FRT,SPG,Retail REITs,14,0.62118885,10.5776999,0.0087431,,32.0,2.0,0.5,4.0,4,-229.2895677,-681.42797403,Federal Realty Investment Trust,Simon Property Group
+12,trial4-ols,EVRG/FE,EVRG,FE,Electric Utilities,15,0.6055619,12.47464473,0.00899644,,37.0,2.0,0.5,4.0,3,1985.2441005,1648.70412137,Evergy,FirstEnergy
+12,trial4-ols,JNJ/LLY,JNJ,LLY,Pharmaceuticals,16,0.29496186,10.76712672,0.01077706,,32.0,2.0,0.5,4.0,4,2828.93896855,2390.26310918,Johnson & Johnson,Lilly (Eli)
+12,trial4-ols,ALL/CINF,ALL,CINF,Property & Casualty Insurance,17,0.67004117,15.11633268,0.01208396,,45.0,2.0,0.5,4.0,4,6719.81259393,6239.01462859,Allstate,Cincinnati Financial
+12,trial4-ols,INTC/SWKS,INTC,SWKS,Semiconductors,18,0.51266839,13.49070467,0.012474,,40.0,2.0,0.5,4.0,3,-10308.330627,-10636.39315377,Intel,Skyworks Solutions
+12,trial4-ols,D/ED,D,ED,Multi-Utilities,19,0.43840752,8.99795494,0.01275294,,30.0,2.0,0.5,4.0,5,-7648.8049591,-8186.42047446,Dominion Energy,Consolidated Edison
+12,trial4-ols,INTU/ORCL,INTU,ORCL,Application Software,20,1.16629102,14.63269366,0.01284872,,44.0,2.0,0.5,4.0,3,3891.25942186,3548.7872403,Intuit,Oracle Corporation
+12,trial4-kalman,CMS/D,CMS,D,Multi-Utilities,1,1.14167121,5.57549319,1.58e-06,,30.0,2.0,0.5,4.0,5,-892.22544029,-1420.69423148,CMS Energy,Dominion Energy
+12,trial4-kalman,D/XEL,D,XEL,Multi-Utilities,2,0.87664715,7.83994067,6.817e-05,,30.0,2.0,0.5,4.0,6,-1351.42676884,-1982.67538126,Dominion Energy,Xcel Energy
+12,trial4-kalman,FE/PEG,FE,PEG,Electric Utilities,3,1.43038739,12.4544852,0.00024206,,37.0,2.0,0.5,4.0,2,-1962.04284631,-2186.27477679,FirstEnergy,Public Service Enterprise Group
+12,trial4-kalman,MDLZ/SJM,MDLZ,SJM,Packaged Foods & Meats,4,0.74241986,8.05165954,0.00069989,,30.0,2.0,0.5,4.0,4,-7123.15510243,-7592.29093669,Mondelez International,J.M. Smucker Company (The)
+12,trial4-kalman,EW/RVTY,EW,RVTY,Health Care Equipment,5,0.90779849,12.05625333,0.00091096,,36.0,2.0,0.5,4.0,2,901.94920838,687.98316692,Edwards Lifesciences,Revvity
+12,trial4-kalman,BNY/KKR,BNY,KKR,Asset Management & Custody Banks,6,0.66462437,9.4248662,0.00173632,,30.0,2.0,0.5,4.0,5,-2076.58942801,-2610.92648751,BNY Mellon,KKR & Co.
+12,trial4-kalman,AEE/D,AEE,D,Multi-Utilities,7,1.20349329,14.0980316,0.00177029,,42.0,2.0,0.5,4.0,3,-5986.85597446,-6333.79402383,Ameren,Dominion Energy
+12,trial4-kalman,CPT/MAA,CPT,MAA,Multi-Family Residential REITs,8,1.03182105,7.6969713,0.00381028,,30.0,2.0,0.5,4.0,3,-713.18969693,-1056.73891664,Camden Property Trust,Mid-America Apartment Communities
+12,trial4-kalman,DUK/FE,DUK,FE,Electric Utilities,9,0.57517563,14.9072105,0.00609582,,45.0,2.0,0.5,4.0,2,-3774.61129985,-4002.02964202,Duke Energy,FirstEnergy
+12,trial4-kalman,EVRG/LNT,EVRG,LNT,Electric Utilities,10,1.11033694,24.91456613,0.00669862,,75.0,2.0,0.5,4.0,3,3575.89875348,3232.47183655,Evergy,Alliant Energy
+12,trial4-kalman,HPQ/SMCI,HPQ,SMCI,"Technology Hardware, Storage & Peripherals",11,1.30279269,11.67193545,0.00699534,,35.0,2.0,0.5,4.0,2,-9850.78021349,-10108.55731061,HP Inc.,Supermicro
+12,trial4-kalman,KKR/NTRS,KKR,NTRS,Asset Management & Custody Banks,12,1.54695421,11.0841895,0.00818195,,33.0,2.0,0.5,4.0,3,-2311.6602146,-2646.34347506,KKR & Co.,Northern Trust
+12,trial4-kalman,RMD/RVTY,RMD,RVTY,Health Care Equipment,13,0.80333913,13.5271754,0.00833488,,41.0,2.0,0.5,4.0,4,-506.82271207,-962.15314069,ResMed,Revvity
+12,trial4-kalman,FRT/SPG,FRT,SPG,Retail REITs,14,0.62118885,10.5776999,0.0087431,,32.0,2.0,0.5,4.0,4,-351.42605794,-806.499851,Federal Realty Investment Trust,Simon Property Group
+12,trial4-kalman,EVRG/FE,EVRG,FE,Electric Utilities,15,0.6055619,12.47464473,0.00899644,,37.0,2.0,0.5,4.0,2,-2136.5110192,-2374.79108495,Evergy,FirstEnergy
+12,trial4-kalman,JNJ/LLY,JNJ,LLY,Pharmaceuticals,16,0.29496186,10.76712672,0.01077706,,32.0,2.0,0.5,4.0,4,3517.32919423,3095.33515546,Johnson & Johnson,Lilly (Eli)
+12,trial4-kalman,ALL/CINF,ALL,CINF,Property & Casualty Insurance,17,0.67004117,15.11633268,0.01208396,,45.0,2.0,0.5,4.0,4,6245.95876776,5795.08462141,Allstate,Cincinnati Financial
+12,trial4-kalman,INTC/SWKS,INTC,SWKS,Semiconductors,18,0.51266839,13.49070467,0.012474,,40.0,2.0,0.5,4.0,3,-8476.37277736,-8825.91107259,Intel,Skyworks Solutions
+12,trial4-kalman,D/ED,D,ED,Multi-Utilities,19,0.43840752,8.99795494,0.01275294,,30.0,2.0,0.5,4.0,5,-11032.67334261,-11571.29402426,Dominion Energy,Consolidated Edison
+12,trial4-kalman,INTU/ORCL,INTU,ORCL,Application Software,20,1.16629102,14.63269366,0.01284872,,44.0,2.0,0.5,4.0,3,3918.13658261,3576.89863246,Intuit,Oracle Corporation
+12,trial5-distance,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,1,,17.92938226,,0.4718223,,2.0,0.0,,0,0.0,0.0,"UDR, Inc.",Vivmark Residential
+12,trial5-distance,CMS/XEL,CMS,XEL,Multi-Utilities,2,,27.6296707,,0.63809841,,2.0,0.0,,1,2145.84160049,1998.4351972,CMS Energy,Xcel Energy
+12,trial5-distance,DUK/SO,DUK,SO,Electric Utilities,3,,20.40803459,,0.74386365,,2.0,0.0,,1,1784.03335725,1611.76585517,Duke Energy,Southern Company
+12,trial5-distance,CPT/MAA,CPT,MAA,Multi-Family Residential REITs,4,,8.24104141,,0.76470719,,2.0,0.0,,1,-1051.28348507,-1192.83168954,Camden Property Trust,Mid-America Apartment Communities
+12,trial5-distance,MCO/SPGI,MCO,SPGI,Financial Exchanges & Data,5,,18.97270643,,0.80761161,,2.0,0.0,,1,725.13312975,595.01789007,Moody's Corporation,S&P Global
+12,trial5-distance,DUK/PEG,DUK,PEG,Electric Utilities,6,,11.00847094,,0.91464791,,2.0,0.0,,0,0.0,0.0,Duke Energy,Public Service Enterprise Group
+12,trial5-distance,ESS/VMRK,ESS,VMRK,Multi-Family Residential REITs,7,,29.92901824,,0.92242352,,2.0,0.0,,0,0.0,0.0,Essex Property Trust,Vivmark Residential
+12,trial5-distance,DLR/EQIX,DLR,EQIX,Data Center REITs,8,,19.54175952,,1.00586911,,2.0,0.0,,1,-6805.00373879,-6974.21709146,Digital Realty,Equinix
+12,trial5-distance,HRL/MKC,HRL,MKC,Packaged Foods & Meats,9,,17.55200774,,1.02242794,,2.0,0.0,,1,6228.4081536,6095.41680387,Hormel Foods,McCormick & Company
+12,trial5-distance,PEG/SO,PEG,SO,Electric Utilities,10,,16.00357465,,1.08367488,,2.0,0.0,,1,4437.19137487,4304.34533151,Public Service Enterprise Group,Southern Company
+12,trial5-distance,ESS/UDR,ESS,UDR,Multi-Family Residential REITs,11,,34.47988981,,1.09694587,,2.0,0.0,,1,2387.53559249,2263.74078048,Essex Property Trust,"UDR, Inc."
+12,trial5-distance,AEP/ETR,AEP,ETR,Electric Utilities,12,,14.31735522,,1.12553313,,2.0,0.0,,0,0.0,0.0,American Electric Power,Entergy
+12,trial5-distance,ED/NI,ED,NI,Multi-Utilities,13,,27.11572727,,1.13768746,,2.0,0.0,,1,1016.29996091,892.12645289,Consolidated Edison,NiSource
+12,trial5-distance,MDLZ/SJM,MDLZ,SJM,Packaged Foods & Meats,14,,10.58041995,,1.23047523,,2.0,0.0,,1,-3116.61755625,-3310.20880675,Mondelez International,J.M. Smucker Company (The)
+12,trial5-distance,AEP/WEC,AEP,WEC,Electric Utilities,15,,40.17859738,,1.43525708,,2.0,0.0,,0,0.0,0.0,American Electric Power,WEC Energy Group
+12,trial5-distance,DHI/LEN,DHI,LEN,Homebuilding,16,,10.68455047,,1.52637634,,2.0,0.0,,0,0.0,0.0,D. R. Horton,Lennar
+12,trial5-distance,NI/SRE,NI,SRE,Multi-Utilities,17,,28.1200111,,1.52727815,,2.0,0.0,,1,281.84642233,114.58753291,NiSource,Sempra
+12,trial5-distance,ED/SRE,ED,SRE,Multi-Utilities,18,,35.6754293,,1.76719998,,2.0,0.0,,1,4539.39695916,4379.52822791,Consolidated Edison,Sempra
+12,trial5-distance,ES/WEC,ES,WEC,Electric Utilities,19,,44.26086074,,1.84692348,,2.0,0.0,,0,0.0,0.0,Eversource Energy,WEC Energy Group
+12,trial5-distance,BNY/STT,BNY,STT,Asset Management & Custody Banks,20,,28.48871603,,1.92168737,,2.0,0.0,,1,515.1226938,355.47174482,BNY Mellon,State Street Corporation
+13,trial4-ols,ROP/TDY,ROP,TDY,Electronic Equipment & Instruments,1,0.90746846,8.92706259,0.0011922,,30.0,2.0,0.5,4.0,4,-3375.1303239,-3822.78933156,Roper Technologies,Teledyne Technologies
+13,trial4-ols,AMD/MRVL,AMD,MRVL,Semiconductors,2,1.03457955,11.34192267,0.00178132,,34.0,2.0,0.5,4.0,5,444.51983124,-108.98237471,Advanced Micro Devices,Marvell Technology
+13,trial4-ols,APA/EOG,APA,EOG,Oil & Gas Exploration & Production,3,1.17762431,12.03907674,0.00509318,,36.0,2.0,0.5,4.0,3,4550.48635156,4230.11362393,APA Corporation,EOG Resources
+13,trial4-ols,ITW/PH,ITW,PH,Industrial Machinery & Supplies & Components,4,0.94500316,10.51544351,0.00631865,,32.0,2.0,0.5,4.0,5,-3413.95398358,-3994.63384876,Illinois Tool Works,Parker Hannifin
+13,trial4-ols,BEN/BLK,BEN,BLK,Asset Management & Custody Banks,5,0.74599464,10.34268041,0.0068869,,31.0,2.0,0.5,4.0,3,-6741.04005301,-7112.47124933,Franklin Resources,BlackRock
+13,trial4-ols,CBOE/NDAQ,CBOE,NDAQ,Financial Exchanges & Data,6,0.70943525,9.67260835,0.00794896,,30.0,2.0,0.5,4.0,5,1789.82529521,1246.1029643,Cboe Global Markets,"Nasdaq, Inc."
+13,trial4-ols,BAC/PNC,BAC,PNC,Diversified Banks,7,1.22286167,9.11931283,0.00814154,,30.0,2.0,0.5,4.0,4,243.00031789,-161.42579539,Bank of America,PNC Financial Services
+13,trial4-ols,CMS/DTE,CMS,DTE,Multi-Utilities,8,0.86746214,8.21942444,0.00959025,,30.0,2.0,0.5,4.0,6,4836.49674894,4218.35310697,CMS Energy,DTE Energy
+13,trial4-ols,EOG/FANG,EOG,FANG,Oil & Gas Exploration & Production,9,0.98346862,11.65169302,0.01058801,,35.0,2.0,0.5,4.0,3,-1201.12519947,-1514.34282126,EOG Resources,Diamondback Energy
+13,trial4-ols,BA/GE,BA,GE,Aerospace & Defense,10,1.16390413,12.54907307,0.01228641,,38.0,2.0,0.5,4.0,2,-3422.58390075,-3664.66043829,Boeing,GE Aerospace
+13,trial4-ols,ECL/IFF,ECL,IFF,Specialty Chemicals,11,0.99796737,20.36782169,0.01370179,,61.0,2.0,0.5,4.0,2,-12431.44826094,-12710.48432621,Ecolab,International Flavors & Fragrances
+13,trial4-ols,CRM/TRMB,CRM,TRMB,Application Software,12,1.284321,13.1908493,0.01375699,,40.0,2.0,0.5,4.0,2,-15713.00607164,-15991.86395683,Salesforce,Trimble Inc.
+13,trial4-ols,JBHT/ODFL,JBHT,ODFL,Cargo Ground Transportation,13,0.62121114,10.26290565,0.01481919,,31.0,2.0,0.5,4.0,4,4707.6842708,4285.3247188,J.B. Hunt,Old Dominion
+13,trial4-ols,LUV/UAL,LUV,UAL,Passenger Airlines,14,1.13728979,15.43909539,0.01750798,,46.0,2.0,0.5,4.0,3,-1988.11175872,-2372.01755083,Southwest Airlines,United Airlines Holdings
+13,trial4-ols,DTE/XEL,DTE,XEL,Multi-Utilities,15,1.14708708,15.40214793,0.01841504,,46.0,2.0,0.5,4.0,4,-2647.33829386,-3104.7897961,DTE Energy,Xcel Energy
+13,trial4-ols,ADBE/TRMB,ADBE,TRMB,Application Software,16,1.41229656,12.49682732,0.01873197,,37.0,2.0,0.5,4.0,2,-825.64589756,-1058.57023387,Adobe Inc.,Trimble Inc.
+13,trial4-ols,EVRG/LNT,EVRG,LNT,Electric Utilities,17,0.98165387,11.35804008,0.02348585,,34.0,2.0,0.5,4.0,3,700.29855413,389.44632601,Evergy,Alliant Energy
+13,trial4-ols,AEP/SO,AEP,SO,Electric Utilities,18,0.9192378,14.12017804,0.03218634,,42.0,2.0,0.5,4.0,1,-5211.99578367,-5376.85012743,American Electric Power,Southern Company
+13,trial4-ols,BEN/STT,BEN,STT,Asset Management & Custody Banks,19,0.77614563,14.89881728,0.03278366,,45.0,2.0,0.5,4.0,3,7916.39419539,7601.73188158,Franklin Resources,State Street Corporation
+13,trial4-ols,AMAT/TER,AMAT,TER,Semiconductor Materials & Equipment,20,0.79188262,20.960427,0.03293037,,63.0,2.0,0.5,4.0,2,-4367.6997551,-4645.66210503,Applied Materials,Teradyne
+13,trial4-kalman,ROP/TDY,ROP,TDY,Electronic Equipment & Instruments,1,0.90746846,8.92706259,0.0011922,,30.0,2.0,0.5,4.0,3,-4225.35157947,-4572.67542796,Roper Technologies,Teledyne Technologies
+13,trial4-kalman,AMD/MRVL,AMD,MRVL,Semiconductors,2,1.03457955,11.34192267,0.00178132,,34.0,2.0,0.5,4.0,5,-2275.84015825,-2829.29511793,Advanced Micro Devices,Marvell Technology
+13,trial4-kalman,APA/EOG,APA,EOG,Oil & Gas Exploration & Production,3,1.17762431,12.03907674,0.00509318,,36.0,2.0,0.5,4.0,4,5319.75898029,4898.07251958,APA Corporation,EOG Resources
+13,trial4-kalman,ITW/PH,ITW,PH,Industrial Machinery & Supplies & Components,4,0.94500316,10.51544351,0.00631865,,32.0,2.0,0.5,4.0,5,-4371.20042162,-4952.92324291,Illinois Tool Works,Parker Hannifin
+13,trial4-kalman,BEN/BLK,BEN,BLK,Asset Management & Custody Banks,5,0.74599464,10.34268041,0.0068869,,31.0,2.0,0.5,4.0,3,-6817.45384631,-7197.70938497,Franklin Resources,BlackRock
+13,trial4-kalman,CBOE/NDAQ,CBOE,NDAQ,Financial Exchanges & Data,6,0.70943525,9.67260835,0.00794896,,30.0,2.0,0.5,4.0,3,2183.52928278,1840.81670199,Cboe Global Markets,"Nasdaq, Inc."
+13,trial4-kalman,BAC/PNC,BAC,PNC,Diversified Banks,7,1.22286167,9.11931283,0.00814154,,30.0,2.0,0.5,4.0,5,3123.36085057,2621.05811687,Bank of America,PNC Financial Services
+13,trial4-kalman,CMS/DTE,CMS,DTE,Multi-Utilities,8,0.86746214,8.21942444,0.00959025,,30.0,2.0,0.5,4.0,6,4863.55330426,4239.6315119,CMS Energy,DTE Energy
+13,trial4-kalman,EOG/FANG,EOG,FANG,Oil & Gas Exploration & Production,9,0.98346862,11.65169302,0.01058801,,35.0,2.0,0.5,4.0,3,378.69834761,49.56204286,EOG Resources,Diamondback Energy
+13,trial4-kalman,BA/GE,BA,GE,Aerospace & Defense,10,1.16390413,12.54907307,0.01228641,,38.0,2.0,0.5,4.0,2,1669.11988953,1447.73721424,Boeing,GE Aerospace
+13,trial4-kalman,ECL/IFF,ECL,IFF,Specialty Chemicals,11,0.99796737,20.36782169,0.01370179,,61.0,2.0,0.5,4.0,2,-13959.18974577,-14244.78572933,Ecolab,International Flavors & Fragrances
+13,trial4-kalman,CRM/TRMB,CRM,TRMB,Application Software,12,1.284321,13.1908493,0.01375699,,40.0,2.0,0.5,4.0,3,-12811.8760177,-13159.82379739,Salesforce,Trimble Inc.
+13,trial4-kalman,JBHT/ODFL,JBHT,ODFL,Cargo Ground Transportation,13,0.62121114,10.26290565,0.01481919,,31.0,2.0,0.5,4.0,4,4565.14416475,4143.87363999,J.B. Hunt,Old Dominion
+13,trial4-kalman,LUV/UAL,LUV,UAL,Passenger Airlines,14,1.13728979,15.43909539,0.01750798,,46.0,2.0,0.5,4.0,2,-1974.2025792,-2226.42537207,Southwest Airlines,United Airlines Holdings
+13,trial4-kalman,DTE/XEL,DTE,XEL,Multi-Utilities,15,1.14708708,15.40214793,0.01841504,,46.0,2.0,0.5,4.0,4,-2612.80321748,-3074.87366087,DTE Energy,Xcel Energy
+13,trial4-kalman,ADBE/TRMB,ADBE,TRMB,Application Software,16,1.41229656,12.49682732,0.01873197,,37.0,2.0,0.5,4.0,2,-141.01226522,-380.73559769,Adobe Inc.,Trimble Inc.
+13,trial4-kalman,EVRG/LNT,EVRG,LNT,Electric Utilities,17,0.98165387,11.35804008,0.02348585,,34.0,2.0,0.5,4.0,3,1201.40363323,886.09726671,Evergy,Alliant Energy
+13,trial4-kalman,AEP/SO,AEP,SO,Electric Utilities,18,0.9192378,14.12017804,0.03218634,,42.0,2.0,0.5,4.0,1,-5855.66633426,-6013.0162631,American Electric Power,Southern Company
+13,trial4-kalman,BEN/STT,BEN,STT,Asset Management & Custody Banks,19,0.77614563,14.89881728,0.03278366,,45.0,2.0,0.5,4.0,3,7968.34518756,7652.47218933,Franklin Resources,State Street Corporation
+13,trial4-kalman,AMAT/TER,AMAT,TER,Semiconductor Materials & Equipment,20,0.79188262,20.960427,0.03293037,,63.0,2.0,0.5,4.0,1,-5636.59389879,-5796.88675971,Applied Materials,Teradyne
+13,trial5-distance,DUK/LNT,DUK,LNT,Electric Utilities,1,,20.08024181,,0.52621189,,2.0,0.0,,1,-588.74440564,-713.04401705,Duke Energy,Alliant Energy
+13,trial5-distance,MA/V,MA,V,Transaction & Payment Processing Services,2,,21.64569341,,0.55703714,,2.0,0.0,,0,0.0,0.0,Mastercard,Visa Inc.
+13,trial5-distance,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,3,,23.23796326,,0.56098756,,2.0,0.0,,0,0.0,0.0,"UDR, Inc.",Vivmark Residential
+13,trial5-distance,AEP/ETR,AEP,ETR,Electric Utilities,4,,18.03074484,,0.61037901,,2.0,0.0,,0,0.0,0.0,American Electric Power,Entergy
+13,trial5-distance,CMS/XEL,CMS,XEL,Multi-Utilities,5,,35.16361947,,0.7219209,,2.0,0.0,,0,0.0,0.0,CMS Energy,Xcel Energy
+13,trial5-distance,CSX/UNP,CSX,UNP,Rail Transportation,6,,17.35380875,,0.75504189,,2.0,0.0,,1,-1177.24010971,-1306.0132577,CSX Corporation,Union Pacific Corporation
+13,trial5-distance,CSX/NSC,CSX,NSC,Rail Transportation,7,,28.30679991,,0.78239383,,2.0,0.0,,1,-5307.2607577,-5501.5761757,CSX Corporation,Norfolk Southern
+13,trial5-distance,RSG/WM,RSG,WM,Environmental & Facilities Services,8,,33.9292548,,0.79150122,,2.0,0.0,,1,-97.41990929,-205.1932601,Republic Services,Waste Management
+13,trial5-distance,LNT/PEG,LNT,PEG,Electric Utilities,9,,20.94646818,,0.80366739,,2.0,0.0,,0,0.0,0.0,Alliant Energy,Public Service Enterprise Group
+13,trial5-distance,DHI/LEN,DHI,LEN,Homebuilding,10,,14.22612018,,0.81685172,,2.0,0.0,,0,0.0,0.0,D. R. Horton,Lennar
+13,trial5-distance,DUK/PEG,DUK,PEG,Electric Utilities,11,,17.49896876,,0.82643663,,2.0,0.0,,1,-3881.89534068,-4044.23924419,Duke Energy,Public Service Enterprise Group
+13,trial5-distance,ITW/PH,ITW,PH,Industrial Machinery & Supplies & Components,12,,9.53824191,,0.93261398,,2.0,0.0,,1,-4138.60397677,-4339.7729253,Illinois Tool Works,Parker Hannifin
+13,trial5-distance,CPT/MAA,CPT,MAA,Multi-Family Residential REITs,13,,31.02899124,,1.00751695,,2.0,0.0,,0,0.0,0.0,Camden Property Trust,Mid-America Apartment Communities
+13,trial5-distance,AEP/SO,AEP,SO,Electric Utilities,14,,17.3745361,,1.03450426,,2.0,0.0,,1,-1281.86443938,-1415.10013582,American Electric Power,Southern Company
+13,trial5-distance,ADI/TXN,ADI,TXN,Semiconductors,15,,31.86040869,,1.17569372,,2.0,0.0,,2,5578.66870319,5308.74844236,Analog Devices,Texas Instruments
+13,trial5-distance,IEX/ITW,IEX,ITW,Industrial Machinery & Supplies & Components,16,,33.37176802,,1.27755237,,2.0,0.0,,1,-4271.967007,-4466.65805346,IDEX Corporation,Illinois Tool Works
+13,trial5-distance,PPL/WEC,PPL,WEC,Electric Utilities,17,,26.44702903,,1.3010203,,2.0,0.0,,0,0.0,0.0,PPL Corporation,WEC Energy Group
+13,trial5-distance,HLT/MAR,HLT,MAR,"Hotels, Resorts & Cruise Lines",18,,29.80408619,,1.33955362,,2.0,0.0,,0,0.0,0.0,Hilton Worldwide,Marriott International
+13,trial5-distance,KO/PEP,KO,PEP,Soft Drinks & Non-alcoholic Beverages,19,,51.89310871,,1.38927025,,2.0,0.0,,0,0.0,0.0,Coca-Cola Company (The),PepsiCo
+13,trial5-distance,CFG/KEY,CFG,KEY,Regional Banks,20,,28.56167979,,1.4378407,,2.0,0.0,,1,-2737.44004117,-2894.13227783,Citizens Financial Group,KeyCorp
+14,trial4-ols,AEE/XEL,AEE,XEL,Multi-Utilities,1,0.84795586,9.74730895,0.00725735,,30.0,2.0,0.5,4.0,5,1288.88901464,749.06615743,Ameren,Xcel Energy
+14,trial4-ols,BEN/STT,BEN,STT,Asset Management & Custody Banks,2,0.74157909,11.55947472,0.00822718,,35.0,2.0,0.5,4.0,4,-3535.16904882,-3990.24561623,Franklin Resources,State Street Corporation
+14,trial4-ols,MPC/PSX,MPC,PSX,Oil & Gas Refining & Marketing,3,1.74541893,15.41501632,0.01351924,,46.0,2.0,0.5,4.0,4,4832.35247603,4375.20973838,Marathon Petroleum,Phillips 66
+14,trial4-ols,CNP/ED,CNP,ED,Multi-Utilities,4,0.67980481,10.78804631,0.01584276,,32.0,2.0,0.5,4.0,5,2223.93817749,1649.90281373,CenterPoint Energy,Consolidated Edison
+14,trial4-ols,ETR/WEC,ETR,WEC,Electric Utilities,5,0.95929217,12.29698115,0.01622093,,37.0,2.0,0.5,4.0,4,2626.53014452,2185.47179937,Entergy,WEC Energy Group
+14,trial4-ols,CCI/SBAC,CCI,SBAC,Telecom Tower REITs,6,1.12210795,15.6657,0.01625666,,47.0,2.0,0.5,4.0,4,5650.23509303,5189.95543527,Crown Castle,SBA Communications
+14,trial4-ols,KMI/TRGP,KMI,TRGP,Oil & Gas Storage & Transportation,7,0.3132698,16.32004324,0.01830353,,49.0,2.0,0.5,4.0,4,3671.21039629,3215.2474637,Kinder Morgan,Targa Resources
+14,trial4-ols,COP/EOG,COP,EOG,Oil & Gas Exploration & Production,8,1.1105057,11.16059938,0.02205401,,33.0,2.0,0.5,4.0,4,-1168.9021524,-1631.54357569,ConocoPhillips,EOG Resources
+14,trial4-ols,FTNT/MSFT,FTNT,MSFT,Systems Software,9,0.83982957,9.87805115,0.02260036,,30.0,2.0,0.5,4.0,4,-7925.99731056,-8406.15200832,Fortinet,Microsoft
+14,trial4-ols,INTU/TYL,INTU,TYL,Application Software,10,0.87347114,12.67288236,0.02391739,,38.0,2.0,0.5,4.0,2,1201.43953318,940.33579488,Intuit,Tyler Technologies
+14,trial4-ols,EVRG/LNT,EVRG,LNT,Electric Utilities,11,0.81719614,12.40020495,0.02948601,,37.0,2.0,0.5,4.0,3,946.68547056,630.52386303,Evergy,Alliant Energy
+14,trial4-ols,EOG/FANG,EOG,FANG,Oil & Gas Exploration & Production,12,1.03287627,14.16066927,0.02959656,,42.0,2.0,0.5,4.0,3,-1559.7098166,-1939.17239206,EOG Resources,Diamondback Energy
+14,trial4-ols,CAT/WAB,CAT,WAB,Construction Machinery & Heavy Transportation Equipment,13,1.15989742,16.64746347,0.0296984,,50.0,2.0,0.5,4.0,2,-2590.53248954,-2872.33588174,Caterpillar Inc.,Wabtec
+14,trial4-ols,CNP/SRE,CNP,SRE,Multi-Utilities,14,0.72441961,14.56350041,0.03274508,,44.0,2.0,0.5,4.0,5,4381.75852561,3805.84185135,CenterPoint Energy,Sempra
+14,trial4-ols,TFC/USB,TFC,USB,Diversified Banks,15,1.10782604,14.09430496,0.03416896,,42.0,2.0,0.5,4.0,3,1760.26154562,1408.63927012,Truist Financial,U.S. Bancorp
+14,trial4-ols,APA/EOG,APA,EOG,Oil & Gas Exploration & Production,16,1.20276606,15.20363888,0.03494695,,46.0,2.0,0.5,4.0,3,3401.65120094,3038.51152739,APA Corporation,EOG Resources
+14,trial4-ols,AEP/ETR,AEP,ETR,Electric Utilities,17,1.11353845,14.16532936,0.03670606,,42.0,2.0,0.5,4.0,4,4201.1271774,3760.51564743,American Electric Power,Entergy
+14,trial4-ols,MRVL/MU,MRVL,MU,Semiconductors,18,1.29465723,18.49773024,0.04576037,,55.0,2.0,0.5,4.0,1,-984.28800394,-1103.3131927,Marvell Technology,Micron Technology
+14,trial4-ols,PCAR/WAB,PCAR,WAB,Construction Machinery & Heavy Transportation Equipment,19,1.54226958,16.09116838,0.04645475,,48.0,2.0,0.5,4.0,3,2733.03126663,2381.3623561,Paccar,Wabtec
+14,trial4-ols,DRI/YUM,DRI,YUM,Restaurants,20,1.08933129,16.35504564,0.04658555,,49.0,2.0,0.5,4.0,2,-1271.83515886,-1522.20943381,Darden Restaurants,Yum! Brands
+14,trial4-kalman,AEE/XEL,AEE,XEL,Multi-Utilities,1,0.84795586,9.74730895,0.00725735,,30.0,2.0,0.5,4.0,4,351.87886546,-75.76419012,Ameren,Xcel Energy
+14,trial4-kalman,BEN/STT,BEN,STT,Asset Management & Custody Banks,2,0.74157909,11.55947472,0.00822718,,35.0,2.0,0.5,4.0,4,-6172.93100151,-6628.90621261,Franklin Resources,State Street Corporation
+14,trial4-kalman,MPC/PSX,MPC,PSX,Oil & Gas Refining & Marketing,3,1.74541893,15.41501632,0.01351924,,46.0,2.0,0.5,4.0,3,1825.23874965,1472.21461393,Marathon Petroleum,Phillips 66
+14,trial4-kalman,CNP/ED,CNP,ED,Multi-Utilities,4,0.67980481,10.78804631,0.01584276,,32.0,2.0,0.5,4.0,5,1685.45055443,1122.91027818,CenterPoint Energy,Consolidated Edison
+14,trial4-kalman,ETR/WEC,ETR,WEC,Electric Utilities,5,0.95929217,12.29698115,0.01622093,,37.0,2.0,0.5,4.0,5,3079.17200202,2540.83420971,Entergy,WEC Energy Group
+14,trial4-kalman,CCI/SBAC,CCI,SBAC,Telecom Tower REITs,6,1.12210795,15.6657,0.01625666,,47.0,2.0,0.5,4.0,3,3138.29290372,2798.38928582,Crown Castle,SBA Communications
+14,trial4-kalman,KMI/TRGP,KMI,TRGP,Oil & Gas Storage & Transportation,7,0.3132698,16.32004324,0.01830353,,49.0,2.0,0.5,4.0,4,3715.45532645,3260.38719702,Kinder Morgan,Targa Resources
+14,trial4-kalman,COP/EOG,COP,EOG,Oil & Gas Exploration & Production,8,1.1105057,11.16059938,0.02205401,,33.0,2.0,0.5,4.0,2,-2731.81541006,-2995.43630603,ConocoPhillips,EOG Resources
+14,trial4-kalman,FTNT/MSFT,FTNT,MSFT,Systems Software,9,0.83982957,9.87805115,0.02260036,,30.0,2.0,0.5,4.0,4,-7993.55065183,-8443.69620029,Fortinet,Microsoft
+14,trial4-kalman,INTU/TYL,INTU,TYL,Application Software,10,0.87347114,12.67288236,0.02391739,,38.0,2.0,0.5,4.0,2,463.08114648,204.14692565,Intuit,Tyler Technologies
+14,trial4-kalman,EVRG/LNT,EVRG,LNT,Electric Utilities,11,0.81719614,12.40020495,0.02948601,,37.0,2.0,0.5,4.0,2,1013.66097111,804.80567152,Evergy,Alliant Energy
+14,trial4-kalman,EOG/FANG,EOG,FANG,Oil & Gas Exploration & Production,12,1.03287627,14.16066927,0.02959656,,42.0,2.0,0.5,4.0,3,-997.54515602,-1366.00704501,EOG Resources,Diamondback Energy
+14,trial4-kalman,CAT/WAB,CAT,WAB,Construction Machinery & Heavy Transportation Equipment,13,1.15989742,16.64746347,0.0296984,,50.0,2.0,0.5,4.0,2,-1501.44242646,-1718.52428273,Caterpillar Inc.,Wabtec
+14,trial4-kalman,CNP/SRE,CNP,SRE,Multi-Utilities,14,0.72441961,14.56350041,0.03274508,,44.0,2.0,0.5,4.0,5,3518.99072902,2944.42530476,CenterPoint Energy,Sempra
+14,trial4-kalman,TFC/USB,TFC,USB,Diversified Banks,15,1.10782604,14.09430496,0.03416896,,42.0,2.0,0.5,4.0,3,205.59388612,-143.76874805,Truist Financial,U.S. Bancorp
+14,trial4-kalman,APA/EOG,APA,EOG,Oil & Gas Exploration & Production,16,1.20276606,15.20363888,0.03494695,,46.0,2.0,0.5,4.0,3,3196.98465862,2846.43729145,APA Corporation,EOG Resources
+14,trial4-kalman,AEP/ETR,AEP,ETR,Electric Utilities,17,1.11353845,14.16532936,0.03670606,,42.0,2.0,0.5,4.0,4,4871.12833916,4437.62318859,American Electric Power,Entergy
+14,trial4-kalman,MRVL/MU,MRVL,MU,Semiconductors,18,1.29465723,18.49773024,0.04576037,,55.0,2.0,0.5,4.0,1,-3156.15290114,-3283.93110356,Marvell Technology,Micron Technology
+14,trial4-kalman,PCAR/WAB,PCAR,WAB,Construction Machinery & Heavy Transportation Equipment,19,1.54226958,16.09116838,0.04645475,,48.0,2.0,0.5,4.0,3,2593.31843845,2254.54758406,Paccar,Wabtec
+14,trial4-kalman,DRI/YUM,DRI,YUM,Restaurants,20,1.08933129,16.35504564,0.04658555,,49.0,2.0,0.5,4.0,2,-871.28139188,-1113.0859012,Darden Restaurants,Yum! Brands
+14,trial5-distance,CMS/DTE,CMS,DTE,Multi-Utilities,1,,16.79405094,,0.30174277,,2.0,0.0,,1,2811.80849537,2684.27464441,CMS Energy,DTE Energy
+14,trial5-distance,MLM/VMC,MLM,VMC,Construction Materials,2,,22.10785523,,0.37829027,,2.0,0.0,,1,-1016.25336978,-1154.15679991,Martin Marietta Materials,Vulcan Materials Company
+14,trial5-distance,DUK/EVRG,DUK,EVRG,Electric Utilities,3,,19.6123097,,0.50786328,,2.0,0.0,,1,-6523.63246402,-6712.32625985,Duke Energy,Evergy
+14,trial5-distance,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,4,,29.03364428,,0.54505537,,2.0,0.0,,1,707.66063694,518.03077881,"UDR, Inc.",Vivmark Residential
+14,trial5-distance,AEP/ETR,AEP,ETR,Electric Utilities,5,,17.82112815,,0.56310855,,2.0,0.0,,1,-1228.11957057,-1414.56782372,American Electric Power,Entergy
+14,trial5-distance,ES/EVRG,ES,EVRG,Electric Utilities,6,,27.01828281,,0.58248148,,2.0,0.0,,1,2403.86992629,2225.56892893,Eversource Energy,Evergy
+14,trial5-distance,AEE/CMS,AEE,CMS,Multi-Utilities,7,,23.13993009,,0.59803579,,2.0,0.0,,1,342.84637039,235.21475562,Ameren,CMS Energy
+14,trial5-distance,DUK/LNT,DUK,LNT,Electric Utilities,8,,29.23118343,,0.61942229,,2.0,0.0,,1,-2043.2059274,-2216.59180483,Duke Energy,Alliant Energy
+14,trial5-distance,DUK/ES,DUK,ES,Electric Utilities,9,,32.01077244,,0.6455086,,2.0,0.0,,1,-6642.81984496,-6841.10402913,Duke Energy,Eversource Energy
+14,trial5-distance,BAC/PNC,BAC,PNC,Diversified Banks,10,,16.241242,,0.66775633,,2.0,0.0,,1,-672.93002934,-778.60925018,Bank of America,PNC Financial Services
+14,trial5-distance,DHI/LEN,DHI,LEN,Homebuilding,11,,24.3037717,,0.67044729,,2.0,0.0,,2,2690.65515482,2453.0752061,D. R. Horton,Lennar
+14,trial5-distance,EVRG/PEG,EVRG,PEG,Electric Utilities,12,,27.81911794,,0.72560951,,2.0,0.0,,1,355.45359676,190.60810065,Evergy,Public Service Enterprise Group
+14,trial5-distance,EVRG/WEC,EVRG,WEC,Electric Utilities,13,,29.34255559,,0.76232016,,2.0,0.0,,1,1820.91079945,1670.23585806,Evergy,WEC Energy Group
+14,trial5-distance,DUK/WEC,DUK,WEC,Electric Utilities,14,,30.58792254,,0.78395275,,2.0,0.0,,1,-2952.59145758,-3129.11802221,Duke Energy,WEC Energy Group
+14,trial5-distance,MA/V,MA,V,Transaction & Payment Processing Services,15,,19.30383985,,0.81329906,,2.0,0.0,,0,0.0,0.0,Mastercard,Visa Inc.
+14,trial5-distance,EVRG/LNT,EVRG,LNT,Electric Utilities,16,,12.89423657,,0.81837127,,2.0,0.0,,1,-1171.26487969,-1346.20894653,Evergy,Alliant Energy
+14,trial5-distance,ETR/WEC,ETR,WEC,Electric Utilities,17,,12.41574928,,0.85980012,,2.0,0.0,,1,-882.79304196,-1022.62382001,Entergy,WEC Energy Group
+14,trial5-distance,AEE/DTE,AEE,DTE,Multi-Utilities,18,,40.49647504,,0.86153764,,2.0,0.0,,1,257.85177489,150.11521017,Ameren,DTE Energy
+14,trial5-distance,BNY/STT,BNY,STT,Asset Management & Custody Banks,19,,20.43402304,,0.89082469,,2.0,0.0,,1,-1286.99026483,-1508.41324087,BNY Mellon,State Street Corporation
+14,trial5-distance,AEP/WEC,AEP,WEC,Electric Utilities,20,,28.86186041,,0.90846816,,2.0,0.0,,0,0.0,0.0,American Electric Power,WEC Energy Group
+15,trial4-ols,FICO/PTC,FICO,PTC,Application Software,1,2.3782825,10.36641823,0.00141143,,31.0,2.0,0.5,4.0,3,-1539.13907308,-1896.9885767,Fair Isaac,PTC Inc.
+15,trial4-ols,GWW/SNA,GWW,SNA,Industrial Machinery & Supplies & Components,2,1.46033316,9.23306054,0.00230202,,30.0,2.0,0.5,4.0,2,-4534.79137157,-4777.17552678,W. W. Grainger,Snap-on
+15,trial4-ols,DHI/LEN,DHI,LEN,Homebuilding,3,1.10607691,9.8738429,0.00376584,,30.0,2.0,0.5,4.0,5,2011.42301469,1454.5463012,D. R. Horton,Lennar
+15,trial4-ols,CNP/SRE,CNP,SRE,Multi-Utilities,4,0.75810028,11.88871968,0.00983341,,36.0,2.0,0.5,4.0,5,4697.00982542,4144.12237623,CenterPoint Energy,Sempra
+15,trial4-ols,EW/MDT,EW,MDT,Health Care Equipment,5,1.51468871,12.28040262,0.01190685,,37.0,2.0,0.5,4.0,4,-663.12810194,-1130.90432052,Edwards Lifesciences,Medtronic
+15,trial4-ols,MSFT/PANW,MSFT,PANW,Systems Software,6,0.66572507,13.74752104,0.01593716,,41.0,2.0,0.5,4.0,4,15608.29467711,15138.59603687,Microsoft,Palo Alto Networks
+15,trial4-ols,AEP/ETR,AEP,ETR,Electric Utilities,7,1.16329613,12.54391736,0.01644348,,38.0,2.0,0.5,4.0,4,4458.14803332,4030.28188855,American Electric Power,Entergy
+15,trial4-ols,PCAR/WAB,PCAR,WAB,Construction Machinery & Heavy Transportation Equipment,8,1.69975489,12.7606093,0.01795653,,38.0,2.0,0.5,4.0,3,3110.92332635,2781.47887146,Paccar,Wabtec
+15,trial4-ols,AEP/WEC,AEP,WEC,Electric Utilities,9,1.13539278,13.58406624,0.01799675,,41.0,2.0,0.5,4.0,2,-3619.87558728,-3879.12114036,American Electric Power,WEC Energy Group
+15,trial4-ols,CMS/NI,CMS,NI,Multi-Utilities,10,1.11079688,14.60230135,0.02279306,,44.0,2.0,0.5,4.0,3,-1715.12195965,-2083.40593477,CMS Energy,NiSource
+15,trial4-ols,LYB/SHW,LYB,SHW,Specialty Chemicals,11,0.44629287,17.14054128,0.02368797,,51.0,2.0,0.5,4.0,4,8636.15195483,8197.11757943,LyondellBasell,Sherwin-Williams
+15,trial4-ols,MA/V,MA,V,Transaction & Payment Processing Services,12,1.01233808,13.16160055,0.02562946,,39.0,2.0,0.5,4.0,3,227.81573221,-126.70109582,Mastercard,Visa Inc.
+15,trial4-ols,IVZ/TROW,IVZ,TROW,Asset Management & Custody Banks,13,0.97677796,16.59981451,0.02841049,,50.0,2.0,0.5,4.0,2,3732.73153618,3515.38798311,Invesco,T. Rowe Price
+15,trial4-ols,FRT/KIM,FRT,KIM,Retail REITs,14,0.90387205,16.44511332,0.03113627,,49.0,2.0,0.5,4.0,2,152.64531049,-93.61037288,Federal Realty Investment Trust,Kimco Realty
+15,trial4-ols,BMY/PFE,BMY,PFE,Pharmaceuticals,15,0.52042955,23.01971448,0.03155862,,69.0,2.0,0.5,4.0,2,-5102.3525228,-5367.77732415,Bristol Myers Squibb,Pfizer
+15,trial4-ols,EVRG/WEC,EVRG,WEC,Electric Utilities,16,1.16590023,16.0098814,0.0342651,,48.0,2.0,0.5,4.0,3,-565.82176354,-906.09788048,Evergy,WEC Energy Group
+15,trial4-ols,CCI/SBAC,CCI,SBAC,Telecom Tower REITs,17,1.20821695,13.94416884,0.03466216,,42.0,2.0,0.5,4.0,2,-2142.53336573,-2401.90433107,Crown Castle,SBA Communications
+15,trial4-ols,COP/EOG,COP,EOG,Oil & Gas Exploration & Production,18,1.2265211,10.54749466,0.03743698,,32.0,2.0,0.5,4.0,5,2863.5789064,2298.44953747,ConocoPhillips,EOG Resources
+15,trial4-ols,ITW/SNA,ITW,SNA,Industrial Machinery & Supplies & Components,19,0.71590506,22.29445703,0.04015302,,67.0,2.0,0.5,4.0,3,5983.77439447,5639.73590477,Illinois Tool Works,Snap-on
+15,trial4-ols,HLT/RCL,HLT,RCL,"Hotels, Resorts & Cruise Lines",20,0.25903799,11.70635675,0.0443575,,35.0,2.0,0.5,4.0,3,-5187.22497274,-5594.37299948,Hilton Worldwide,Royal Caribbean Group
+15,trial4-kalman,FICO/PTC,FICO,PTC,Application Software,1,2.3782825,10.36641823,0.00141143,,31.0,2.0,0.5,4.0,4,-1514.05324673,-1970.99959053,Fair Isaac,PTC Inc.
+15,trial4-kalman,GWW/SNA,GWW,SNA,Industrial Machinery & Supplies & Components,2,1.46033316,9.23306054,0.00230202,,30.0,2.0,0.5,4.0,2,-4971.5456744,-5205.50184212,W. W. Grainger,Snap-on
+15,trial4-kalman,DHI/LEN,DHI,LEN,Homebuilding,3,1.10607691,9.8738429,0.00376584,,30.0,2.0,0.5,4.0,4,202.13843078,-243.01861954,D. R. Horton,Lennar
+15,trial4-kalman,CNP/SRE,CNP,SRE,Multi-Utilities,4,0.75810028,11.88871968,0.00983341,,36.0,2.0,0.5,4.0,5,4496.63891034,3960.88957964,CenterPoint Energy,Sempra
+15,trial4-kalman,EW/MDT,EW,MDT,Health Care Equipment,5,1.51468871,12.28040262,0.01190685,,37.0,2.0,0.5,4.0,4,-4023.02229726,-4496.19109419,Edwards Lifesciences,Medtronic
+15,trial4-kalman,MSFT/PANW,MSFT,PANW,Systems Software,6,0.66572507,13.74752104,0.01593716,,41.0,2.0,0.5,4.0,2,-3556.91519036,-3813.39151934,Microsoft,Palo Alto Networks
+15,trial4-kalman,AEP/ETR,AEP,ETR,Electric Utilities,7,1.16329613,12.54391736,0.01644348,,38.0,2.0,0.5,4.0,4,3367.56389332,2938.70696999,American Electric Power,Entergy
+15,trial4-kalman,PCAR/WAB,PCAR,WAB,Construction Machinery & Heavy Transportation Equipment,8,1.69975489,12.7606093,0.01795653,,38.0,2.0,0.5,4.0,5,5387.32486938,4851.74225037,Paccar,Wabtec
+15,trial4-kalman,AEP/WEC,AEP,WEC,Electric Utilities,9,1.13539278,13.58406624,0.01799675,,41.0,2.0,0.5,4.0,2,-3493.95866675,-3746.06567095,American Electric Power,WEC Energy Group
+15,trial4-kalman,CMS/NI,CMS,NI,Multi-Utilities,10,1.11079688,14.60230135,0.02279306,,44.0,2.0,0.5,4.0,4,938.27464044,478.31629799,CMS Energy,NiSource
+15,trial4-kalman,LYB/SHW,LYB,SHW,Specialty Chemicals,11,0.44629287,17.14054128,0.02368797,,51.0,2.0,0.5,4.0,4,6196.64326787,5748.77866757,LyondellBasell,Sherwin-Williams
+15,trial4-kalman,MA/V,MA,V,Transaction & Payment Processing Services,12,1.01233808,13.16160055,0.02562946,,39.0,2.0,0.5,4.0,4,1118.75208105,680.07791318,Mastercard,Visa Inc.
+15,trial4-kalman,IVZ/TROW,IVZ,TROW,Asset Management & Custody Banks,13,0.97677796,16.59981451,0.02841049,,50.0,2.0,0.5,4.0,2,3890.31675576,3682.09812813,Invesco,T. Rowe Price
+15,trial4-kalman,FRT/KIM,FRT,KIM,Retail REITs,14,0.90387205,16.44511332,0.03113627,,49.0,2.0,0.5,4.0,1,-1341.84366171,-1480.34136123,Federal Realty Investment Trust,Kimco Realty
+15,trial4-kalman,BMY/PFE,BMY,PFE,Pharmaceuticals,15,0.52042955,23.01971448,0.03155862,,69.0,2.0,0.5,4.0,2,-5407.9309318,-5671.5158384,Bristol Myers Squibb,Pfizer
+15,trial4-kalman,EVRG/WEC,EVRG,WEC,Electric Utilities,16,1.16590023,16.0098814,0.0342651,,48.0,2.0,0.5,4.0,3,-256.09894702,-592.08162341,Evergy,WEC Energy Group
+15,trial4-kalman,CCI/SBAC,CCI,SBAC,Telecom Tower REITs,17,1.20821695,13.94416884,0.03466216,,42.0,2.0,0.5,4.0,1,-2539.52139687,-2667.37573958,Crown Castle,SBA Communications
+15,trial4-kalman,COP/EOG,COP,EOG,Oil & Gas Exploration & Production,18,1.2265211,10.54749466,0.03743698,,32.0,2.0,0.5,4.0,6,2127.68633091,1459.25442795,ConocoPhillips,EOG Resources
+15,trial4-kalman,ITW/SNA,ITW,SNA,Industrial Machinery & Supplies & Components,19,0.71590506,22.29445703,0.04015302,,67.0,2.0,0.5,4.0,3,6017.73883552,5676.37544739,Illinois Tool Works,Snap-on
+15,trial4-kalman,HLT/RCL,HLT,RCL,"Hotels, Resorts & Cruise Lines",20,0.25903799,11.70635675,0.0443575,,35.0,2.0,0.5,4.0,3,-5034.84847389,-5397.65608319,Hilton Worldwide,Royal Caribbean Group
+15,trial5-distance,CMS/DTE,CMS,DTE,Multi-Utilities,1,,21.52057729,,0.38925988,,2.0,0.0,,0,0.0,0.0,CMS Energy,DTE Energy
+15,trial5-distance,MAA/UDR,MAA,UDR,Multi-Family Residential REITs,2,,32.78856565,,0.40662486,,2.0,0.0,,0,0.0,0.0,Mid-America Apartment Communities,"UDR, Inc."
+15,trial5-distance,ETR/WEC,ETR,WEC,Electric Utilities,3,,16.94606907,,0.411918,,2.0,0.0,,1,-3887.02194125,-4095.96070902,Entergy,WEC Energy Group
+15,trial5-distance,AEE/CMS,AEE,CMS,Multi-Utilities,4,,44.48021881,,0.42332674,,2.0,0.0,,1,553.04162724,422.8076084,Ameren,CMS Energy
+15,trial5-distance,MA/V,MA,V,Transaction & Payment Processing Services,5,,13.52322622,,0.42372896,,2.0,0.0,,1,1541.87132349,1409.06654595,Mastercard,Visa Inc.
+15,trial5-distance,DUK/ETR,DUK,ETR,Electric Utilities,6,,19.36828468,,0.45896744,,2.0,0.0,,0,0.0,0.0,Duke Energy,Entergy
+15,trial5-distance,MCO/SPGI,MCO,SPGI,Financial Exchanges & Data,7,,18.96736409,,0.47263143,,2.0,0.0,,2,2251.41441458,1978.68171164,Moody's Corporation,S&P Global
+15,trial5-distance,DHI/LEN,DHI,LEN,Homebuilding,8,,47.46935157,,0.51040551,,2.0,0.0,,1,-307.54126052,-519.74976689,D. R. Horton,Lennar
+15,trial5-distance,DUK/WEC,DUK,WEC,Electric Utilities,9,,48.73006543,,0.53944708,,2.0,0.0,,1,-2737.19575473,-2941.96317626,Duke Energy,WEC Energy Group
+15,trial5-distance,AEE/XEL,AEE,XEL,Multi-Utilities,10,,30.97565778,,0.61066828,,2.0,0.0,,1,873.86386406,687.12394366,Ameren,Xcel Energy
+15,trial5-distance,BAC/PNC,BAC,PNC,Diversified Banks,11,,18.09537207,,0.6289174,,2.0,0.0,,1,-4834.52275359,-5033.82537266,Bank of America,PNC Financial Services
+15,trial5-distance,EVRG/LNT,EVRG,LNT,Electric Utilities,12,,36.31218186,,0.64809881,,2.0,0.0,,0,0.0,0.0,Evergy,Alliant Energy
+15,trial5-distance,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,13,,45.89329069,,0.65470105,,2.0,0.0,,1,645.54934402,498.85218256,"UDR, Inc.",Vivmark Residential
+15,trial5-distance,MLM/VMC,MLM,VMC,Construction Materials,14,,42.95046929,,0.68918897,,2.0,0.0,,1,2254.37153681,2110.76425948,Martin Marietta Materials,Vulcan Materials Company
+15,trial5-distance,AMAT/LRCX,AMAT,LRCX,Semiconductor Materials & Equipment,15,,42.01095762,,0.72931973,,2.0,0.0,,1,-1910.48625345,-2109.54591651,Applied Materials,Lam Research
+15,trial5-distance,CMS/XEL,CMS,XEL,Multi-Utilities,16,,35.09344634,,0.78315585,,2.0,0.0,,1,3400.34566974,3211.94025841,CMS Energy,Xcel Energy
+15,trial5-distance,DTE/XEL,DTE,XEL,Multi-Utilities,17,,41.40269081,,0.78750912,,2.0,0.0,,1,2715.93752976,2527.07452091,DTE Energy,Xcel Energy
+15,trial5-distance,CPT/MAA,CPT,MAA,Multi-Family Residential REITs,18,,54.98726974,,0.87357358,,2.0,0.0,,0,0.0,0.0,Camden Property Trust,Mid-America Apartment Communities
+15,trial5-distance,AEE/DTE,AEE,DTE,Multi-Utilities,19,,78.9080289,,0.92273883,,2.0,0.0,,0,0.0,0.0,Ameren,DTE Energy
+15,trial5-distance,DHR/TMO,DHR,TMO,Life Sciences Tools & Services,20,,31.56552069,,0.9267466,,2.0,0.0,,1,1044.44329541,933.61585054,Danaher Corporation,Thermo Fisher Scientific
+16,trial4-ols,IBM/IT,IBM,IT,IT Consulting & Other Services,1,0.8102647,14.8132408,0.00078287,,44.0,2.0,0.5,4.0,3,3694.17143629,3301.05971999,IBM,Gartner
+16,trial4-ols,COP/EOG,COP,EOG,Oil & Gas Exploration & Production,2,1.13821431,10.96387159,0.00376594,,33.0,2.0,0.5,4.0,4,3049.32874832,2589.69390338,ConocoPhillips,EOG Resources
+16,trial4-ols,NOW/PANW,NOW,PANW,Systems Software,3,0.86801309,10.74928649,0.00522305,,32.0,2.0,0.5,4.0,3,213.33095397,-144.32437949,ServiceNow,Palo Alto Networks
+16,trial4-ols,ACN/CTSH,ACN,CTSH,IT Consulting & Other Services,4,1.03786524,12.06168789,0.00788829,,36.0,2.0,0.5,4.0,4,1407.32413874,963.04988786,Accenture,Cognizant
+16,trial4-ols,NDSN/SWK,NDSN,SWK,Industrial Machinery & Supplies & Components,5,0.42329753,22.00424114,0.01193984,,66.0,2.0,0.5,4.0,2,6934.2652963,6703.14273647,Nordson Corporation,Stanley Black & Decker
+16,trial4-ols,FE/PPL,FE,PPL,Electric Utilities,6,0.73389027,7.94980352,0.01261397,,30.0,2.0,0.5,4.0,3,-694.1098765,-1045.75901297,FirstEnergy,PPL Corporation
+16,trial4-ols,ITW/SNA,ITW,SNA,Industrial Machinery & Supplies & Components,7,0.86035237,11.89386748,0.01413786,,36.0,2.0,0.5,4.0,5,1671.65084387,1083.19541208,Illinois Tool Works,Snap-on
+16,trial4-ols,CFG/HBAN,CFG,HBAN,Regional Banks,8,1.13391571,15.00689908,0.01617675,,45.0,2.0,0.5,4.0,2,-470.86293244,-743.01771781,Citizens Financial Group,Huntington Bancshares
+16,trial4-ols,MSFT/PANW,MSFT,PANW,Systems Software,9,0.75949091,11.84248519,0.01923738,,36.0,2.0,0.5,4.0,1,-3457.99814235,-3590.73495542,Microsoft,Palo Alto Networks
+16,trial4-ols,CMS/SRE,CMS,SRE,Multi-Utilities,10,0.9328041,19.52682544,0.02051841,,59.0,2.0,0.5,4.0,3,3647.85197424,3261.84889056,CMS Energy,Sempra
+16,trial4-ols,MO/PM,MO,PM,Tobacco,11,0.79083805,14.53357845,0.02206571,,44.0,2.0,0.5,4.0,5,-1222.61796543,-1761.01512395,Altria,Philip Morris International
+16,trial4-ols,EW/MDT,EW,MDT,Health Care Equipment,12,1.47143958,18.41712543,0.02262684,,55.0,2.0,0.5,4.0,3,1065.24588789,684.91056914,Edwards Lifesciences,Medtronic
+16,trial4-ols,A/WAT,A,WAT,Life Sciences Tools & Services,13,0.81051159,23.66737308,0.02427076,,71.0,2.0,0.5,4.0,2,-1983.93965388,-2222.13282253,Agilent Technologies,Waters Corporation
+16,trial4-ols,ANET/MSI,ANET,MSI,Communications Equipment,14,2.22933819,13.72478954,0.02606893,,41.0,2.0,0.5,4.0,3,136.01767417,-251.55936761,Arista Networks,Motorola Solutions
+16,trial4-ols,AJG/MRSH,AJG,MRSH,Insurance Brokers,15,1.25351848,9.29189286,0.02650162,,30.0,2.0,0.5,4.0,4,850.42491276,399.94625127,Arthur J. Gallagher & Co.,Marsh McLennan
+16,trial4-ols,ALL/WRB,ALL,WRB,Property & Casualty Insurance,16,1.19359361,13.97225623,0.03232454,,42.0,2.0,0.5,4.0,3,5782.30202461,5466.38677498,Allstate,W. R. Berkley Corporation
+16,trial4-ols,DTE/SRE,DTE,SRE,Multi-Utilities,17,1.07904389,20.01931112,0.03295876,,60.0,2.0,0.5,4.0,3,-2847.51609134,-3185.96728631,DTE Energy,Sempra
+16,trial4-ols,LEN/NVR,LEN,NVR,Homebuilding,18,1.19636097,12.74458784,0.03367944,,38.0,2.0,0.5,4.0,3,-3599.31018879,-3955.04677614,Lennar,"NVR, Inc."
+16,trial4-ols,SNA/SWK,SNA,SWK,Industrial Machinery & Supplies & Components,19,0.52400396,36.25849813,0.03450074,,109.0,2.0,0.5,4.0,2,-3638.92766641,-3886.5847258,Snap-on,Stanley Black & Decker
+16,trial4-ols,ITW/SWK,ITW,SWK,Industrial Machinery & Supplies & Components,20,0.39223711,40.68594337,0.03540226,,122.0,2.0,0.5,4.0,2,-932.31458513,-1161.61244833,Illinois Tool Works,Stanley Black & Decker
+16,trial4-kalman,IBM/IT,IBM,IT,IT Consulting & Other Services,1,0.8102647,14.8132408,0.00078287,,44.0,2.0,0.5,4.0,4,1475.28247605,988.12656985,IBM,Gartner
+16,trial4-kalman,COP/EOG,COP,EOG,Oil & Gas Exploration & Production,2,1.13821431,10.96387159,0.00376594,,33.0,2.0,0.5,4.0,4,2444.22603177,1985.18738997,ConocoPhillips,EOG Resources
+16,trial4-kalman,NOW/PANW,NOW,PANW,Systems Software,3,0.86801309,10.74928649,0.00522305,,32.0,2.0,0.5,4.0,3,1703.62977048,1354.08472198,ServiceNow,Palo Alto Networks
+16,trial4-kalman,ACN/CTSH,ACN,CTSH,IT Consulting & Other Services,4,1.03786524,12.06168789,0.00788829,,36.0,2.0,0.5,4.0,5,4236.22127716,3690.95402636,Accenture,Cognizant
+16,trial4-kalman,NDSN/SWK,NDSN,SWK,Industrial Machinery & Supplies & Components,5,0.42329753,22.00424114,0.01193984,,66.0,2.0,0.5,4.0,3,9589.01494198,9243.97657008,Nordson Corporation,Stanley Black & Decker
+16,trial4-kalman,FE/PPL,FE,PPL,Electric Utilities,6,0.73389027,7.94980352,0.01261397,,30.0,2.0,0.5,4.0,3,1488.26142781,1151.93709788,FirstEnergy,PPL Corporation
+16,trial4-kalman,ITW/SNA,ITW,SNA,Industrial Machinery & Supplies & Components,7,0.86035237,11.89386748,0.01413786,,36.0,2.0,0.5,4.0,6,1567.01607732,883.99753868,Illinois Tool Works,Snap-on
+16,trial4-kalman,CFG/HBAN,CFG,HBAN,Regional Banks,8,1.13391571,15.00689908,0.01617675,,45.0,2.0,0.5,4.0,2,-1477.58681153,-1744.419145,Citizens Financial Group,Huntington Bancshares
+16,trial4-kalman,MSFT/PANW,MSFT,PANW,Systems Software,9,0.75949091,11.84248519,0.01923738,,36.0,2.0,0.5,4.0,3,-636.10022805,-994.92124221,Microsoft,Palo Alto Networks
+16,trial4-kalman,CMS/SRE,CMS,SRE,Multi-Utilities,10,0.9328041,19.52682544,0.02051841,,59.0,2.0,0.5,4.0,4,3895.7228416,3415.40022228,CMS Energy,Sempra
+16,trial4-kalman,MO/PM,MO,PM,Tobacco,11,0.79083805,14.53357845,0.02206571,,44.0,2.0,0.5,4.0,3,6804.95233931,6445.0375449,Altria,Philip Morris International
+16,trial4-kalman,EW/MDT,EW,MDT,Health Care Equipment,12,1.47143958,18.41712543,0.02262684,,55.0,2.0,0.5,4.0,3,-10497.01121099,-10927.88991362,Edwards Lifesciences,Medtronic
+16,trial4-kalman,A/WAT,A,WAT,Life Sciences Tools & Services,13,0.81051159,23.66737308,0.02427076,,71.0,2.0,0.5,4.0,2,-1903.08485709,-2140.54403382,Agilent Technologies,Waters Corporation
+16,trial4-kalman,ANET/MSI,ANET,MSI,Communications Equipment,14,2.22933819,13.72478954,0.02606893,,41.0,2.0,0.5,4.0,4,-4372.50921646,-4841.21517999,Arista Networks,Motorola Solutions
+16,trial4-kalman,AJG/MRSH,AJG,MRSH,Insurance Brokers,15,1.25351848,9.29189286,0.02650162,,30.0,2.0,0.5,4.0,4,1007.58455853,562.8567997,Arthur J. Gallagher & Co.,Marsh McLennan
+16,trial4-kalman,ALL/WRB,ALL,WRB,Property & Casualty Insurance,16,1.19359361,13.97225623,0.03232454,,42.0,2.0,0.5,4.0,4,8281.58522563,7855.72220116,Allstate,W. R. Berkley Corporation
+16,trial4-kalman,DTE/SRE,DTE,SRE,Multi-Utilities,17,1.07904389,20.01931112,0.03295876,,60.0,2.0,0.5,4.0,2,-5707.78783407,-5938.15302164,DTE Energy,Sempra
+16,trial4-kalman,LEN/NVR,LEN,NVR,Homebuilding,18,1.19636097,12.74458784,0.03367944,,38.0,2.0,0.5,4.0,3,-1906.11520403,-2232.54801946,Lennar,"NVR, Inc."
+16,trial4-kalman,SNA/SWK,SNA,SWK,Industrial Machinery & Supplies & Components,19,0.52400396,36.25849813,0.03450074,,109.0,2.0,0.5,4.0,2,-3607.23105581,-3852.24424135,Snap-on,Stanley Black & Decker
+16,trial4-kalman,ITW/SWK,ITW,SWK,Industrial Machinery & Supplies & Components,20,0.39223711,40.68594337,0.03540226,,122.0,2.0,0.5,4.0,2,-960.48260076,-1188.46753533,Illinois Tool Works,Stanley Black & Decker
+16,trial5-distance,CMS/DTE,CMS,DTE,Multi-Utilities,1,,21.21585202,,0.24302671,,2.0,0.0,,1,875.58436189,704.13311858,CMS Energy,DTE Energy
+16,trial5-distance,FE/PPL,FE,PPL,Electric Utilities,2,,13.11291252,,0.3270871,,2.0,0.0,,1,-4033.37932056,-4196.75606811,FirstEnergy,PPL Corporation
+16,trial5-distance,EVRG/WEC,EVRG,WEC,Electric Utilities,3,,21.79095383,,0.36321982,,2.0,0.0,,1,1580.79887769,1387.48068506,Evergy,WEC Energy Group
+16,trial5-distance,CNP/ED,CNP,ED,Multi-Utilities,4,,34.3195435,,0.37189987,,2.0,0.0,,1,2987.00712887,2765.80404583,CenterPoint Energy,Consolidated Edison
+16,trial5-distance,LNT/WEC,LNT,WEC,Electric Utilities,5,,57.08696749,,0.41837745,,2.0,0.0,,1,186.47544092,-3.24471349,Alliant Energy,WEC Energy Group
+16,trial5-distance,PEG/SO,PEG,SO,Electric Utilities,6,,26.47034403,,0.63364389,,2.0,0.0,,3,8409.50501986,8037.6090195,Public Service Enterprise Group,Southern Company
+16,trial5-distance,EXC/WEC,EXC,WEC,Electric Utilities,7,,26.18788077,,0.66982842,,2.0,0.0,,1,-2373.58061792,-2572.95703343,Exelon,WEC Energy Group
+16,trial5-distance,EVRG/LNT,EVRG,LNT,Electric Utilities,8,,41.94585789,,0.74299588,,2.0,0.0,,0,0.0,0.0,Evergy,Alliant Energy
+16,trial5-distance,AEE/XEL,AEE,XEL,Multi-Utilities,9,,33.03254514,,0.75621749,,2.0,0.0,,0,0.0,0.0,Ameren,Xcel Energy
+16,trial5-distance,DUK/ETR,DUK,ETR,Electric Utilities,10,,19.72937651,,0.76915026,,2.0,0.0,,1,-12004.61599774,-12179.63939556,Duke Energy,Entergy
+16,trial5-distance,AEP/ETR,AEP,ETR,Electric Utilities,11,,25.80435256,,0.78395674,,2.0,0.0,,1,-12760.04282873,-12934.68851313,American Electric Power,Entergy
+16,trial5-distance,CNP/SRE,CNP,SRE,Multi-Utilities,12,,15.9711429,,0.79246301,,2.0,0.0,,1,-4621.12617595,-4856.348211,CenterPoint Energy,Sempra
+16,trial5-distance,FRT/REG,FRT,REG,Retail REITs,13,,55.04867632,,0.81465381,,2.0,0.0,,1,-215.45919129,-323.74638785,Federal Realty Investment Trust,Regency Centers
+16,trial5-distance,EXC/LNT,EXC,LNT,Electric Utilities,14,,37.93809693,,0.82421623,,2.0,0.0,,1,-316.5307553,-443.36723412,Exelon,Alliant Energy
+16,trial5-distance,CCI/SBAC,CCI,SBAC,Telecom Tower REITs,15,,29.48116743,,0.85663427,,2.0,0.0,,1,-1741.99287014,-1886.5032819,Crown Castle,SBA Communications
+16,trial5-distance,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,16,,99.24842094,,0.89970632,,2.0,0.0,,0,0.0,0.0,"UDR, Inc.",Vivmark Residential
+16,trial5-distance,AEP/LNT,AEP,LNT,Electric Utilities,17,,60.56132064,,0.91087512,,2.0,0.0,,1,-1622.82297661,-1762.77968243,American Electric Power,Alliant Energy
+16,trial5-distance,AEP/DUK,AEP,DUK,Electric Utilities,18,,58.48549921,,0.9129092,,2.0,0.0,,0,0.0,0.0,American Electric Power,Duke Energy
+16,trial5-distance,MA/V,MA,V,Transaction & Payment Processing Services,19,,15.46496726,,0.93401922,,2.0,0.0,,1,2579.16465795,2393.47386532,Mastercard,Visa Inc.
+16,trial5-distance,ESS/VMRK,ESS,VMRK,Multi-Family Residential REITs,20,,105.63825624,,1.03858973,,2.0,0.0,,0,0.0,0.0,Essex Property Trust,Vivmark Residential
+17,trial4-ols,AEP/FE,AEP,FE,Electric Utilities,1,1.30192388,7.54911413,0.0004134,,30.0,2.0,0.5,4.0,4,-3132.02830833,-3626.40402288,American Electric Power,FirstEnergy
+17,trial4-ols,CB/PGR,CB,PGR,Property & Casualty Insurance,2,0.56657491,12.82090044,0.00091278,,38.0,2.0,0.5,4.0,2,4057.60744297,3835.63627062,Chubb Limited,Progressive Corporation
+17,trial4-ols,EIX/SO,EIX,SO,Electric Utilities,3,0.87268153,10.01402571,0.00174879,,30.0,2.0,0.5,4.0,4,-5588.41595312,-6054.11942512,Edison International,Southern Company
+17,trial4-ols,JNJ/ZTS,JNJ,ZTS,Pharmaceuticals,4,0.28295494,13.30823686,0.00256836,,40.0,2.0,0.5,4.0,3,-72.66105084,-449.31257743,Johnson & Johnson,Zoetis
+17,trial4-ols,MCO/SPGI,MCO,SPGI,Financial Exchanges & Data,5,1.22473466,9.59580762,0.00273622,,30.0,2.0,0.5,4.0,5,1640.05388762,1118.58901654,Moody's Corporation,S&P Global
+17,trial4-ols,BAX/IDXX,BAX,IDXX,Health Care Equipment,6,0.65888167,17.66547938,0.00377971,,53.0,2.0,0.5,4.0,1,3073.05271868,2952.76179719,Baxter International,Idexx Laboratories
+17,trial4-ols,MO/PM,MO,PM,Tobacco,7,0.87505434,10.71392539,0.00551324,,32.0,2.0,0.5,4.0,3,-6945.4317229,-7329.96961191,Altria,Philip Morris International
+17,trial4-ols,ADP/PAYX,ADP,PAYX,Human Resource & Employment Services,8,1.10759411,11.53484649,0.00881235,,35.0,2.0,0.5,4.0,4,1953.15352833,1513.79577347,Automatic Data Processing,Paychex
+17,trial4-ols,CPT/UDR,CPT,UDR,Multi-Family Residential REITs,9,1.05612192,15.92199331,0.00939865,,48.0,2.0,0.5,4.0,4,1107.88766722,666.54783996,Camden Property Trust,"UDR, Inc."
+17,trial4-ols,ACN/CTSH,ACN,CTSH,IT Consulting & Other Services,10,1.03281019,11.72520353,0.01103403,,35.0,2.0,0.5,4.0,4,-145.03209374,-572.54641974,Accenture,Cognizant
+17,trial4-ols,GE/NOC,GE,NOC,Aerospace & Defense,11,3.08998009,28.66900074,0.01135381,,86.0,2.0,0.5,4.0,3,20920.67227262,20597.12125923,GE Aerospace,Northrop Grumman
+17,trial4-ols,ALL/WRB,ALL,WRB,Property & Casualty Insurance,12,1.3223642,11.99504505,0.01358561,,36.0,2.0,0.5,4.0,3,-967.51174131,-1334.59663997,Allstate,W. R. Berkley Corporation
+17,trial4-ols,EIX/FE,EIX,FE,Electric Utilities,13,1.31358636,20.25861106,0.01498331,,61.0,2.0,0.5,4.0,2,-17.14336338,-267.92000117,Edison International,FirstEnergy
+17,trial4-ols,CMS/DTE,CMS,DTE,Multi-Utilities,14,1.0331034,12.70716232,0.0183903,,38.0,2.0,0.5,4.0,3,2099.59566284,1780.57758544,CMS Energy,DTE Energy
+17,trial4-ols,PH/PNR,PH,PNR,Industrial Machinery & Supplies & Components,15,1.12313123,13.03960343,0.01878253,,39.0,2.0,0.5,4.0,3,-879.61465222,-1240.58247698,Parker Hannifin,Pentair
+17,trial4-ols,NOC/TDG,NOC,TDG,Aerospace & Defense,16,0.13404202,16.23554093,0.02293384,,49.0,2.0,0.5,4.0,3,19101.96143649,18788.1777921,Northrop Grumman,TransDigm Group
+17,trial4-ols,NTRS/STT,NTRS,STT,Asset Management & Custody Banks,17,0.99681632,12.76959288,0.02427115,,38.0,2.0,0.5,4.0,3,237.29039465,-118.38303182,Northern Trust,State Street Corporation
+17,trial4-ols,CME/FDS,CME,FDS,Financial Exchanges & Data,18,1.2063668,14.56154855,0.02598299,,44.0,2.0,0.5,4.0,2,-8711.68418858,-8994.00357426,CME Group,FactSet
+17,trial4-ols,GD/GE,GD,GE,Aerospace & Defense,19,0.3480217,22.10303382,0.02600417,,66.0,2.0,0.5,4.0,2,8682.69546463,8448.34906654,General Dynamics,GE Aerospace
+17,trial4-ols,CDNS/INTU,CDNS,INTU,Application Software,20,0.86716866,13.12106995,0.02754276,,39.0,2.0,0.5,4.0,4,6685.48792278,6202.64361055,Cadence Design Systems,Intuit
+17,trial4-kalman,AEP/FE,AEP,FE,Electric Utilities,1,1.30192388,7.54911413,0.0004134,,30.0,2.0,0.5,4.0,5,1239.67358196,659.85369904,American Electric Power,FirstEnergy
+17,trial4-kalman,CB/PGR,CB,PGR,Property & Casualty Insurance,2,0.56657491,12.82090044,0.00091278,,38.0,2.0,0.5,4.0,4,5272.74227907,4811.01014474,Chubb Limited,Progressive Corporation
+17,trial4-kalman,EIX/SO,EIX,SO,Electric Utilities,3,0.87268153,10.01402571,0.00174879,,30.0,2.0,0.5,4.0,3,5630.15958091,5303.24501042,Edison International,Southern Company
+17,trial4-kalman,JNJ/ZTS,JNJ,ZTS,Pharmaceuticals,4,0.28295494,13.30823686,0.00256836,,40.0,2.0,0.5,4.0,3,2174.5460823,1797.75574282,Johnson & Johnson,Zoetis
+17,trial4-kalman,MCO/SPGI,MCO,SPGI,Financial Exchanges & Data,5,1.22473466,9.59580762,0.00273622,,30.0,2.0,0.5,4.0,5,989.11406605,463.34335513,Moody's Corporation,S&P Global
+17,trial4-kalman,BAX/IDXX,BAX,IDXX,Health Care Equipment,6,0.65888167,17.66547938,0.00377971,,53.0,2.0,0.5,4.0,1,256.49794097,140.52422975,Baxter International,Idexx Laboratories
+17,trial4-kalman,MO/PM,MO,PM,Tobacco,7,0.87505434,10.71392539,0.00551324,,32.0,2.0,0.5,4.0,3,-5457.26191913,-5807.38445816,Altria,Philip Morris International
+17,trial4-kalman,ADP/PAYX,ADP,PAYX,Human Resource & Employment Services,8,1.10759411,11.53484649,0.00881235,,35.0,2.0,0.5,4.0,4,1026.1362413,583.4633612,Automatic Data Processing,Paychex
+17,trial4-kalman,CPT/UDR,CPT,UDR,Multi-Family Residential REITs,9,1.05612192,15.92199331,0.00939865,,48.0,2.0,0.5,4.0,4,991.40412075,553.65300022,Camden Property Trust,"UDR, Inc."
+17,trial4-kalman,ACN/CTSH,ACN,CTSH,IT Consulting & Other Services,10,1.03281019,11.72520353,0.01103403,,35.0,2.0,0.5,4.0,4,-25.82270208,-454.82315289,Accenture,Cognizant
+17,trial4-kalman,GE/NOC,GE,NOC,Aerospace & Defense,11,3.08998009,28.66900074,0.01135381,,86.0,2.0,0.5,4.0,2,10335.86528702,10098.74577318,GE Aerospace,Northrop Grumman
+17,trial4-kalman,ALL/WRB,ALL,WRB,Property & Casualty Insurance,12,1.3223642,11.99504505,0.01358561,,36.0,2.0,0.5,4.0,3,-60.45955419,-410.93883579,Allstate,W. R. Berkley Corporation
+17,trial4-kalman,EIX/FE,EIX,FE,Electric Utilities,13,1.31358636,20.25861106,0.01498331,,61.0,2.0,0.5,4.0,2,-1172.52786195,-1422.304812,Edison International,FirstEnergy
+17,trial4-kalman,CMS/DTE,CMS,DTE,Multi-Utilities,14,1.0331034,12.70716232,0.0183903,,38.0,2.0,0.5,4.0,3,1787.40944394,1467.69948057,CMS Energy,DTE Energy
+17,trial4-kalman,PH/PNR,PH,PNR,Industrial Machinery & Supplies & Components,15,1.12313123,13.03960343,0.01878253,,39.0,2.0,0.5,4.0,3,-3289.29478359,-3648.46392823,Parker Hannifin,Pentair
+17,trial4-kalman,NOC/TDG,NOC,TDG,Aerospace & Defense,16,0.13404202,16.23554093,0.02293384,,49.0,2.0,0.5,4.0,3,20178.15054088,19862.97912713,Northrop Grumman,TransDigm Group
+17,trial4-kalman,NTRS/STT,NTRS,STT,Asset Management & Custody Banks,17,0.99681632,12.76959288,0.02427115,,38.0,2.0,0.5,4.0,4,1053.09995356,593.00798463,Northern Trust,State Street Corporation
+17,trial4-kalman,CME/FDS,CME,FDS,Financial Exchanges & Data,18,1.2063668,14.56154855,0.02598299,,44.0,2.0,0.5,4.0,3,-5354.27484645,-5724.54606276,CME Group,FactSet
+17,trial4-kalman,GD/GE,GD,GE,Aerospace & Defense,19,0.3480217,22.10303382,0.02600417,,66.0,2.0,0.5,4.0,2,8664.92627886,8425.72066994,General Dynamics,GE Aerospace
+17,trial4-kalman,CDNS/INTU,CDNS,INTU,Application Software,20,0.86716866,13.12106995,0.02754276,,39.0,2.0,0.5,4.0,4,5515.41200783,5035.02615566,Cadence Design Systems,Intuit
+17,trial5-distance,CMS/DTE,CMS,DTE,Multi-Utilities,1,,14.31849725,,0.21563142,,2.0,0.0,,1,-235.13769145,-368.58169974,CMS Energy,DTE Energy
+17,trial5-distance,DUK/PPL,DUK,PPL,Electric Utilities,2,,34.48522158,,0.5025159,,2.0,0.0,,0,0.0,0.0,Duke Energy,PPL Corporation
+17,trial5-distance,AEP/FE,AEP,FE,Electric Utilities,3,,18.80767635,,0.51225347,,2.0,0.0,,1,-1520.63165294,-1739.49919508,American Electric Power,FirstEnergy
+17,trial5-distance,MA/V,MA,V,Transaction & Payment Processing Services,4,,26.84519828,,0.70219436,,2.0,0.0,,1,1748.73506122,1592.1573644,Mastercard,Visa Inc.
+17,trial5-distance,EVRG/WEC,EVRG,WEC,Electric Utilities,5,,23.06110679,,0.73139844,,2.0,0.0,,1,5197.3197121,5028.34034159,Evergy,WEC Energy Group
+17,trial5-distance,LNT/PPL,LNT,PPL,Electric Utilities,6,,53.03674083,,0.80956064,,2.0,0.0,,1,3392.76735683,3278.72447059,Alliant Energy,PPL Corporation
+17,trial5-distance,ADP/PAYX,ADP,PAYX,Human Resource & Employment Services,7,,14.89798744,,0.86916694,,2.0,0.0,,1,3762.2629899,3591.13848717,Automatic Data Processing,Paychex
+17,trial5-distance,CCI/SBAC,CCI,SBAC,Telecom Tower REITs,8,,26.78857757,,0.90659468,,2.0,0.0,,1,3645.82997982,3514.41311489,Crown Castle,SBA Communications
+17,trial5-distance,CMS/ED,CMS,ED,Multi-Utilities,9,,79232.43362941,,0.97270044,,2.0,0.0,,1,-335.05822158,-506.27105519,CMS Energy,Consolidated Edison
+17,trial5-distance,D/NEE,D,NEE,Multi-Utilities,10,,19.24746881,,1.07392862,,2.0,0.0,,1,5730.48634033,5612.43928147,Dominion Energy,NextEra Energy
+17,trial5-distance,FE/LNT,FE,LNT,Electric Utilities,11,,48.82173864,,1.08203887,,2.0,0.0,,1,7773.45613057,7643.09586967,FirstEnergy,Alliant Energy
+17,trial5-distance,FRT/REG,FRT,REG,Retail REITs,12,,76.29588966,,1.10962888,,2.0,0.0,,1,-1733.02308018,-1903.24492628,Federal Realty Investment Trust,Regency Centers
+17,trial5-distance,CMS/SRE,CMS,SRE,Multi-Utilities,13,,23.20332306,,1.11549224,,2.0,0.0,,1,-4281.62578257,-4506.4142059,CMS Energy,Sempra
+17,trial5-distance,DTE/ED,DTE,ED,Multi-Utilities,14,,89.94143595,,1.13293969,,2.0,0.0,,1,1988.72551164,1774.50412288,DTE Energy,Consolidated Edison
+17,trial5-distance,LNT/WEC,LNT,WEC,Electric Utilities,15,,56.36540234,,1.19858134,,2.0,0.0,,1,-975.23175978,-1145.82890666,Alliant Energy,WEC Energy Group
+17,trial5-distance,MO/PM,MO,PM,Tobacco,16,,11.41341702,,1.23070659,,2.0,0.0,,1,-12947.03430145,-13188.83202138,Altria,Philip Morris International
+17,trial5-distance,DUK/LNT,DUK,LNT,Electric Utilities,17,,67.67554069,,1.23239941,,2.0,0.0,,1,1340.91238034,1198.98140787,Duke Energy,Alliant Energy
+17,trial5-distance,PCG/PNW,PCG,PNW,Multi-Utilities,18,,18.20152268,,1.24711841,,2.0,0.0,,1,-12174.20484225,-12400.41597796,PG&E Corporation,Pinnacle West Capital
+17,trial5-distance,AEE/XEL,AEE,XEL,Multi-Utilities,19,,30.16285098,,1.27759829,,2.0,0.0,,1,1617.95314707,1422.6455723,Ameren,Xcel Energy
+17,trial5-distance,FE/WEC,FE,WEC,Electric Utilities,20,,70.04151941,,1.30572483,,2.0,0.0,,1,3126.40648422,2947.59470409,FirstEnergy,WEC Energy Group
+18,trial4-ols,GEN/PANW,GEN,PANW,Systems Software,1,0.87997459,9.66532097,0.00069037,,30.0,2.0,0.5,4.0,4,1826.35984701,1334.92849626,Gen Digital,Palo Alto Networks
+18,trial4-ols,CPT/UDR,CPT,UDR,Multi-Family Residential REITs,2,1.09215548,10.2377056,0.00083204,,31.0,2.0,0.5,4.0,6,2034.28018556,1348.12433387,Camden Property Trust,"UDR, Inc."
+18,trial4-ols,FITB/KEY,FITB,KEY,Regional Banks,3,1.01690976,9.71017013,0.00100085,,30.0,2.0,0.5,4.0,5,398.50861053,-166.07917923,Fifth Third Bancorp,KeyCorp
+18,trial4-ols,BKNG/RCL,BKNG,RCL,"Hotels, Resorts & Cruise Lines",4,0.55883211,10.9843326,0.0016699,,33.0,2.0,0.5,4.0,6,11851.54861492,11188.29510096,Booking Holdings,Royal Caribbean Group
+18,trial4-ols,MCO/SPGI,MCO,SPGI,Financial Exchanges & Data,5,1.23115154,8.92868026,0.00176114,,30.0,2.0,0.5,4.0,4,715.00361135,256.7046299,Moody's Corporation,S&P Global
+18,trial4-ols,CB/PGR,CB,PGR,Property & Casualty Insurance,6,0.5057326,8.90520052,0.00188411,,30.0,2.0,0.5,4.0,6,-2145.4928316,-2843.24082998,Chubb Limited,Progressive Corporation
+18,trial4-ols,AEP/DUK,AEP,DUK,Electric Utilities,7,1.02958717,14.04332667,0.00305646,,42.0,2.0,0.5,4.0,4,1941.80739579,1454.35357678,American Electric Power,Duke Energy
+18,trial4-ols,CPT/VMRK,CPT,VMRK,Multi-Family Residential REITs,8,1.11378545,8.82084443,0.00328792,,30.0,2.0,0.5,4.0,4,-472.70980016,-934.2691008,Camden Property Trust,Vivmark Residential
+18,trial4-ols,PNC/TFC,PNC,TFC,Diversified Banks,9,1.04715676,9.10518616,0.00329474,,30.0,2.0,0.5,4.0,4,318.11179245,-143.71770259,PNC Financial Services,Truist Financial
+18,trial4-ols,BRO/MRSH,BRO,MRSH,Insurance Brokers,10,2.27801063,9.29253673,0.00365189,,30.0,2.0,0.5,4.0,5,3713.05993193,3146.00345879,Brown & Brown,Marsh McLennan
+18,trial4-ols,NOW/PANW,NOW,PANW,Systems Software,11,1.110143,10.11546598,0.00401008,,30.0,2.0,0.5,4.0,4,16389.12830944,15959.02116503,ServiceNow,Palo Alto Networks
+18,trial4-ols,ESS/UDR,ESS,UDR,Multi-Family Residential REITs,12,1.20146023,21.91400016,0.00518722,,66.0,2.0,0.5,4.0,2,1812.89435871,1551.35280889,Essex Property Trust,"UDR, Inc."
+18,trial4-ols,GE/RTX,GE,RTX,Aerospace & Defense,13,1.54525514,13.9005206,0.00597894,,42.0,2.0,0.5,4.0,3,11759.16046297,11399.48499749,GE Aerospace,RTX Corporation
+18,trial4-ols,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,14,1.00189511,12.4499934,0.01151787,,37.0,2.0,0.5,4.0,4,2505.88289215,2058.73704493,"UDR, Inc.",Vivmark Residential
+18,trial4-ols,NTRS/STT,NTRS,STT,Asset Management & Custody Banks,15,1.0388626,11.59564725,0.01317193,,35.0,2.0,0.5,4.0,4,2926.58757932,2476.76102343,Northern Trust,State Street Corporation
+18,trial4-ols,COP/OXY,COP,OXY,Oil & Gas Exploration & Production,16,0.59608632,11.91999116,0.0143502,,36.0,2.0,0.5,4.0,3,1842.96583745,1498.27478225,ConocoPhillips,Occidental Petroleum
+18,trial4-ols,AMP/ARES,AMP,ARES,Asset Management & Custody Banks,17,0.82525879,12.48929437,0.01543202,,37.0,2.0,0.5,4.0,4,996.97326436,550.91990997,Ameriprise Financial,Ares Management
+18,trial4-ols,ISRG/RMD,ISRG,RMD,Health Care Equipment,18,1.1624568,14.69387137,0.01601716,,44.0,2.0,0.5,4.0,3,-6219.05877056,-6558.45656134,Intuitive Surgical,ResMed
+18,trial4-ols,DUK/SO,DUK,SO,Electric Utilities,19,0.92537962,13.05252143,0.0183553,,39.0,2.0,0.5,4.0,5,2765.64688771,2171.26808396,Duke Energy,Southern Company
+18,trial4-ols,COP/DVN,COP,DVN,Oil & Gas Exploration & Production,20,0.55396066,15.41351383,0.01872344,,46.0,2.0,0.5,4.0,2,1911.29120484,1662.27981689,ConocoPhillips,Devon Energy
+18,trial4-kalman,GEN/PANW,GEN,PANW,Systems Software,1,0.87997459,9.66532097,0.00069037,,30.0,2.0,0.5,4.0,3,-2387.70161079,-2761.62828914,Gen Digital,Palo Alto Networks
+18,trial4-kalman,CPT/UDR,CPT,UDR,Multi-Family Residential REITs,2,1.09215548,10.2377056,0.00083204,,31.0,2.0,0.5,4.0,6,1649.79776608,975.88505329,Camden Property Trust,"UDR, Inc."
+18,trial4-kalman,FITB/KEY,FITB,KEY,Regional Banks,3,1.01690976,9.71017013,0.00100085,,30.0,2.0,0.5,4.0,5,3459.35298485,2908.6825706,Fifth Third Bancorp,KeyCorp
+18,trial4-kalman,BKNG/RCL,BKNG,RCL,"Hotels, Resorts & Cruise Lines",4,0.55883211,10.9843326,0.0016699,,33.0,2.0,0.5,4.0,6,9345.88164399,8698.0378647,Booking Holdings,Royal Caribbean Group
+18,trial4-kalman,MCO/SPGI,MCO,SPGI,Financial Exchanges & Data,5,1.23115154,8.92868026,0.00176114,,30.0,2.0,0.5,4.0,4,716.62397184,264.41089881,Moody's Corporation,S&P Global
+18,trial4-kalman,CB/PGR,CB,PGR,Property & Casualty Insurance,6,0.5057326,8.90520052,0.00188411,,30.0,2.0,0.5,4.0,6,-2433.6560895,-3119.08801625,Chubb Limited,Progressive Corporation
+18,trial4-kalman,AEP/DUK,AEP,DUK,Electric Utilities,7,1.02958717,14.04332667,0.00305646,,42.0,2.0,0.5,4.0,4,471.5117763,-10.47593331,American Electric Power,Duke Energy
+18,trial4-kalman,CPT/VMRK,CPT,VMRK,Multi-Family Residential REITs,8,1.11378545,8.82084443,0.00328792,,30.0,2.0,0.5,4.0,3,-1165.3608218,-1507.28386491,Camden Property Trust,Vivmark Residential
+18,trial4-kalman,PNC/TFC,PNC,TFC,Diversified Banks,9,1.04715676,9.10518616,0.00329474,,30.0,2.0,0.5,4.0,5,-338.62666484,-907.64500121,PNC Financial Services,Truist Financial
+18,trial4-kalman,BRO/MRSH,BRO,MRSH,Insurance Brokers,10,2.27801063,9.29253673,0.00365189,,30.0,2.0,0.5,4.0,4,4818.69272803,4385.51906391,Brown & Brown,Marsh McLennan
+18,trial4-kalman,NOW/PANW,NOW,PANW,Systems Software,11,1.110143,10.11546598,0.00401008,,30.0,2.0,0.5,4.0,4,11159.71349806,10721.40768348,ServiceNow,Palo Alto Networks
+18,trial4-kalman,ESS/UDR,ESS,UDR,Multi-Family Residential REITs,12,1.20146023,21.91400016,0.00518722,,66.0,2.0,0.5,4.0,2,1131.11486281,875.61199182,Essex Property Trust,"UDR, Inc."
+18,trial4-kalman,GE/RTX,GE,RTX,Aerospace & Defense,13,1.54525514,13.9005206,0.00597894,,42.0,2.0,0.5,4.0,2,2993.28355732,2748.99812744,GE Aerospace,RTX Corporation
+18,trial4-kalman,UDR/VMRK,UDR,VMRK,Multi-Family Residential REITs,14,1.00189511,12.4499934,0.01151787,,37.0,2.0,0.5,4.0,4,1836.45229747,1395.66430916,"UDR, Inc.",Vivmark Residential
+18,trial4-kalman,NTRS/STT,NTRS,STT,Asset Management & Custody Banks,15,1.0388626,11.59564725,0.01317193,,35.0,2.0,0.5,4.0,3,120.83136859,-222.10046462,Northern Trust,State Street Corporation
+18,trial4-kalman,COP/OXY,COP,OXY,Oil & Gas Exploration & Production,16,0.59608632,11.91999116,0.0143502,,36.0,2.0,0.5,4.0,3,-215.61058126,-553.22793049,ConocoPhillips,Occidental Petroleum
+18,trial4-kalman,AMP/ARES,AMP,ARES,Asset Management & Custody Banks,17,0.82525879,12.48929437,0.01543202,,37.0,2.0,0.5,4.0,4,573.74104881,133.68654873,Ameriprise Financial,Ares Management
+18,trial4-kalman,ISRG/RMD,ISRG,RMD,Health Care Equipment,18,1.1624568,14.69387137,0.01601716,,44.0,2.0,0.5,4.0,2,-15269.60240716,-15506.42105514,Intuitive Surgical,ResMed
+18,trial4-kalman,DUK/SO,DUK,SO,Electric Utilities,19,0.92537962,13.05252143,0.0183553,,39.0,2.0,0.5,4.0,4,2482.67146415,2011.51095515,Duke Energy,Southern Company
+18,trial4-kalman,COP/DVN,COP,DVN,Oil & Gas Exploration & Production,20,0.55396066,15.41351383,0.01872344,,46.0,2.0,0.5,4.0,4,5750.71507801,5298.68932968,ConocoPhillips,Devon Energy
+18,trial5-distance,CMS/DTE,CMS,DTE,Multi-Utilities,1,,19.96177179,,0.36345566,,2.0,0.0,,1,1018.641964,902.23945531,CMS Energy,DTE Energy
+18,trial5-distance,CPT/VMRK,CPT,VMRK,Multi-Family Residential REITs,2,,12.5534693,,0.45672132,,2.0,0.0,,0,0.0,0.0,Camden Property Trust,Vivmark Residential
+18,trial5-distance,EVRG/WEC,EVRG,WEC,Electric Utilities,3,,18.41698654,,0.67923465,,2.0,0.0,,1,1541.56706893,1429.14529568,Evergy,WEC Energy Group
+18,trial5-distance,MAA/UDR,MAA,UDR,Multi-Family Residential REITs,4,,30.66093198,,0.70664459,,2.0,0.0,,0,0.0,0.0,Mid-America Apartment Communities,"UDR, Inc."
+18,trial5-distance,DUK/SO,DUK,SO,Electric Utilities,5,,13.10622456,,0.93218115,,2.0,0.0,,1,681.70235293,548.95197945,Duke Energy,Southern Company
+18,trial5-distance,MA/V,MA,V,Transaction & Payment Processing Services,6,,52.25173794,,0.97071152,,2.0,0.0,,0,0.0,0.0,Mastercard,Visa Inc.
+18,trial5-distance,LNT/WEC,LNT,WEC,Electric Utilities,7,,42.18936469,,1.00653066,,2.0,0.0,,0,0.0,0.0,Alliant Energy,WEC Energy Group
+18,trial5-distance,ADP/PAYX,ADP,PAYX,Human Resource & Employment Services,8,,15.39404685,,1.02573631,,2.0,0.0,,1,-106.04319544,-261.30707308,Automatic Data Processing,Paychex
+18,trial5-distance,PPL/SO,PPL,SO,Electric Utilities,9,,34.31195607,,1.04165179,,2.0,0.0,,1,-182.23262054,-313.96377738,PPL Corporation,Southern Company
+18,trial5-distance,CPT/MAA,CPT,MAA,Multi-Family Residential REITs,10,,31.42004723,,1.18871364,,2.0,0.0,,0,0.0,0.0,Camden Property Trust,Mid-America Apartment Communities
+18,trial5-distance,CCI/SBAC,CCI,SBAC,Telecom Tower REITs,11,,29.77066285,,1.21443828,,2.0,0.0,,1,996.52889044,811.08447785,Crown Castle,SBA Communications
+18,trial5-distance,AEE/PNW,AEE,PNW,Multi-Utilities,12,,49.62397656,,1.29904234,,2.0,0.0,,1,2536.78609208,2374.36137277,Ameren,Pinnacle West Capital
+18,trial5-distance,PNC/TFC,PNC,TFC,Diversified Banks,13,,14.60063903,,1.32186605,,2.0,0.0,,0,0.0,0.0,PNC Financial Services,Truist Financial
+18,trial5-distance,EXR/PSA,EXR,PSA,Self-Storage REITs,14,,35.76843071,,1.32844452,,2.0,0.0,,0,0.0,0.0,Extra Space Storage,Public Storage
+18,trial5-distance,DTE/ED,DTE,ED,Multi-Utilities,15,,55.07087493,,1.34483635,,2.0,0.0,,0,0.0,0.0,DTE Energy,Consolidated Edison
+18,trial5-distance,CMS/ED,CMS,ED,Multi-Utilities,16,,63.25016646,,1.3691369,,2.0,0.0,,0,0.0,0.0,CMS Energy,Consolidated Edison
+18,trial5-distance,ADI/TXN,ADI,TXN,Semiconductors,17,,13.31862555,,1.37636093,,2.0,0.0,,1,-10909.33997068,-11092.77608185,Analog Devices,Texas Instruments
+18,trial5-distance,AIG/L,AIG,L,Multi-line Insurance,18,,23.65268819,,1.38720324,,2.0,0.0,,1,-864.19163684,-1076.7092672,American International Group,Loews Corporation
+18,trial5-distance,AZO/ORLY,AZO,ORLY,Automotive Retail,19,,14.45400858,,1.4665958,,2.0,0.0,,1,-809.80512079,-936.78647875,AutoZone,O'Reilly Automotive
+18,trial5-distance,D/PNW,D,PNW,Multi-Utilities,20,,25.53226302,,1.56155564,,2.0,0.0,,0,0.0,0.0,Dominion Energy,Pinnacle West Capital

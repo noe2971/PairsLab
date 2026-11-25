@@ -17,6 +17,10 @@ dependencies = [
 ]
 
 [dependency-groups]
+app = [
+    "plotly>=7.2.0",
+    "streamlit>=1.67.0",
+]
 dev = ["pytest>=8", "ruff>=0.6"]
 
 [build-system]
@@ -31,6 +35,8 @@ wheel.packages = ["src/pairslab"]
 build-dir = "build/{wheel_tag}"
 
 [tool.uv]
+# `uv sync` also installs the dashboard dependencies, so CI can test the app.
+default-groups = ["dev", "app"]
 # Rebuild the C++ extension whenever its sources change (uv otherwise caches the build).
 cache-keys = [{ file = "pyproject.toml" }, { file = "cpp/**" }]
 
