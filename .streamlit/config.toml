@@ -1,0 +1,28 @@
+# Theme and server settings for the PairsLab dashboard (Streamlit Community Cloud reads this
+# file from the repository root). Visual style: warm paper background, ink text, one accent
+# colour per strategy variant (see app/pairslab_app/theme.py).
+
+[theme]
+base = "light"
+primaryColor = "#16202E"
+backgroundColor = "#F6F3EC"
+secondaryBackgroundColor = "#ECE7DB"
+textColor = "#16202E"
+baseFontSize = 17
+baseRadius = "0.6rem"
+borderColor = "#D9D2C3"
+font = "'IBM Plex Sans':https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap, sans-serif"
+headingFont = "Newsreader:https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap, serif"
+codeFont = "'IBM Plex Mono':https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap, monospace"
+
+[client]
+toolbarMode = "minimal"
+showErrorDetails = false
+
+[server]
+headless = true
+runOnSave = false
+enableXsrfProtection = true
+
+[browser]
+gatherUsageStats = false

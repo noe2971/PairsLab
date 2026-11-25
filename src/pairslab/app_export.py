@@ -14,6 +14,8 @@ Files written (all small enough to commit):
   (``pw``: automatic Politis-White, ``alt``: the 40-day alternative). Pooled simulated 1-day
   and 10-day returns (for the VaR/CVaR picture) and the per-history statistics (max drawdown,
   total return, Sharpe, VaR, CVaR).
+* ``risk_summary_by_block.csv``: the real value, median and 95% interval of each statistic under
+  both block lengths (the layout of ``risk_summary.csv`` plus a ``block`` column).
 * ``pairs_index.csv``, ``pairs_daily.parquet``, ``pairs_trades.csv``: for every pair traded in
   every window and variant: formation statistics, prices / spread / z-score on the trading
   window, and the executed trades (base costs) with their P&L.
@@ -191,8 +193,8 @@ def export_risk_histograms(
     n_paths: int = N_PATHS,
     seed: int = DEFAULT_SEED,
     alt_block: float = ALT_BLOCK,
-) -> pd.DataFrame:
-    """Histograms of the bootstrap distributions for every variant and both block lengths.
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Histograms and summaries of the bootstrap for every variant and both block lengths.
 
     The bootstrap is re-simulated with the stored seed (same histories as the published risk
     tables, NumPy reference backend) and checked against ``risk_summary.csv``: if a median
@@ -206,8 +208,10 @@ def export_risk_histograms(
         alt_block: The alternative block length.
 
     Returns:
-        Long frame ``variant, block, series, bin_lo, bin_hi, count``. ``series`` is
-        ``pooled_1d``, ``pooled_10d`` or ``stat:<name>`` (the per-history statistics).
+        ``(histograms, summary)``. ``histograms`` is a long frame ``variant, block, series,
+        bin_lo, bin_hi, count`` where ``series`` is ``pooled_1d``, ``pooled_10d`` or
+        ``stat:<name>`` (the per-history statistics). ``summary`` has the layout of
+        ``risk_summary.csv`` plus a ``block`` column (``pw`` or ``alt``).
 
     Raises:
         ValueError: If a simulated median differs from the stored summary.
@@ -215,13 +219,16 @@ def export_risk_histograms(
     """
     stored = pd.read_csv(Path(results_dir) / "risk_summary.csv")
     rows: list[dict[str, object]] = []
+    summaries: list[pd.DataFrame] = []
     for variant in VARIANTS:
         returns = load_oos_returns(db_path, variant)
         pw_block = politis_white_block_length(returns.to_numpy())
         for label, block in (("pw", pw_block), ("alt", alt_block)):
             result = bootstrap_risk(returns, variant, n_paths, block, seed)
+            summary = summarize(result)
             if label == "pw" and n_paths == N_PATHS:
-                _check_against_stored(summarize(result), stored)
+                _check_against_stored(summary, stored)
+            summaries.append(summary.assign(block=label, mean_block=block))
             for name, values in result.stats.items():
                 edges = histogram_edges(values)
                 counts = count_in_bins(values, edges)
@@ -229,7 +236,7 @@ def export_risk_histograms(
             pooled = pooled_return_histograms(returns.to_numpy(), block, n_paths, seed)
             for name, (counts, edges) in pooled.items():
                 rows += _histogram_rows(variant, label, name, counts, edges)
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows), pd.concat(summaries, ignore_index=True)
 
 
 def _check_against_stored(fresh: pd.DataFrame, stored: pd.DataFrame) -> None:
@@ -271,9 +278,7 @@ def load_prices(db_path: Path | str, tickers: Sequence[str]) -> pd.DataFrame:
     return wide
 
 
-def open_pnl_path(
-    trades: pd.DataFrame, prices: pd.DataFrame, dates: pd.DatetimeIndex
-) -> pd.Series:
+def open_pnl_path(trades: pd.DataFrame, prices: pd.DataFrame, dates: pd.DatetimeIndex) -> pd.Series:
     """Cumulative net P&L of one pair, marked to market each day.
 
     While a trade is open the P&L is its mark-to-market on the day's closes (shares times the
@@ -439,8 +444,12 @@ def write_all(
     returns.round(10).to_csv(path)
     written.append(path)
 
+    histograms, summary = export_risk_histograms(db_path, results_dir, n_paths)
     path = out / "risk_histograms.csv"
-    export_risk_histograms(db_path, results_dir, n_paths).to_csv(path, index=False)
+    histograms.to_csv(path, index=False)
+    written.append(path)
+    path = out / "risk_summary_by_block.csv"
+    summary.to_csv(path, index=False)
     written.append(path)
 
     index, daily, trades = export_pairs(db_path)
@@ -454,9 +463,7 @@ def write_all(
     )
     written.append(path)
     path = out / "pairs_trades.csv"
-    trades.round({c: 6 for c in trades.select_dtypes("float64").columns}).to_csv(
-        path, index=False
-    )
+    trades.round({c: 6 for c in trades.select_dtypes("float64").columns}).to_csv(path, index=False)
     written.append(path)
 
     meta = {

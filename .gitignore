@@ -30,3 +30,6 @@ credentials*
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# Browser test screenshots
+.playwright-mcp/
