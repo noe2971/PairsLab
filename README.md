@@ -130,6 +130,23 @@ clustering), so the 10-day 99% tail is understated under the automatic block len
 real 3.2% CVaR falls outside its interval (1.95-2.92%) but inside the one for 40-day blocks
 (1.98-4.01%); both are in `results/risk_tail_alt_block.csv`. Details in PROGRESS.md.
 
+## Dashboard
+
+```bash
+uv run python -m pairslab.app_export        # once, after a new walk-forward or risk run
+uv run streamlit run app/streamlit_app.py   # http://localhost:8501
+```
+
+A five-page Streamlit app in `app/` (Overview, Pair explorer, Risk, Costs, Method) for people
+who will not read the code. It reads **only committed files in `results/`**: the existing
+`walkforward.csv`, `risk_*.csv` and `benchmark.md`, plus a few small files that
+`pairslab.app_export` writes to `results/app/` from the local DuckDB (stitched daily returns,
+bootstrap histograms, and prices, spread, z-score, trades and P&L of every pair in every
+window; about 4 MB in total). The deployed app therefore needs no DuckDB, no C++ build and no
+rerun; its dependencies are in `app/requirements.txt`. The theme is in
+`.streamlit/config.toml`. Tests (`tests/test_app.py`) load every page, check the error
+states and interactions, and compare the headline numbers with the result files.
+
 ## Setup
 
 ```bash

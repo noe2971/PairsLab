@@ -607,3 +607,56 @@ Real data with `--backend cpp`: every stored CSV reproduced to within 4e-15; ful
 - Fusing the stages per row (one pass, data in cache) and threads would add more; not done
   to keep stage timings comparable.
 - `uv pip install -e .` was not run separately this session (`uv sync` builds the same way).
+
+## Session 11 (2026-11-25): Streamlit dashboard for recruiters
+
+**Done**
+- `src/pairslab/app_export.py` (`python -m pairslab.app_export`): exports the small files the
+  app needs into `results/app/` (about 4 MB, committed): `oos_daily_returns.csv` (3 variants x
+  4 cost levels), `risk_histograms.csv` and `risk_summary_by_block.csv` (bootstrap distributions
+  under both block lengths), `pairs_index.csv`, `pairs_daily.parquet`, `pairs_trades.csv`
+  (prices, spread, z-score, trades and daily P&L of all 1,080 pair-windows), `meta.json`. Nothing
+  is re-backtested. Two built-in checks: the re-simulated bootstrap medians must equal
+  `risk_summary.csv`, and every pair's P&L path must end at the sum of its stored trades.
+- `app/` (Streamlit, Plotly): `streamlit_app.py` plus the package `pairslab_app` (data loaders
+  with validation, theme, charts, five pages). Overview (pitch, verdict cards, equity curves,
+  comparison table, in-sample vs out-of-sample), Pair explorer (window, strategy, pair; prices,
+  spread, z-score with bands, trade markers, P&L, trade log), Risk (VaR/CVaR histograms, drawdown
+  / return / Sharpe distributions, Sharpe interval, Politis-White vs b = 40), Costs (slider over
+  0/5/10/20 bps, break-even cost), Method (six steps, window timeline, C++ benchmark chart,
+  limitations).
+- Deploy files: `.streamlit/config.toml` (theme, fonts, minimal toolbar), `app/requirements.txt`
+  (streamlit, plotly, pandas, numpy, pyarrow only). `pyproject.toml` has an `app` dependency
+  group that `uv sync` installs by default, so CI can run the app tests.
+- 31 new tests (274 in total): every page loads without exceptions, entrypoint loads, headline
+  numbers equal `walkforward.csv`, the cost slider switches to the 20 bps results, window / pair
+  pickers, no-trade empty state, missing-file and wrong-column error states, break-even
+  interpolation, benchmark parsing, histogram totals, per-pair P&L consistency.
+
+**Decisions and why**
+- The app reads only `results/`, never DuckDB: the database is git-ignored (53 MB) and the
+  C++ extension would have to compile on the host. Everything extra is exported once and
+  committed, so the deployed app is a pure read-only view and cannot drift from the results.
+- `app/requirements.txt` next to the entrypoint: Community Cloud searches the entrypoint's
+  folder first, so it beats the root `uv.lock`, and the host never tries to build `pairslab`.
+- Colour per variant is fixed (OLS blue, Kalman orange, distance green; the same as the PNG
+  charts) and no other element uses those colours; ink and brick red are reserved for
+  structure and for "bad".
+- The headline is computed from the result files, not typed in: if the walk-forward is rerun,
+  the verdict cards change with it.
+- The Risk page marks the median simulated VaR/CVaR on the pooled simulated returns and shows
+  the real value and 95% range in the cards below; for tails beyond one day it tells the reader
+  to use the b = 40 numbers (session 9 decision).
+- Pair-explorer markers: entries and exits at the signal day on the z-score panel, at the
+  fill day (next close) on the price and P&L panels, which is how the backtest executes.
+- Tests restore `sys.modules["__main__"]` after each AppTest: Streamlit leaves its temporary
+  page script there, and the `spawn` workers of the selection tests then re-run it and crash.
+
+**Open questions**
+- The deployed link is not live yet: it needs the user's own share.streamlit.io account.
+- Streamlit Community Cloud's Python version is chosen at deploy time; use 3.12 or 3.13
+  (developed on 3.13).
+- The Pair explorer lists the 20 pairs of each window; a cross-window search for one ticker
+  would be a natural extension.
+- The sandboxed shell stopped responding late in the session; the last test runs went through
+  the Terminal panel. Not a project issue.
